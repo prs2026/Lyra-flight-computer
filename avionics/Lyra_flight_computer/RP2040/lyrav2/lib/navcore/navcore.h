@@ -264,11 +264,13 @@ class NAVCORE{
             orientationquat = accelrotquat * orientationquat;
 
 
-            Quaterniond quatadj(0.707,0.707,0,0);
+            Vector3d adjaxis(0,1,0);
+            Quaterniond quatadj(AngleAxisd(M_PI_2,adjaxis));
+            
 
-            Quaterniond orientationquatadj = quatadj*orientationquat;//*quatadj.conjugate();
+            Quaterniond orientationquatadj = quatadj*orientationquat;
 
-            Matrix3d R = orientationquatadj.toRotationMatrix();
+            Matrix3d R = orientationquat.toRotationMatrix();
 
             orientationeuler = R.eulerAngles(0,1,2);
 
@@ -283,25 +285,16 @@ class NAVCORE{
 
         Vector3float getworldaccel(navpacket _state){
             Vector3d accelvec = vectorfloatto3(_state.r.imudata.accel);
-            Quaterniond orientationquat = quatstructtoeigen(_state.r.orientationquatadj);//.inverse();
-            Quaterniond accelquat2;
-            accelquat2.w() = 0;
+            Quaterniond orientationquat = quatstructtoeigen(_state.r.orientationquat);//.inverse();
 
-            // Matrix3d R = orientationquat.toRotationMatrix();
-            // Matrix3d Rtrans = R.inverse();
 
-            accelquat2.x() = accelvec.x();
-            accelquat2.y() = accelvec.y();
-            accelquat2.z() = accelvec.z();
+            Matrix3d R = (orientationquat.normalized()).toRotationMatrix();
+            Matrix3d Rtrans = (R.inverse()).normalized();
 
-            accelquat2 = orientationquat.inverse() * accelquat2 * orientationquat;
+            accelvec = Rtrans*accelvec;       
 
-            accelvec.x() = accelquat2.x();
-            accelvec.y() = accelquat2.y();
-            accelvec.z() = accelquat2.z();
-
-            Vector3d grav(0,0,9.801);
-            Vector3d _accelworld = accelvec-grav;
+            Vector3d grav(0,9.801,0);
+            Vector3d _accelworld = accelvec;//-grav;
 
             return vector3tofloat(_accelworld);
 

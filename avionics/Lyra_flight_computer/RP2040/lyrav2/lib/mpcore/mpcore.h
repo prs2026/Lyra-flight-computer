@@ -638,7 +638,7 @@ class MPCORE{
                 ">orientation w: %f \n"
                 ">orientation x: %f \n"
                 ">orientation y: %f \n"
-                ">orientation z:s %f \n"
+                ">orientation z: %f \n"
 
                 ">maxrecorded alt: %f \n"
                 ">filtered alt: %f \n"
