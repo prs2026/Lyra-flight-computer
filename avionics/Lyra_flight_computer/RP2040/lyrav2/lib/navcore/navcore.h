@@ -300,7 +300,7 @@ class NAVCORE{
             accelquat2.z() = accelvec.z();
 
             accelquat2 = orientationquat3; //* accelquat2 * orientationquat3.inverse();
-
+ 
             // accelvec.x() = accelquat2.x();
             // accelvec.y() = accelquat2.y();
             // accelvec.z() = accelquat2.z();   
