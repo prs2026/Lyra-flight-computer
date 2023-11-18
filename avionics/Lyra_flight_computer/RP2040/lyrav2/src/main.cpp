@@ -223,11 +223,13 @@ void loop() { // main core loop
 void loop1() { // nav core loop
     if (MP._sysstate.r.state == 0)
     {
-        NAV.alpha = 0.2;
+        NAV.alpha = 0.8;
+        //Serial.printf(">navalpha: 0.8\n");
     }
     else
     {
         NAV.alpha = 0.98;
+        //Serial.printf(">navalpha: 0.98\n");
     }
     
     NAV.getsensordata();
