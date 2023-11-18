@@ -285,16 +285,28 @@ class NAVCORE{
 
         Vector3float getworldaccel(navpacket _state){
             Vector3d accelvec = vectorfloatto3(_state.r.imudata.accel);
-            Quaterniond orientationquat = quatstructtoeigen(_state.r.orientationquat);//.inverse();
+            Quaterniond orientationquat3 = quatstructtoeigen(_state.r.orientationquat);//.inverse();
 
 
-            Matrix3d R = (orientationquat.normalized()).toRotationMatrix();
-            Matrix3d Rtrans = (R.inverse()).normalized();
+            // Matrix3d R = (orientationquat.normalized()).toRotationMatrix();
+            // Matrix3d Rtrans = (R.inverse()).normalized();
 
-            accelvec = Rtrans*accelvec;       
+            // accelvec = Rtrans*accelvec;    
+
+            Quaterniond accelquat2;
+
+            accelquat2.x() = accelvec.x();
+            accelquat2.y() = accelvec.y();
+            accelquat2.z() = accelvec.z();
+
+            accelquat2 = orientationquat3; //* accelquat2 * orientationquat3.inverse();
+
+            // accelvec.x() = accelquat2.x();
+            // accelvec.y() = accelquat2.y();
+            // accelvec.z() = accelquat2.z();   
 
             Vector3d grav(0,9.801,0);
-            Vector3d _accelworld = accelvec;//-grav;
+            Vector3d _accelworld = accelvec-grav;
 
             return vector3tofloat(_accelworld);
 
