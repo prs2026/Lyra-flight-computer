@@ -235,7 +235,7 @@ void loop1() { // nav core loop
     NAV.getsensordata();
     NAV.KFpredict();
 
-    if (millis() - NAV.prevtime.kfupdate >= 300)
+    if (millis() - NAV.prevtime.kfupdate >= 100)
     {
         NAV.KFupdate();
         NAV.prevtime.kfupdate = millis();

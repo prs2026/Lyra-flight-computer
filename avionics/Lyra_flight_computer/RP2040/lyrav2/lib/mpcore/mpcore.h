@@ -309,7 +309,7 @@ class MPCORE{
                 }
                 
                 sdfile.printf(
-                    "101,"//checksum // checksum,uptime mp,uptime nav, errorflag mp, accel x, accel y, accel z, gyro x, gyro y, gyro z, mag x, mag y, mag z, magraw x, magraw y, magraw z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, pressure, verticalvel, imutemp, barotemp, state,checksum
+                    "101,"//checksum // checksum,uptime mp,uptime nav, errorflag mp, accel x, accel y, accel z, gyro x, gyro y, gyro z, mag x, mag y, mag z, magraw x, magraw y, magraw z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, pressure, verticalvel,filteredaccel x, filteredaccel y, filteredaccel z, imutemp, barotemp, state,checksum
                     "%d,%d,"//uptimes
                     "%d,%d,"//errorflag
                     "%f,%f,%f," // accel
@@ -319,6 +319,7 @@ class MPCORE{
                     "%f,%f,%f," // orientation euler"
                     "%f,%f,%f,%f," // orientation quat"
                     "%f,%f,%f,%f,%f,%f,%f," //altitude, presusre, verticalvel,filtered vvel, altitudeagl, filtered alt
+                    "%f,%f,%f," // accel
                     "%f,%f," // temps, imu baro mag
                     "%d,202\n", //state
                     readentry.r.uptime,
@@ -350,10 +351,13 @@ class MPCORE{
                     readentry.r.navsysstate.r.barodata.altitude,
                     readentry.r.navsysstate.r.barodata.pressure,
                     readentry.r.navsysstate.r.barodata.verticalvel,
-                    readentry.r.navsysstate.r.filteredvvel,
+                    readentry.r.navsysstate.r.filtered.vvel,
                     readentry.r.navsysstate.r.barodata.maxrecordedalt,
                     readentry.r.navsysstate.r.barodata.altitudeagl,
-                    readentry.r.navsysstate.r.filteredalt,
+                    readentry.r.navsysstate.r.filtered.alt,
+                    readentry.r.navsysstate.r.filtered.accel.x,
+                    readentry.r.navsysstate.r.filtered.accel.y,
+                    readentry.r.navsysstate.r.filtered.accel.z,
                     readentry.r.navsysstate.r.imudata.temp,
                     readentry.r.navsysstate.r.barodata.temp,
                     readentry.r.state
@@ -667,7 +671,7 @@ class MPCORE{
 
                 , _sysstate.r.navsysstate.r.barodata.altitude
                 , _sysstate.r.navsysstate.r.barodata.verticalvel
-                , _sysstate.r.navsysstate.r.filteredvvel
+                , _sysstate.r.navsysstate.r.filtered.vvel
 
                 ,_sysstate.r.navsysstate.r.magdata.utesla.x
                 ,_sysstate.r.navsysstate.r.magdata.utesla.y
@@ -687,7 +691,7 @@ class MPCORE{
                 ,_sysstate.r.navsysstate.r.orientationquat.z
 
                 , _sysstate.r.navsysstate.r.barodata.maxrecordedalt
-                , _sysstate.r.navsysstate.r.filteredalt
+                , _sysstate.r.navsysstate.r.filtered.alt
                 , _sysstate.r.state
                 , _sysstate.r.navsysstate.r.barodata.altitudeagl
                 , _sysstate.r.navsysstate.r.confidence.alt

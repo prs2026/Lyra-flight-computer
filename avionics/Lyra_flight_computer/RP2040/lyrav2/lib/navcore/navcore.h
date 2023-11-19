@@ -35,11 +35,13 @@ class NAVCORE{
         float alpha = 0.98;
 
         void KFinit(){
-            _sysstate.r.filteredalt = _sysstate.r.barodata.altitudeagl;
-            _sysstate.r.filteredvvel = _sysstate.r.barodata.verticalvel;
+            _sysstate.r.filtered.alt = _sysstate.r.barodata.altitudeagl;
+            _sysstate.r.filtered.vvel = _sysstate.r.barodata.verticalvel;
+            _sysstate.r.filtered.accel = _sysstate.r.accelworld;
            
             _sysstate.r.confidence.alt = 100;
             _sysstate.r.confidence.vvel = 100;
+            _sysstate.r.confidence.vaccel = 100;
             prevsysstate = _sysstate;
             prevtime.kfpredict = micros();
             prevtime.kfupdate = micros();
@@ -160,10 +162,10 @@ class NAVCORE{
 
             double timestep = (micros() - kfpredicttime)/1e6;
 
-            extrapolatedsysstate.r.filteredalt = _sysstate.r.filteredalt + (timestep*_sysstate.r.filteredvvel); // extrapolate with velocity dynamics
-            extrapolatedsysstate.r.filteredvvel = _sysstate.r.filteredvvel;// + (timestep*_sysstate.r.accelworld.z); 
+            extrapolatedsysstate.r.filtered.alt = _sysstate.r.filtered.alt + (timestep*_sysstate.r.filtered.vvel); // extrapolate with velocity dynamics
+            extrapolatedsysstate.r.filtered.vvel = _sysstate.r.filtered.vvel;// + (timestep*_sysstate.r.accelworld.z); 
 
-            extrapolatedsysstate.r.confidence.alt = _sysstate.r.confidence.alt + (pow(timestep,2)*_sysstate.r.confidence.vvel) + ALTVAR; // extrapolate variences with velocity dynamics
+            extrapolatedsysstate.r.confidence.alt = _sysstate.r.confidence.alt + ((timestep*timestep)*_sysstate.r.confidence.vvel) + ALTVAR; // extrapolate variences with velocity dynamics
             extrapolatedsysstate.r.confidence.vvel = _sysstate.r.confidence.vvel + VVELVAR;// +pow(timestep,2)*0.5 + 0.05;
 
             extrapolatedsysstate = computeorientation(extrapolatedsysstate);
@@ -184,8 +186,10 @@ class NAVCORE{
             kgain.vvel = /*0.5;*/ _sysstate.r.confidence.vvel/(_sysstate.r.confidence.vvel+VVELNOISE);
             //Serial.printf(">kalman gain: %f\n",kgain.alt);
             
-            _sysstate.r.filteredalt = prevsysstate.r.filteredalt + kgain.alt*(_sysstate.r.barodata.altitudeagl - prevsysstate.r.filteredalt); // state update
-            _sysstate.r.filteredvvel = prevsysstate.r.filteredvvel + kgain.vvel*(_sysstate.r.barodata.verticalvel - prevsysstate.r.filteredvvel);
+            _sysstate.r.filtered.alt = prevsysstate.r.filtered.alt + kgain.alt*(_sysstate.r.barodata.altitudeagl - prevsysstate.r.filtered.alt); // state update
+            _sysstate.r.filtered.vvel = prevsysstate.r.filtered.vvel + kgain.vvel*(_sysstate.r.barodata.verticalvel - prevsysstate.r.filtered.vvel);
+
+            
 
             _sysstate.r.confidence.alt = (1-kgain.alt)*prevsysstate.r.confidence.alt; // variences update
             _sysstate.r.confidence.vvel = (1-kgain.vvel)*prevsysstate.r.confidence.vvel;

@@ -116,8 +116,14 @@ struct MAGdata{
 struct variences{
     float alt;
     float vvel;
+    float vaccel;
 };
 
+struct position{
+    Vector3float accel;
+    float alt;
+    float vvel;
+};
 
 union navpacket
 {
@@ -130,13 +136,12 @@ union navpacket
         BAROdata barodata;
         MAGdata magdata;
         Vector3float accelworld;
-        float filteredalt;
-        float filteredvvel;
         //Vector3float pos;
         Vector3float orientationeuler;
         Quatstruct orientationquat;
         Quatstruct orientationquatadj;
         variences confidence;
+        position filtered;
         //Vector3float vel;
         
     } r;
