@@ -163,13 +163,19 @@ class NAVCORE{
             double timestep = (micros() - kfpredicttime)/1e6;
 
             extrapolatedsysstate.r.filtered.alt = _sysstate.r.filtered.alt + (timestep*_sysstate.r.filtered.vvel); // extrapolate with velocity dynamics
-            extrapolatedsysstate.r.filtered.vvel = _sysstate.r.filtered.vvel;// + (timestep*_sysstate.r.accelworld.z); 
+            extrapolatedsysstate.r.filtered.vvel = _sysstate.r.filtered.vvel + (timestep*_sysstate.r.accelworld.y); 
+
 
             extrapolatedsysstate.r.confidence.alt = _sysstate.r.confidence.alt + ((timestep*timestep)*_sysstate.r.confidence.vvel) + ALTVAR; // extrapolate variences with velocity dynamics
-            extrapolatedsysstate.r.confidence.vvel = _sysstate.r.confidence.vvel + VVELVAR;// +pow(timestep,2)*0.5 + 0.05;
+            extrapolatedsysstate.r.confidence.vvel = _sysstate.r.confidence.vvel + VVELVAR;
 
+
+
+            //intergrategyros(timestep);
             extrapolatedsysstate = computeorientation(extrapolatedsysstate);
             extrapolatedsysstate.r.accelworld = getworldaccel(extrapolatedsysstate);
+            extrapolatedsysstate.r.orientationeuler = quat2euler(extrapolatedsysstate.r.orientationquat);
+
             //Serial.printf(">extrap var: %f\n",extrapolatedsysstate.r.confidence.alt);
 
             kfpredicttime = micros();
@@ -182,8 +188,8 @@ class NAVCORE{
             double timestep = (micros() - kfupdatetime)/1e6;
 
             variences kgain; // calc new kalman gain
-            kgain.alt = /*0.2;*/  _sysstate.r.confidence.alt/(_sysstate.r.confidence.alt+ALTNOISE);
-            kgain.vvel = /*0.5;*/ _sysstate.r.confidence.vvel/(_sysstate.r.confidence.vvel+VVELNOISE);
+            kgain.alt = _sysstate.r.confidence.alt/(_sysstate.r.confidence.alt+ALTNOISE);
+            kgain.vvel = _sysstate.r.confidence.vvel/(_sysstate.r.confidence.vvel+VVELNOISE);
             //Serial.printf(">kalman gain: %f\n",kgain.alt);
             
             _sysstate.r.filtered.alt = prevsysstate.r.filtered.alt + kgain.alt*(_sysstate.r.barodata.altitudeagl - prevsysstate.r.filtered.alt); // state update
@@ -194,25 +200,69 @@ class NAVCORE{
             _sysstate.r.confidence.alt = (1-kgain.alt)*prevsysstate.r.confidence.alt; // variences update
             _sysstate.r.confidence.vvel = (1-kgain.vvel)*prevsysstate.r.confidence.vvel;
             
-            
+            //adjustwithaccel();
+
             prevsysstate = _sysstate;
-            prevsysstate.r.confidence = _sysstate.r.confidence;
             kfupdatetime = micros();
         }
+
+        void intergrategyros(double timestep){
+            Quaterniond orientationquat = quatstructtoeigen(_sysstate.r.orientationquat);
+            Vector3d gyro = vectorfloatto3(_sysstate.r.imudata.gyro);
+            
+            Quaterniond qdelta(AngleAxisd(timestep*gyro.norm(), gyro.normalized()));
+
+            orientationquat = orientationquat * qdelta;
+
+            _sysstate.r.orientationquat = eigentoquatstruct(orientationquat);
+
+            return;
+        }
+
+
+        void adjustwithaccel(){
+            Quaterniond orientationquat = quatstructtoeigen(_sysstate.r.orientationquat);
+            Vector3d accel = vectorfloatto3(_sysstate.r.imudata.accel);
+
+            Quaterniond accelquat;
+
+            accelquat.x() = accel.x();
+            accelquat.y() = accel.y();
+            accelquat.z() = accel.z();
+
+            accelquat = orientationquat * accelquat * orientationquat.inverse();
+
+            accel.x() = accelquat.x();
+            accel.y() = accelquat.y();
+            accel.z() = accelquat.z();
+            
+
+            Vector3d accelnorm(accel.normalized());
+
+            float phi = acos(accelnorm.y());
+
+            Vector3d naxis(accelnorm.cross(Vector3d(0,1,0)));
+
+            naxis = naxis.normalized();
+
+
+            Quaterniond accelrotquat(AngleAxisd((1-alpha)*phi,naxis));
+
+            orientationquat = accelrotquat * orientationquat;
+
+        }
+
 
         navpacket computeorientation(navpacket currentpacket){
             double timestep = (micros() - prevtime.intergrateorientation)/1e6;
             Quaterniond orientationquat = quatstructtoeigen(currentpacket.r.orientationquat);
             Vector3d gyro = vectorfloatto3(currentpacket.r.imudata.gyro);
             Vector3d accel = vectorfloatto3(currentpacket.r.imudata.accel);
-            Vector3d mag = vectorfloatto3(currentpacket.r.magdata.utesla);
             Vector3d orientationeuler = vectorfloatto3(currentpacket.r.orientationeuler);
-
-            AngleAxisd aa(timestep*gyro.norm(), gyro/gyro.norm());
-            Quaterniond qdelta(aa);
+            
+            Quaterniond qdelta(AngleAxisd(timestep*gyro.norm(), gyro.normalized()));
 
             orientationquat = orientationquat * qdelta;
-
 
             prevtime.intergrateorientation = micros();
 
@@ -243,7 +293,7 @@ class NAVCORE{
             orientationquat = accelrotquat * orientationquat;
 
 
-            Vector3d adjaxis(0,1,0);
+            Vector3d adjaxis(1,0,0);
             Quaterniond quatadj(AngleAxisd(M_PI_2,adjaxis));
             
 
@@ -264,13 +314,7 @@ class NAVCORE{
 
         Vector3float getworldaccel(navpacket _state){
             Vector3d accelvec = vectorfloatto3(_state.r.imudata.accel);
-            Quaterniond orientationquat3 = quatstructtoeigen(_state.r.orientationquat);//.inverse();
-
-
-            // Matrix3d R = (orientationquat.normalized()).toRotationMatrix();
-            // Matrix3d Rtrans = (R.inverse()).normalized();
-
-            // accelvec = Rtrans*accelvec;    
+            Quaterniond orientationquat3 = quatstructtoeigen(_state.r.orientationquatadj);//.inverse();
 
             Quaterniond accelquat2;
 
@@ -285,7 +329,7 @@ class NAVCORE{
             accelvec.z() = accelquat2.z();   
 
             Vector3d grav;
-            grav << 0,9.801,0;
+            grav << 0,0,9.801;
             Vector3d _accelworld = accelvec-grav;
 
             return vector3tofloat(_accelworld);

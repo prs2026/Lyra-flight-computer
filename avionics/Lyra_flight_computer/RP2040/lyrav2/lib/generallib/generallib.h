@@ -103,6 +103,15 @@ int radiocommcheck(){
     return 0;
     }
 
+Vector3float quat2euler(Quatstruct inquatstruct){
+    Quaterniond quat = quatstructtoeigen(inquatstruct);
+    
+    Matrix3d R = quat.toRotationMatrix();
+
+    Vector3d euler = R.eulerAngles(0,1,2);
+    return vector3tofloat(euler);
+    
+}
 
 
 

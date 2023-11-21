@@ -59,12 +59,17 @@ using Eigen::AngleAxisd;
 #define BLUE 3
 
 #define ALTVAR 0.5 
-#define VVELVAR 0.5
+#define VVELVAR 0.8
+#define VACCELVAR 0.6
+#define ORIENTVAR 0.4
 
 #define ALTNOISE 0.1
-#define VVELNOISE 0.2
+#define VVELNOISE 1.5
+#define VACCELNOISE 0.2
+#define ORIENTNOISE 0.4
 
-
+#define NRF24 1;
+#define E22 2;
 
 
 byte radioaddress[][7] = {"flight","ground"};
@@ -117,6 +122,7 @@ struct variences{
     float alt;
     float vvel;
     float vaccel;
+    float orientation;
 };
 
 struct position{
@@ -131,7 +137,6 @@ union navpacket
     {
         int32_t errorflag;
         uint32_t uptime;
-        uint32_t state;
         IMUdata imudata;
         BAROdata barodata;
         MAGdata magdata;

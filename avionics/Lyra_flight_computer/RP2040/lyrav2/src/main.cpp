@@ -13,13 +13,12 @@ void setup() { // main core setup
     MP.setuppins();
     MP.beep();
     MP.setled(BLUE);
-    MP.serialinit();
+    MP.initperipherials();
 
     MP.handshake();
 
     MP.flashinit();
     MP.initsd();
-    MP.radioinit();
     
 
     
@@ -99,7 +98,7 @@ void loop() { // main core loop
 
     if (MP.sendserialon & millis() - MP.prevtime.serial >= MP.intervals[MP._sysstate.r.state].serial)
     {
-        MP.senddatatoserial();
+        port.senddata(MP._sysstate);
         MP.prevtime.serial = millis();
         //eventsfired += 20;
     }
@@ -235,7 +234,7 @@ void loop1() { // nav core loop
     NAV.getsensordata();
     NAV.KFpredict();
 
-    if (millis() - NAV.prevtime.kfupdate >= 100)
+    if (millis() - NAV.prevtime.kfupdate >= 300)
     {
         NAV.KFupdate();
         NAV.prevtime.kfupdate = millis();

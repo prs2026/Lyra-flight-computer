@@ -19,6 +19,8 @@
 
 
 Sd2Card card;
+SERIALPORT port;
+RADIO telemetryradio;
 
 
 class MPCORE{
@@ -144,6 +146,12 @@ class MPCORE{
             default:
                 break;
             }
+        }
+
+        int initperipherials(){
+            port.init();
+            int error = telemetryradio.begin();
+            return 0;
         }
 
         int initsd(){
@@ -443,21 +451,6 @@ class MPCORE{
         }
 
 
-        void serialinit(){
-            Serial.begin(115200);
-            //Serial1.begin(115200);
-            uint32_t serialstarttime = millis();
-            while (!Serial && millis() - serialstarttime < 5000);
-            delay(100);
-            
-
-            Serial.println("\n\nMP Serial init");
-            //Serial1.println("\n\nMP Serial init");
-            
-            return;
-        }
-
-
         int flashinit(){
                 Serial.println("flash init start");
                 // LittleFSConfig cfg;
@@ -548,168 +541,7 @@ class MPCORE{
         }
 
 
-        int radioinit(){
-            SPI.end();
-            SPI.setRX(SPI0_MISO);
-            SPI.setTX(SPI0_MOSI);
-            SPI.setSCK(SPI0_SCLK);
-            SPI.begin();
-            Serial.println("radio init start");
-
-            int error = radio.begin(&SPI);
-            if (!error)
-            {
-                Serial.println("radio init fail");
-                error = radio.isChipConnected();
-
-                if (!error)
-                {
-                    Serial.println("radio not connected");
-                    errorflag *= 19;
-                    return 1;
-                }
-
-            }
-            Serial.println("radio init success");
-
-    
-
-            //radio.setPALevel(RF24_PA_MAX);
-            //radio.setAutoAck(true);
-            //radio.setRetries(10,15);
-            //radio.setDataRate(RF24_250KBPS);
-
-            radio.openWritingPipe(radioaddress[1]);
-            radio.openReadingPipe(1,radioaddress[0]);
-
-            uint32_t radiostarttime = millis();
-
-            bool sucess = false;
-
-            while ((millis() - radiostarttime) < 2000)
-            {
-                if (radiocommcheck() == 0)
-                {
-                    sucess == true;
-                    break;
-                }
-                //Serial.println("radio handshake fail");
-            }
-            if (sucess)
-            {
-               
-                Serial.println("radio handshake timeout");
-                errorflag *= 19;
-                return 1;
-            }
-            Serial.println("radio handshake complete");
-            return 0;
-
-            
-        }
-
-
-        int senddatatoserial(){
-            if (sendtoteleplot)
-            {
-                Serial.printf(
-                ">MP uptime: %d \n" 
-                ">NAV uptime: %d \n" 
-                ">MP errorflag %d \n" 
-                ">NAV errorflag %d \n" 
-                ">accel x: %f \n" 
-                ">accel y: %f \n"
-                ">accel z: %f \n"
-                ">accelworld x: %f \n" 
-                ">accelworld y: %f \n"
-                ">accelworld z: %f \n"  
-                ">gyro x: %f \n" 
-                ">gyro y: %f \n"
-                ">gyro z: %f \n"
-                ">altitude: %f \n" 
-                ">verticalvel: %f \n"
-                ">filtered vvel: %f \n"
-                ">mag x: %f \n" 
-                ">mag y: %f \n" 
-                ">mag z: %f \n"
-                // ">magraw x: %f \n"
-                // ">magraw y: %f \n"
-                // ">magraw z: %f \n"
-                ">orientation pitch: %f \n"
-                ">orientation yaw: %f \n"
-                ">orientation roll: %f \n"
-
-                ">orientation w: %f \n"
-                ">orientation x: %f \n"
-                ">orientation y: %f \n"
-                ">orientation z: %f \n"
-
-                ">maxrecorded alt: %f \n"
-                ">filtered alt: %f \n"
-                ">state : %d \n"
-                ">altitudeagl : %f \n"
-                ">varience alt : %f \n"
-                ">varience vvel : %f \n"
-                ">baro temp : %f \n",
-                _sysstate.r.uptime
-                ,_sysstate.r.navsysstate.r.uptime
-
-                , _sysstate.r.errorflag
-                , _sysstate.r.navsysstate.r.errorflag
-
-                ,_sysstate.r.navsysstate.r.imudata.accel.x
-                ,_sysstate.r.navsysstate.r.imudata.accel.y
-                ,_sysstate.r.navsysstate.r.imudata.accel.z
-
-                ,_sysstate.r.navsysstate.r.accelworld.x
-                ,_sysstate.r.navsysstate.r.accelworld.y
-                ,_sysstate.r.navsysstate.r.accelworld.z
-
-                ,_sysstate.r.navsysstate.r.imudata.gyro.x*(180/M_PI)
-                ,_sysstate.r.navsysstate.r.imudata.gyro.y*(180/M_PI)
-                ,_sysstate.r.navsysstate.r.imudata.gyro.z*(180/M_PI)
-
-                , _sysstate.r.navsysstate.r.barodata.altitude
-                , _sysstate.r.navsysstate.r.barodata.verticalvel
-                , _sysstate.r.navsysstate.r.filtered.vvel
-
-                ,_sysstate.r.navsysstate.r.magdata.utesla.x
-                ,_sysstate.r.navsysstate.r.magdata.utesla.y
-                ,_sysstate.r.navsysstate.r.magdata.utesla.z
-
-                // ,_sysstate.r.navsysstate.r.magdata.gauss.x
-                // ,_sysstate.r.navsysstate.r.magdata.gauss.y
-                // ,_sysstate.r.navsysstate.r.magdata.gauss.z
-
-                ,_sysstate.r.navsysstate.r.orientationeuler.x*(180/M_PI)
-                ,_sysstate.r.navsysstate.r.orientationeuler.y*(180/M_PI)
-                ,_sysstate.r.navsysstate.r.orientationeuler.z*(180/M_PI)
-
-                ,_sysstate.r.navsysstate.r.orientationquat.w
-                ,_sysstate.r.navsysstate.r.orientationquat.x
-                ,_sysstate.r.navsysstate.r.orientationquat.y
-                ,_sysstate.r.navsysstate.r.orientationquat.z
-
-                , _sysstate.r.navsysstate.r.barodata.maxrecordedalt
-                , _sysstate.r.navsysstate.r.filtered.alt
-                , _sysstate.r.state
-                , _sysstate.r.navsysstate.r.barodata.altitudeagl
-                , _sysstate.r.navsysstate.r.confidence.alt
-                , _sysstate.r.navsysstate.r.confidence.vvel
-                , _sysstate.r.navsysstate.r.barodata.temp
-                 );
-                 // this is ugly, but better than a million seperate prints
-                return 0;
-            }
-            else
-            {
-                Serial.printf("%f,%f,%f \n",_sysstate.r.navsysstate.r.orientationeuler.x,_sysstate.r.navsysstate.r.orientationeuler.y,_sysstate.r.navsysstate.r.orientationeuler.z);
-            }
-            
-            
-
-            return 0;
-        }
+        
 
         int changestate(){
 
@@ -830,13 +662,13 @@ class MPCORE{
             case 's':
                 Serial.println("printing data to teleplot");
                 sendserialon = !sendserialon;
-                sendtoteleplot = true;
+                port.sendtoplot = true;
                 break;
 
             case 'w':
                 Serial.println("printing data to processing");
                 sendserialon = !sendserialon;
-                sendtoteleplot = false;
+                port.sendtoplot = false;
                 break;
 
 
@@ -882,28 +714,6 @@ class MPCORE{
             
             radio.startListening();
             // if (!error)
-            // {
-            //     //Serial.printf("telemetry send fail \n");
-            //     return 1;
-            // }
-
-            // for (int i = 0; i < sizeof(databufs); i++)
-            // {
-            //   Serial.print(databufs[i],HEX);
-            //   Serial.print(" ");
-            // }
-            // Serial.println("eom");
-            
-            // Serial.printf("%f,%f,%f"//accel
-            // ",%f,%f,%f" // gyro
-            // ",%f,%f" // alt, vvel
-            // ",%f,%f,%f" // orientation
-            // ",%d,%d,%d \n", // uptime, errorflagmp, errorflagnav, dataage, selfuptime
-            // float(packettosend.r.accel.x)/100,float(packettosend.r.accel.y)/100,float(packettosend.r.accel.z)/100,
-            // float(packettosend.r.gyro.x)/100,float(packettosend.r.gyro.y)/100,float(packettosend.r.gyro.z)/100,
-            // float(packettosend.r.altitude)/100,float(packettosend.r.verticalvel)/100,
-            // float(packettosend.r.orientationeuler.x)/100,float(packettosend.r.orientationeuler.y)/100,float(packettosend.r.orientationeuler.z)/100,
-            // packettosend.r.uptime,packettosend.r.errorflagmp,packettosend.r.errorflagnav);
 
             
             return 0;
