@@ -185,6 +185,10 @@
           "drill": 0.0
         },
         {
+          "diameter": 0.7,
+          "drill": 0.35
+        },
+        {
           "diameter": 0.8,
           "drill": 0.4
         }
@@ -492,7 +496,32 @@
       "version": 3
     },
     "net_colors": null,
-    "netclass_assignments": null,
+    "netclass_assignments": {
+      "+12P": "Power",
+      "+12V": "Power",
+      "+12VA": "Power",
+      "+1V1": "Power",
+      "+1V2": "Power",
+      "+3V3": "Power",
+      "+5VD": "Power",
+      "+BATT": "Power",
+      "/ BOT RP USB_D+": "USB",
+      "/BOT RP USB_D-": "USB",
+      "/P1-": "Pyro",
+      "/P2-": "Pyro",
+      "/P3-": "Pyro",
+      "/P4-": "Pyro",
+      "/SERVO PWR": "Power",
+      "/SPI1 PWR BOT": "Power",
+      "/USB_D+ BOT": "USB",
+      "/USB_D- BOT": "USB",
+      "GND": "Power",
+      "Net-(Q2A-D)": "Pyro",
+      "Net-(Q2B-D)": "Pyro",
+      "Net-(Q3A-D)": "Pyro",
+      "Net-(Q3B-D)": "Pyro",
+      "VBUS": "Power"
+    },
     "netclass_patterns": [
       {
         "netclass": "Default",
@@ -535,6 +564,14 @@
       "version": 1
     },
     "net_format_name": "",
+    "ngspice": {
+      "fix_include_paths": true,
+      "meta": {
+        "version": 0
+      },
+      "model_mode": 0,
+      "workbook_filename": ""
+    },
     "page_layout_descr_file": "",
     "plot_directory": "",
     "spice_current_sheet_as_root": false,

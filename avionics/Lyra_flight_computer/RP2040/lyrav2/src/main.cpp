@@ -245,7 +245,7 @@ void loop1() { // nav core loop
     
     
 
-    if ((millis() - NAV.prevtime.sendpacket) >= NAV.intervals[NAV._sysstate.r.state].sendpacket)
+    if ((millis() - NAV.prevtime.sendpacket) >= 50)
     {
         int inbuf = rp2040.fifo.available();
         int error = NAV.sendpacket(NAV._sysstate);

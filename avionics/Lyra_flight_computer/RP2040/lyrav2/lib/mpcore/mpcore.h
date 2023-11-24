@@ -183,6 +183,12 @@ class MPCORE{
                 errorflag*=7;
                 return 1;
             }
+
+            if (!SD.exists("/logs/"))
+            {
+                SD.mkdir("/logs/");
+            }
+            
             
             SDLib::File logfile = SD.open("test.txt",FILE_WRITE);
 
@@ -244,47 +250,60 @@ class MPCORE{
 
             int fileunique = 1;
             char fileuniquestr[3];
-            char fileend[] = ".csv";
+            char fileend[] = "/";
+            char parsefilend[] = "LOGGG.CSV";
 
             int error = 1;
 
-            char newfilename[25] = "/log";
-
-
+            char newlogdir[30] = "/logs/log";
 
             for (int i = 0; i < 400; i++)
             {  
-                strcpy(newfilename, "/log");
+                strcpy(newlogdir, "/logs/log");
                 itoa(fileunique, fileuniquestr, 10);
-                strcat(newfilename, fileuniquestr);
-                strcat(newfilename, fileend);
+                strcat(newlogdir, fileuniquestr);
+                strcat(newlogdir, fileend);
                 //Serial.print("checking if file exists ");
-                //Serial.println(newfilename);
-                int exists = SD.exists(newfilename);
+                //Serial.println(newlogdir);
+                int exists = SD.exists(newlogdir);
                 if (exists == 0)
                 {
-                    Serial.print("making new file with name ");
-                    Serial.println(newfilename);
+                    Serial.print("making new file directory with name: ");
+                    Serial.println(newlogdir);
                     error = 0;
                     break;
                 }
                 fileunique++;
             }
 
-            SDLib::File sdfile = SD.open(newfilename, FILE_WRITE);
+            SD.mkdir(newlogdir);            // make new folder
+            if (!SD.exists(newlogdir))
+            {
+                Serial.print("failed to make dir: ");
+                Serial.println(newlogdir);
+                return 1;
+            }
+            
+            char parsefilename[80] = "";
+            strcpy(parsefilename,newlogdir);
+            strcat(parsefilename,parsefilend);
+
+            Serial.print("making new parsed data file with name: ");
+            Serial.println(parsefilename);
+            SDLib::File sdfile = SD.open(parsefilename, FILE_WRITE);
 
             error = sdfile;
             
             if (error == 0)
             {
-                Serial.print("unable to make file");
-                Serial.println(newfilename);
+                Serial.print("unable to make file: ");
+                Serial.println(parsefilename);
                 return 1;
             }
             
             fs::File readfile = LittleFS.open("/log.csv", "r");
             sdfile.println("checksum,uptime mp,uptime nav, errorflag mp, errorflag nav,accel x, accel y, accel z, accelworld x,accelworld y,accelworld z, gyro x, gyro y, gyro z, mag x, mag y, mag z, magraw x, magraw y, magraw z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, pressure, verticalvel,filteredvvel,maxrecorded alt,altitudeagl,filteredalt,imutemp, barotemp, state,checksum2");
-            
+
             Serial.printf("flash amount used: %d\n",readfile.size());
 
             while (readfile.available() > 0)
@@ -370,15 +389,49 @@ class MPCORE{
                     readentry.r.navsysstate.r.barodata.temp,
                     readentry.r.state
                     );
+            }
 
+            sdfile.close();
+            
+            char rawfilename[80] = "";
+            strcpy(rawfilename,newlogdir);
+            strcat(rawfilename,"rawdata.txt");
+
+            Serial.print("making new parsed data file with name: ");
+            Serial.println(rawfilename);
+            SDLib::File rawfile = SD.open(rawfilename, FILE_WRITE);
+
+            error = rawfile;
+            
+            if (error == 0)
+            {
+                Serial.print("unable to make file: ");
+                Serial.println(rawfile);
+                return 1;
+            }
+
+            readfile.seek(0);
+
+            for (int i = 0; i < readfile.size(); i++)
+            {
+                uint8_t buf;
+                buf = readfile.read();
+                rawfile.write(buf);
             }
             
+            
             readfile.close();
-            sdfile.close();
+            
+            rawfile.close();
+            
             erasedata();
             Serial.println("done moving data");
             return 0;
         }
+
+
+
+
 
         int fetchnavdata(){
             navpacket recivedpacket;
