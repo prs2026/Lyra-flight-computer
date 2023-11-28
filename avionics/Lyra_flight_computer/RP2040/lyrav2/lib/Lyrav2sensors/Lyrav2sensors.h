@@ -557,8 +557,19 @@ class RADIO{
         Serial1.end();
         Serial1.setRX(UART0_RX);
         Serial1.setTX(UART0_TX);
-        Serial1.begin();
-        Serial.println("Serial1 configured");
+        Serial1.begin(9600);
+        Serial.println("Serial1 configured\n sending init bytes");
+        uint8_t buf[3] = {0xC1,0x00,0x04};
+        Serial1.write(buf,3);
+        delay(200);
+        while (Serial1.available())
+        {
+            Serial.print(Serial1.read(),HEX);
+        }
+        Serial.println();
+
+
+
         int error = e22.begin();
         Serial.printf("radio status: %d\n",error);
 

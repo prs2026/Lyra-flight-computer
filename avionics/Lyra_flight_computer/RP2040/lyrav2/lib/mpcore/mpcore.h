@@ -742,7 +742,7 @@ class MPCORE{
                 break;
 
             case 'p':
-                Serial1.print("testing");
+                Serial1.write("testing");
                 Serial.print("testing");
                 break;
             
