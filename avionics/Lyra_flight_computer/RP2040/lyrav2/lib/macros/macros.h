@@ -73,6 +73,8 @@ using Eigen::AngleAxisd;
 
 
 byte radioaddress[][7] = {"flight","ground"};
+uint8_t radioaddressebyte[2][4] = {{0xAB,0xCD},{0x12,0x34}};
+
 
 
 RF24 radio(26,BRK_CS);

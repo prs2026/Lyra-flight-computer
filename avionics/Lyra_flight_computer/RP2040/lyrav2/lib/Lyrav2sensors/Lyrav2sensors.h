@@ -9,7 +9,7 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP3XX.h>
 #include <Adafruit_LIS3MDL.h>
-
+#include <LoRa_E220.h>
 
 #include <generallib.h>
 
@@ -21,6 +21,8 @@ Bmi088Gyro gyrounit(Wire1,0x68);
 
 Adafruit_BMP3XX bmp;
 Adafruit_LIS3MDL mdl;
+
+LoRa_E220 e22(&Serial1);
 
 const float SEALEVELPRESSURE = 1023.3;
 
@@ -549,15 +551,33 @@ class RADIO{
             
         }
 
+
+    int E22init(){
+        Serial.println("starting e22 init");
+        Serial1.end();
+        Serial1.setRX(UART0_RX);
+        Serial1.setTX(UART0_TX);
+        Serial1.begin();
+        Serial.println("Serial1 configured");
+        int error = e22.begin();
+        Serial.printf("radio status: %d\n",error);
+        return 0;
+    }
+
+
     int begin(int radiotype = 0){
         int error;
         error = NRF24init();
         if (error == 0){ return 0; }
 
+        error = E22init();
         return 1;
     }
 
 };
+
+
+
 
 
 
