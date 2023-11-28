@@ -570,13 +570,8 @@ class RADIO{
 
 
 
-        int error = e22.begin();
-        Serial.printf("radio status: %d\n",error);
+        // Serial.printf("radio status: %d\n",error);
 
-        ResponseStatus rs = e22.sendMessage("Hello, world?");
-        // Check If there is some problem of successfully send
-        Serial.print("radio send status: ");
-        Serial.println(rs.getResponseDescription());
         return 0;
     }
 
