@@ -740,6 +740,11 @@ class MPCORE{
             case 'o':
                 baro.getpadoffset();
                 break;
+
+            case 'p':
+                Serial1.print("testing");
+                Serial.print("testing");
+                break;
             
             default:
                 break;
