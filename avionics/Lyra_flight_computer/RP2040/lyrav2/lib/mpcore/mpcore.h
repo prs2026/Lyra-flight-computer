@@ -12,7 +12,7 @@
 #include "LittleFS.h"
 //#include <ArduinoEigenDense.h>
 #include <generallib.h>
-
+#include <navcore.h>
 
 
 //fs::File logtofile;
@@ -21,6 +21,8 @@
 Sd2Card card;
 SERIALPORT port;
 RADIO telemetryradio;
+
+NAVCORE NAV;
 
 
 class MPCORE{
@@ -34,16 +36,16 @@ class MPCORE{
         uint32_t landedtime = 0;
         bool datamoved = false;
         uint32_t landingdetectiontime = 0;
+        uint32_t liftofftime = 0;
 
 
 
         MPCORE(){
             _sysstate.r.state = 0;
-            _sysstate.r.checksum1 = 0xAB;
-            _sysstate.r.checksum2 = 0xCD;
+            _sysstate.r.errorflag = 1;
         };
 
-        int32_t errorflag = 1;
+        //int32_t _sysstate.errorflag = 1;
         /*
             1 = no error
             3 = handshake fail
@@ -148,9 +150,53 @@ class MPCORE{
             }
         }
 
+        int logtextentry(const char* entry){
+            fs::File textfile = LittleFS.open("/textlog.txt", "a+");
+            textfile.printf("| %d | %d | ", millis(),millis() - liftofftime);
+            textfile.write(entry);
+
+            textfile.close();
+            return 0;
+        }
+
+        int logtextentry(const char* entry, float val){
+            fs::File textfile = LittleFS.open("/textlog.txt", "a+");
+            textfile.printf("| %d | %d | ", millis(),millis() - liftofftime);
+            textfile.print(entry);
+            textfile.print(val);
+
+            textfile.close();
+            return 0;
+        }
+
+        int logtextentry(const char* entry, int val){
+            fs::File textfile = LittleFS.open("/textlog.txt", "a+");
+            
+            textfile.printf("| %d | %d | ", millis(),millis() - liftofftime);
+            textfile.print(entry);
+            textfile.print(val);
+
+            textfile.close();
+            return 0;
+        }
+
+        int logcurrentstate(){
+            fs::File textfile = LittleFS.open("/textlog.txt", "a+");
+            textfile.printf("| %d | %d | ", millis(),0);
+            textfile.println("setup complete, status: ");
+            textfile.printf("\tMP errorflag: %d \n\tNAV errorflag: %d ",_sysstate.r.errorflag);
+
+
+            textfile.close();
+
+            return 0;
+        }
+
+
         int initperipherials(){
             port.init();
             int error = telemetryradio.begin();
+            
             return 0;
         }
 
@@ -180,7 +226,7 @@ class MPCORE{
             if (!SD.begin(CS_SD))
             {
                 Serial.println("SD init failure, card not present or not working");
-                errorflag*=7;
+                _sysstate.r.errorflag*=7;
                 return 1;
             }
 
@@ -209,19 +255,23 @@ class MPCORE{
 
         int logdata(){
             uint32_t openingtime = micros();
+
+            logpacket datatolog = preplogentry(_sysstate,NAV._sysstate);
+            //Serial.print(datatolog.r.checksum2);
+
             fs::File logfile = LittleFS.open("/log.csv", "a+");
             //Serial.printf("opening file took %d \n",micros()-openingtime);
             openingtime = micros();
             if (!logfile){
                 return 1;
-                errorflag *= 11;
+                _sysstate.r.errorflag % 11 == 0 ? _sysstate.r.errorflag = _sysstate.r.errorflag : _sysstate.r.errorflag *= 11;
             };
             //Serial.printf("checking file took %d \n",micros()-openingtime);
             openingtime = micros();
             int j = 0;
-            for (int i = 0; i < sizeof(mpstate); i++)
+            for (int i = 0; i < sizeof(logpacket); i++)
             {
-                logfile.write(_sysstate.data8[j]);
+                logfile.write(datatolog.data[j]);
                 j++;
             }
         
@@ -240,6 +290,13 @@ class MPCORE{
                 return 1;
            }
            Serial.println("file erase success");
+           error = LittleFS.remove("/textlog.txt");
+           if (error != 1)
+           {
+                Serial.println("log erase fail");
+                return 1;
+           }
+           Serial.println("log erase success");
            return 0;
            
         }
@@ -308,24 +365,24 @@ class MPCORE{
 
             while (readfile.available() > 0)
             {
-                mpstate readentry;
-                uint8_t buf[sizeof(mpstate)];
-                readfile.read(buf,sizeof(mpstate));
+                logpacket readentry;
+                uint8_t buf[sizeof(logpacket)];
+                readfile.read(buf,sizeof(logpacket));
                 int j = 0;
-                for (int i = 0; i < sizeof(mpstate); i++)
+                for (int i = 0; i < sizeof(logpacket); i++)
                 {
-                    readentry.data8[j] = buf[j];
+                    readentry.data[j] = buf[j];
                     j++;
                 }
                 if (readentry.r.checksum1 != 0xAB || readentry.r.checksum2 != 0xCD)
                 {
                     uint32_t starttime = millis();
-                    while (millis() - starttime < 1000)
+                    while (millis() - starttime < 5000 && readfile.available() > 0)
                     {   
                         int thisbyte = readfile.read();
                         if (thisbyte == 0xAB)
                         {
-                            Serial.println("found start of next entry");
+                            Serial.printf("found start of next entry at pos %d\n",readfile.position());
                             readfile.seek(readfile.position() - 1);
                             break;
                         }
@@ -349,9 +406,9 @@ class MPCORE{
                     "%f,%f,%f," // accel
                     "%f,%f," // temps, imu baro mag
                     "%d,202\n", //state
-                    readentry.r.uptime,
+                    readentry.r.MPstate.r.uptime,
                     readentry.r.navsysstate.r.uptime,
-                    readentry.r.errorflag,
+                    readentry.r.MPstate.r.errorflag,
                     readentry.r.navsysstate.r.errorflag,
                     readentry.r.navsysstate.r.imudata.accel.x,
                     readentry.r.navsysstate.r.imudata.accel.y,
@@ -387,9 +444,11 @@ class MPCORE{
                     readentry.r.navsysstate.r.filtered.accel.z,
                     readentry.r.navsysstate.r.imudata.temp,
                     readentry.r.navsysstate.r.barodata.temp,
-                    readentry.r.state
+                    readentry.r.MPstate.r.state
                     );
             }
+
+            readfile.close();
 
             sdfile.close();
             
@@ -397,7 +456,7 @@ class MPCORE{
             strcpy(rawfilename,newlogdir);
             strcat(rawfilename,"rawdata.txt");
 
-            Serial.print("making new parsed data file with name: ");
+            Serial.print("making new raw  data file with name: ");
             Serial.println(rawfilename);
             SDLib::File rawfile = SD.open(rawfilename, FILE_WRITE);
 
@@ -410,19 +469,51 @@ class MPCORE{
                 return 1;
             }
 
-            readfile.seek(0);
+            fs::File readfile2 = LittleFS.open("/log.csv", "r");
 
-            for (int i = 0; i < readfile.size(); i++)
+            for (int i = 0; i < readfile2.size(); i++)
             {
                 uint8_t buf;
-                buf = readfile.read();
-                rawfile.write(buf);
+                buf = readfile2.read();
+                if (buf == 0xAB){ rawfile.println();}
+                rawfile.print(buf,HEX);
+                
+                rawfile.print(" ");
             }
-            
-            
+
             readfile.close();
-            
+
             rawfile.close();
+
+            fs::File textfile = LittleFS.open("/textlog.txt", "r");
+
+
+            char textlogname[80] = "";
+            strcpy(textlogname,newlogdir);
+            strcat(textlogname,"textlog.txt");
+
+            Serial.print("making new textlog file with name: ");
+            Serial.println(textlogname);
+            SDLib::File textlog = SD.open(textlogname, FILE_WRITE);
+
+
+            error = textlog;
+            
+            if (error == 0)
+            {
+                Serial.print("unable to make file: ");
+                Serial.println(textlogname);
+                return 1;
+            }
+
+
+            while (textfile.available() > 0)
+            {
+                textlog.print(textfile.readString());
+            }
+
+            
+            textlog.close();
             
             erasedata();
             Serial.println("done moving data");
@@ -433,34 +524,7 @@ class MPCORE{
 
 
 
-        int fetchnavdata(){
-            navpacket recivedpacket;
-            if (rp2040.fifo.available() <= 0)
-            {
-                return 1;
-            }
-            if (rp2040.fifo.pop() != 0xAB)
-            {
-                return 1;
-            }
-            
-            for (int i = 0; i < sizeof(recivedpacket.data)/sizeof(recivedpacket.data[0]); i++)
-            {
-                recivedpacket.data[i] = rp2040.fifo.pop();
-            }
-            
 
-            _sysstate.r.navsysstate = recivedpacket;
-
-            while (rp2040.fifo.available() > 0)
-            {
-                uint32_t buf;
-                rp2040.fifo.pop_nb(&buf);
-            }
-            
-            
-            return 0;
-        }
 
         int handshake(){
             uint32_t data;
@@ -498,8 +562,8 @@ class MPCORE{
                 return 0;
             }
             Serial.println("NAV Handshake failed");
-            errorflag*= 3;
-            errorflag *= -1;
+            _sysstate.r.errorflag*= 3;
+            _sysstate.r.errorflag *= -1;
             return 1;
         }
 
@@ -518,7 +582,7 @@ class MPCORE{
                 if (error = 0)
                 {
                     Serial.printf("filesystem mount fail %d\n",error);
-                    errorflag *= 11;
+                    _sysstate.r.errorflag *= 11;
                     rp2040.resumeOtherCore();
                     return 1;
                 }
@@ -540,7 +604,7 @@ class MPCORE{
                 if (error != 1)
                 {
                     Serial.printf("filesystem info fail %d\n", error);
-                    errorflag *= 11;
+                    _sysstate.r.errorflag *= 11;
                     rp2040.resumeOtherCore();
                     return 1;
                 }
@@ -559,7 +623,7 @@ class MPCORE{
                 if (!testfile)
                 {
                     Serial.println("file open failed");
-                    errorflag *= 11;
+                    _sysstate.r.errorflag *= 11;
                     rp2040.resumeOtherCore();
                     return 2;
                 }
@@ -579,7 +643,7 @@ class MPCORE{
                 if (readnum != testnum)
                 {
                     Serial.printf("read fail, expected %d, got %d\n",testnum,readnum);
-                    errorflag *= 11;
+                    _sysstate.r.errorflag *= 11;
                     rp2040.resumeOtherCore();
                     return 3;
                 }
@@ -598,8 +662,8 @@ class MPCORE{
 
         int changestate(){
 
-            Vector3d accelvec = vectorfloatto3(_sysstate.r.navsysstate.r.imudata.accel);
-            Vector3d gyrovec  = vectorfloatto3(_sysstate.r.navsysstate.r.imudata.gyro);
+            Vector3d accelvec = vectorfloatto3(NAV._sysstate.r.imudata.accel);
+            Vector3d gyrovec  = vectorfloatto3(NAV._sysstate.r.imudata.gyro);
             if (_sysstate.r.state == 1) // detect liftoff
             {
                 
@@ -609,6 +673,7 @@ class MPCORE{
                 {
                     _sysstate.r.state = 2;
                     detectiontime = millis();
+                    logtextentry("liftoff detected");
                 }
                 
             }
@@ -621,17 +686,19 @@ class MPCORE{
                 {
                     _sysstate.r.state = 3;
                     detectiontime = millis();
+                    logtextentry("burnout detected");
                 }
             }
 
             else if (_sysstate.r.state == 3) // detect appogee
             {
-                _sysstate.r.navsysstate.r.barodata.altitudeagl < _sysstate.r.navsysstate.r.barodata.maxrecordedalt*0.95 ?  detectiontime = detectiontime : detectiontime = millis();
+                NAV._sysstate.r.barodata.altitudeagl < NAV._sysstate.r.barodata.maxrecordedalt*0.95 ?  detectiontime = detectiontime : detectiontime = millis();
 
                 if (millis() - detectiontime >= 100)
                 {
                     _sysstate.r.state = 4;
                     detectiontime = millis();
+                    logtextentry("apogee detected");
                 }
             }
 
@@ -644,6 +711,7 @@ class MPCORE{
                 {
                     _sysstate.r.state = 5;
                     detectiontime = millis();
+                    logtextentry("chutes opening detected");
                 }
             }
 
@@ -652,7 +720,7 @@ class MPCORE{
 
                 
 
-                if (abs(_sysstate.r.navsysstate.r.barodata.verticalvel) < 0.3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
+                if (abs(NAV._sysstate.r.barodata.verticalvel) < 0.3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
                 {
                      detectiontime = detectiontime;
                 }
@@ -665,11 +733,12 @@ class MPCORE{
                     _sysstate.r.state = 6;
                     detectiontime = millis();
                     landedtime = millis();
+                    logtextentry("landing detected");
                 }
             }
             
 
-            if (_sysstate.r.state > 1 && abs(_sysstate.r.navsysstate.r.barodata.verticalvel) < 0.3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
+            if (_sysstate.r.state > 1 && abs(NAV._sysstate.r.barodata.verticalvel) < 0.3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
             {
                 landingdetectiontime = landingdetectiontime;
             }
@@ -681,6 +750,7 @@ class MPCORE{
                     _sysstate.r.state = 6;
                     detectiontime = millis();
                     landedtime = millis();
+                    logtextentry("landing detected");
             }
             
 
@@ -702,11 +772,13 @@ class MPCORE{
 
             if (input == 'l' && _sysstate.r.state < 2){
                 _sysstate.r.state = 1;
+                logtextentry("put into launch detect state");
                 return 0;
             }
 
             else if (input == 'a' && (_sysstate.r.state < 3 || _sysstate.r.state >= 6 )){
                 _sysstate.r.state = 0;
+                logtextentry("aborted from state: ",int(_sysstate.r.state));
                 return 0;
             }
 
@@ -724,11 +796,6 @@ class MPCORE{
                 port.sendtoplot = false;
                 break;
 
-
-            case 'e':
-                erasedata();
-                break;
-
             case 'D':
                 logdata();
                 break;
@@ -739,6 +806,7 @@ class MPCORE{
             
             case 'o':
                 baro.getpadoffset();
+                logtextentry("got new pad offset: ",float(baro.padalt));
                 break;
 
             case 'p':
@@ -759,7 +827,7 @@ class MPCORE{
             uint8_t databufs[32];
             
 
-            packettosend = statetopacket(_sysstate);
+            packettosend = statetopacket(_sysstate,NAV._sysstate);
             int j = 0;
             for (int i = 0; i < sizeof(databufs); i++)
             {
@@ -780,4 +848,35 @@ class MPCORE{
 
 };
 
+        // int fetchnavdata(){
+        //     navpacket recivedpacket;
+        //     if (rp2040.fifo.available() <= 0)
+        //     {
+        //         return 1;
+        //     }
+        //     if (rp2040.fifo.pop() != 0xAB)
+        //     {
+        //         return 1;
+        //     }
+            
+        //     for (int i = 0; i < sizeof(recivedpacket.data)/sizeof(recivedpacket.data[0]); i++)
+        //     {
+        //         recivedpacket.data[i] = rp2040.fifo.pop();
+        //     }
+            
+
+        //     _sysstate.r.navsysstate = recivedpacket;
+
+        //     while (rp2040.fifo.available() > 0)
+        //     {
+        //         uint32_t buf;
+        //         rp2040.fifo.pop_nb(&buf);
+        //     }
+            
+            
+        //     return 0;
+        // }
+
 #endif // MPCOREHEADER
+
+

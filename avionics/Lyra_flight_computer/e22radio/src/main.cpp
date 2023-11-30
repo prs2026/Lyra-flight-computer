@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include <LoRa_E220.h>
+#include <e22.h>
 
-LoRa_E220 radio(&Serial1);
+e22 ebyte(2);
 
 
 void setup() {
@@ -17,9 +17,9 @@ void setup() {
   Serial1.setRX(1);
   // Serial1.begin(9600);
   Serial.println("initiing radio");
-  int error = radio.begin();
+  ebyte.setup();
 
-  Serial.printf("radio status: %d\n",error);
+  // Serial.printf("radio status: %d\n",error);
 }
 
 void loop() {

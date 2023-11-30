@@ -9,9 +9,9 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP3XX.h>
 #include <Adafruit_LIS3MDL.h>
-#include <LoRa_E220.h>
 
 #include <generallib.h>
+#include <e22.h>
 
 
 /* accelunit object */
@@ -22,7 +22,7 @@ Bmi088Gyro gyrounit(Wire1,0x68);
 Adafruit_BMP3XX bmp;
 Adafruit_LIS3MDL mdl;
 
-LoRa_E220 e22(&Serial1);
+e22 ebyte(SERVO1);
 
 const float SEALEVELPRESSURE = 1023.3;
 
@@ -108,6 +108,7 @@ public:
         {
             Serial.print("accelunit init failure, error code: ");
             Serial.println(status);
+            // MP.logtextentry("accelunit init failure, error code: ",status);
             return 1;
         }
 
@@ -119,9 +120,11 @@ public:
         {
             Serial.print("gyrounit init failure, error code: ");
             Serial.println(status);
+            //MP.logtextentry("gyrounit init failure, error code: ",status);
             return 2;
         }
             Serial.println("IMU init success");
+            //MP.logtextentry("IMU init sucess");
             return 0;
         }
 
@@ -209,7 +212,7 @@ float prevalt;
 float hpfmomentum;
 int address = 0;
 uint64_t prevtime;
-double padalt = 0;
+
 float lpfal = 0.7;
 float lpfalv = 0.7;
 // float hpfcutoff = 5;
@@ -221,6 +224,8 @@ public:
 
     };
     BAROdata data;
+    double padalt = 0;
+
 
     int getpadoffset(int samplesize = 1){
         double _padalt = 0;
@@ -232,6 +237,7 @@ public:
 
         _padalt /= samplesize;
         Serial.printf("new pad offset: %f\n",_padalt);
+        //MP.logtextentry("BMP new pad offset: ",float(_padalt));
         padalt = _padalt;
         data.maxrecordedalt = 0;
         return 0;
@@ -241,12 +247,14 @@ public:
         if (!bmp.begin_I2C(0x76,&Wire1))
         {
             Serial.println("BMP init failure");
+            //MP.logtextentry("BMP init fail");
             return 1;
         }
         bmp.setPressureOversampling(BMP3_OVERSAMPLING_8X);
         bmp.setOutputDataRate(BMP3_ODR_100_HZ);
         getpadoffset();
         Serial.println("BMP init success");
+        //MP.logtextentry("BMP init fail");
         return 0;
     }
     void readsensor(){
@@ -374,6 +382,7 @@ public:
             if (Serial)
             {
                 Serial.println("\n\nMP Serial init");
+                //MP.logtextentry("MP serial init");
                 return 0;
             }
             else{
@@ -382,7 +391,7 @@ public:
     }
 
     
-    int senddata(mpstate state){
+    int senddata(mpstate state,navpacket navstate){
         if (sendtoplot)
         {
             Serial.printf(
@@ -425,58 +434,58 @@ public:
             ">varience vvel : %f \n"
             ">baro temp : %f \n",
             state.r.uptime
-            ,state.r.navsysstate.r.uptime
+            ,navstate.r.uptime
 
             , state.r.errorflag
-            , state.r.navsysstate.r.errorflag
+            , navstate.r.errorflag
 
-            ,state.r.navsysstate.r.imudata.accel.x
-            ,state.r.navsysstate.r.imudata.accel.y
-            ,state.r.navsysstate.r.imudata.accel.z
+            ,navstate.r.imudata.accel.x
+            ,navstate.r.imudata.accel.y
+            ,navstate.r.imudata.accel.z
 
-            ,state.r.navsysstate.r.accelworld.x
-            ,state.r.navsysstate.r.accelworld.y
-            ,state.r.navsysstate.r.accelworld.z
+            ,navstate.r.accelworld.x
+            ,navstate.r.accelworld.y
+            ,navstate.r.accelworld.z
 
-            ,state.r.navsysstate.r.imudata.gyro.x*(180/M_PI)
-            ,state.r.navsysstate.r.imudata.gyro.y*(180/M_PI)
-            ,state.r.navsysstate.r.imudata.gyro.z*(180/M_PI)
+            ,navstate.r.imudata.gyro.x*(180/M_PI)
+            ,navstate.r.imudata.gyro.y*(180/M_PI)
+            ,navstate.r.imudata.gyro.z*(180/M_PI)
 
-            , state.r.navsysstate.r.barodata.altitude
-            , state.r.navsysstate.r.barodata.verticalvel
-            , state.r.navsysstate.r.filtered.vvel
+            ,navstate.r.barodata.altitude
+            ,navstate.r.barodata.verticalvel
+            ,navstate.r.filtered.vvel
 
-            ,state.r.navsysstate.r.magdata.utesla.x
-            ,state.r.navsysstate.r.magdata.utesla.y
-            ,state.r.navsysstate.r.magdata.utesla.z
+            ,navstate.r.magdata.utesla.x
+            ,navstate.r.magdata.utesla.y
+            ,navstate.r.magdata.utesla.z
 
-            // ,state.r.navsysstate.r.magdata.gauss.x
-            // ,state.r.navsysstate.r.magdata.gauss.y
-            // ,state.r.navsysstate.r.magdata.gauss.z
+            // ,navstate.r.magdata.gauss.x
+            // ,navstate.r.magdata.gauss.y
+            // ,navstate.r.magdata.gauss.z
 
-            ,state.r.navsysstate.r.orientationeuler.x*(180/M_PI)
-            ,state.r.navsysstate.r.orientationeuler.y*(180/M_PI)
-            ,state.r.navsysstate.r.orientationeuler.z*(180/M_PI)
+            ,navstate.r.orientationeuler.x*(180/M_PI)
+            ,navstate.r.orientationeuler.y*(180/M_PI)
+            ,navstate.r.orientationeuler.z*(180/M_PI)
 
-            ,state.r.navsysstate.r.orientationquat.w
-            ,state.r.navsysstate.r.orientationquat.x
-            ,state.r.navsysstate.r.orientationquat.y
-            ,state.r.navsysstate.r.orientationquat.z
+            ,navstate.r.orientationquat.w
+            ,navstate.r.orientationquat.x
+            ,navstate.r.orientationquat.y
+            ,navstate.r.orientationquat.z
 
-            , state.r.navsysstate.r.barodata.maxrecordedalt
-            , state.r.navsysstate.r.filtered.alt
+            ,navstate.r.barodata.maxrecordedalt
+            ,navstate.r.filtered.alt
             , state.r.state
-            , state.r.navsysstate.r.barodata.altitudeagl
-            , state.r.navsysstate.r.confidence.alt
-            , state.r.navsysstate.r.confidence.vvel
-            , state.r.navsysstate.r.barodata.temp
+            ,navstate.r.barodata.altitudeagl
+            ,navstate.r.confidence.alt
+            ,navstate.r.confidence.vvel
+            ,navstate.r.barodata.temp
                 );
                 // this is ugly, but better than a million seperate prints
             return 0;
         }
         else
         {
-            Serial.printf("%f,%f,%f \n",state.r.navsysstate.r.orientationeuler.x,state.r.navsysstate.r.orientationeuler.y,state.r.navsysstate.r.orientationeuler.z);
+            Serial.printf("%f,%f,%f \n",navstate.r.orientationeuler.x,navstate.r.orientationeuler.y,navstate.r.orientationeuler.z);
         }
         
         
@@ -554,23 +563,19 @@ class RADIO{
 
     int E22init(){
         Serial.println("starting e22 init");
+        //MP.logtextentry("starting e22 init");
         Serial1.end();
         Serial1.setRX(UART0_RX);
         Serial1.setTX(UART0_TX);
-        Serial1.begin(9600);
-        Serial.println("Serial1 configured\n sending init bytes");
-        uint8_t buf[3] = {0xC1,0x00,0x04};
-        Serial1.write(buf,3);
-        delay(200);
-        while (Serial1.available())
-        {
-            Serial.print(Serial1.read(),HEX);
-        }
-        Serial.println();
+        //Serial1.begin(9600);
+
+        ebyte.setup();
+        
+    
+
+        //Serial.printf("radio status: %d\n",error);
 
 
-
-        // Serial.printf("radio status: %d\n",error);
 
         return 0;
     }

@@ -30,6 +30,8 @@ class NAVCORE{
     public:
     
         navpacket _sysstate;
+
+        
         
 
         float alpha = 0.98;
@@ -49,6 +51,7 @@ class NAVCORE{
 
         NAVCORE(){
             _sysstate.r.orientationquat = {1,0,0,0};
+            _sysstate.r.errorflag = 1;
         };
         /*
         1 = no errors
@@ -79,41 +82,41 @@ class NAVCORE{
         timings prevtime;
 
 
-        int sendpacket(navpacket datatosend){
-            if (rp2040.fifo.available() > 250)
-            {
-                return 1;
-            }
+        // int sendpacket(navpacket datatosend){
+        //     if (rp2040.fifo.available() > 250)
+        //     {
+        //         return 1;
+        //     }
             
-            rp2040.fifo.push(0xAB);
-            for (int i = 0; i < sizeof(datatosend.data)/sizeof(datatosend.data[0]); i++)
-            {
-                bool error = 1;
-                int j = 0;
-                rp2040.fifo.push(datatosend.data[i]);
+        //     rp2040.fifo.push(0xAB);
+        //     for (int i = 0; i < sizeof(datatosend.data)/sizeof(datatosend.data[0]); i++)
+        //     {
+        //         bool error = 1;
+        //         int j = 0;
+        //         rp2040.fifo.push(datatosend.data[i]);
                 
-            }
-            rp2040.fifo.push(0xCD);
-            return 0;
-        }
+        //     }
+        //     rp2040.fifo.push(0xCD);
+        //     return 0;
+        // }
 
-        int handshake(){
-            uint32_t data;
-            rp2040.fifo.push(0xAA);
-            data = rp2040.fifo.pop();
-            if (data != 0xAB)
-            {
-                rp2040.fifo.push(data);
-                _sysstate.r.errorflag*3;
-                return 1;
-            }
-            rp2040.fifo.push(0xCD);
-            rp2040.fifo.pop();
-            navpacket handshakepacket;
-            handshakepacket.r.errorflag = 1;
+        // int handshake(){
+        //     uint32_t data;
+        //     rp2040.fifo.push(0xAA);
+        //     data = rp2040.fifo.pop();
+        //     if (data != 0xAB)
+        //     {
+        //         rp2040.fifo.push(data);
+        //         _sysstate.r.errorflag*3;
+        //         return 1;
+        //     }
+        //     rp2040.fifo.push(0xCD);
+        //     rp2040.fifo.pop();
+        //     navpacket handshakepacket;
+        //     handshakepacket.r.errorflag = 1;
 
-            return 0;
-        }
+        //     return 0;
+        // }
 
         int initi2c(){
             Wire1.setSCL(SCL);

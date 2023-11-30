@@ -114,6 +114,17 @@ Vector3float quat2euler(Quatstruct inquatstruct){
 }
 
 
+logpacket preplogentry(mpstate MPstate, navpacket NAVstate){
+    logpacket result;
+    result.r.checksum1 = 0xAB;
+    result.r.checksum2 = 0xCD;
+    result.r.MPstate = MPstate;
+    result.r.navsysstate = NAVstate;
+
+    return result;
+}
+
+
 
 
 #endif // GENERALLIB
