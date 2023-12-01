@@ -30,6 +30,7 @@ public:
         
         pinMode(M1PIN,OUTPUT);
         digitalWrite(M1PIN,LOW);
+
         uint8_t recivebuf[8];
         setmode(CONFIG);
         Serial.println("recived:");
@@ -58,6 +59,7 @@ public:
             Serial.print(" ");
             j++;
         }
+        Serial.println();
 
         
         return;

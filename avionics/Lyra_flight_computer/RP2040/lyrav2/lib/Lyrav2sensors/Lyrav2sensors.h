@@ -22,7 +22,7 @@ Bmi088Gyro gyrounit(Wire1,0x68);
 Adafruit_BMP3XX bmp;
 Adafruit_LIS3MDL mdl;
 
-e22 ebyte(SERVO1);
+e22 ebyte(SERVO1,SERVO4);
 
 const float SEALEVELPRESSURE = 1023.3;
 
