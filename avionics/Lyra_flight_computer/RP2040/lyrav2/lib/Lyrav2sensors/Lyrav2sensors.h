@@ -22,7 +22,7 @@ Bmi088Gyro gyrounit(Wire1,0x68);
 Adafruit_BMP3XX bmp;
 Adafruit_LIS3MDL mdl;
 
-e22 ebyte(SERVO1,SERVO4);
+e22 ebyte(SERVO3,SERVO4);
 
 const float SEALEVELPRESSURE = 1023.3;
 
@@ -565,8 +565,8 @@ class RADIO{
         Serial.println("starting e22 init");
         //MP.logtextentry("starting e22 init");
         Serial1.end();
-        Serial1.setRX(UART0_RX);
-        Serial1.setTX(UART0_TX);
+        Serial1.setRX(SERVO2);
+        Serial1.setTX(SERVO1);
         //Serial1.begin(9600);
 
         ebyte.setup();
