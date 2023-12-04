@@ -37,6 +37,7 @@ class MPCORE{
         bool datamoved = false;
         uint32_t landingdetectiontime = 0;
         uint32_t liftofftime = 0;
+        uint32_t missionelasped = 0;
 
 
 
@@ -150,31 +151,37 @@ class MPCORE{
             }
         }
 
-        int logtextentry(const char* entry){
+        int logtextentry(const char *entry){
             fs::File textfile = LittleFS.open("/textlog.txt", "a+");
-            textfile.printf("| %d | %d | ", millis(),millis() - liftofftime);
-            textfile.write(entry);
+            textfile.printf("| %d | %d | ", millis(),missionelasped);
+            textfile.print(entry);
+            textfile.println();
+            Serial.printf("| %d | %d | ", millis(),missionelasped);
+            Serial.print(entry);
+            Serial.println();
 
             textfile.close();
             return 0;
         }
 
-        int logtextentry(const char* entry, float val){
+        int logtextentry(const char *entry, float val){
             fs::File textfile = LittleFS.open("/textlog.txt", "a+");
-            textfile.printf("| %d | %d | ", millis(),millis() - liftofftime);
+            textfile.printf("| %d | %d | ", millis(),missionelasped);
             textfile.print(entry);
             textfile.print(val);
+            textfile.println();
 
             textfile.close();
             return 0;
         }
 
-        int logtextentry(const char* entry, int val){
+        int logtextentry(const char *entry, int val){
             fs::File textfile = LittleFS.open("/textlog.txt", "a+");
             
-            textfile.printf("| %d | %d | ", millis(),millis() - liftofftime);
+            textfile.printf("| %d | %d | ", millis(),missionelasped);
             textfile.print(entry);
             textfile.print(val);
+            textfile.println();
 
             textfile.close();
             return 0;
@@ -813,6 +820,13 @@ class MPCORE{
                 Serial1.write("testing");
                 Serial.print("testing");
                 break;
+
+            case 't':
+                logtextentry("testing");
+                logtextentry("testing ",123);
+                logtextentry("testing ",0.2f);
+                break;
+
             
             default:
                 break;

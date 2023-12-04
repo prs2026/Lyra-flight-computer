@@ -109,11 +109,6 @@ void loop() { // main core loop
         //eventsfired += 20;
     }
     
-    
-
-
-
-
 
 
     if (millis()- MP.prevtime.led >= MP.intervals[MP._sysstate.r.state].led)
@@ -214,6 +209,7 @@ void loop() { // main core loop
     }
     
     MP.prevtime.loop = micros();
+    MP._sysstate.r.state >= 1 ? MP.missionelasped = millis() - MP.liftofftime : MP.missionelasped = 0, MP.landedtime = millis();
 }
 
 
