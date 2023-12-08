@@ -826,6 +826,11 @@ class MPCORE{
                 logtextentry("testing ",123);
                 logtextentry("testing ",0.2f);
                 break;
+            
+            case 'k':
+                Serial.println("testing radio");
+                Serial1.write(0x32);
+                break;
 
             
             default:

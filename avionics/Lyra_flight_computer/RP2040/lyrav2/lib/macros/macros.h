@@ -224,6 +224,11 @@ telepacket statetopacket(mpstate state,navpacket navstate){
     return packet;
 }
 
+void printBin(byte aByte) {
+  for (int8_t aBit = 7; aBit >= 0; aBit--)
+    Serial.write(bitRead(aByte, aBit) ? '1' : '0');
+}
+
 
 
 #endif // MACROS

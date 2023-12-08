@@ -52,16 +52,42 @@ public:
         return;
     }
 
+
+
+    void setreg(uint8_t address, uint8_t value){
+        uint8_t sendbuf[4] = {0xC0,address,0x01,value};
+        Serial1.write(sendbuf,4);
+        uint32_t sendtime = millis();
+        while (!Serial1.available() && millis() - sendtime < 500)
+        {
+            delay(10);
+            //Serial.print(digitalRead(AUXPIN));
+        }
+        delay(50);
+        int j = 0;
+        uint8_t buf[10] = {};
+        while (Serial1.available() > 1)
+        {
+            buf[j] = Serial1.read();
+            j++;
+        }
+        j = 0;
+        
+
+        return;
+
+    }
+
     void printreg(uint8_t address, uint8_t len){
-        uint8_t readbuf[10] = {};
+        uint8_t readbuf[15] = {};
         readreg(readbuf,address,len);
-        Serial.printf("reg addr %x, len %d\n",address,len);
+        Serial.printf("reg addr 0x%x, len %d\n",address,len);
         Serial.println("hex: bin: dec:");
         int j = 0;
-        for (int i = 0; i < 3+len; i++)
+        for (int i = 0; i < 4+len; i++)
         {
-            Serial.printf("%x, ",readbuf[j]);
-            Serial.print(readbuf[j],BIN);
+            Serial.printf("0x%x, ",readbuf[j]);
+            printBin(readbuf[j]);
             Serial.printf(", %d\n",readbuf[j]);
             j++;
         }
@@ -84,8 +110,17 @@ public:
 
         //Serial.println("recived:");
         //Serial.print(digitalRead(AUXPIN));
-        printreg(0x00,4);
-
+        printreg(0x00,2);
+        printreg(0x03,2);
+        printreg(0x05,2);
+        setreg(0x05,68);
+        printreg(0x05,2);
+        setreg(0x00,0xFF);
+        setreg(0x00,0xFF);
+        setreg(0x04,0b11000000);
+        printreg(0x00,3);
+        setmode(0);
+        Serial1.write(0x32);
         return 0;
     }
     
