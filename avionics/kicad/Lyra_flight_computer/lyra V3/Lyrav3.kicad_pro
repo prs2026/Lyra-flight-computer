@@ -517,12 +517,11 @@
       "/P3-": "Pyro",
       "/P4-": "Pyro",
       "/SERVO PWR": "Power",
-      "/SPI1 PWR BOT": "Power",
+      "/SPI PWR": "Power",
       "Net-(Q2A-D)": "Pyro",
       "Net-(Q2B-D)": "Pyro",
       "Net-(Q3A-D)": "Pyro",
-      "Net-(Q3B-D)": "Pyro",
-      "VBUS": "Power"
+      "Net-(Q3B-D)": "Pyro"
     },
     "netclass_patterns": [
       {
