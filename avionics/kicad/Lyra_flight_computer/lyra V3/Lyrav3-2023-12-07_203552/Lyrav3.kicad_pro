@@ -398,24 +398,24 @@
       "duplicate_sheet_names": "error",
       "endpoint_off_grid": "warning",
       "extra_units": "error",
-      "global_label_dangling": "error",
+      "global_label_dangling": "warning",
       "hier_label_mismatch": "error",
       "label_dangling": "error",
       "lib_symbol_issues": "warning",
-      "missing_bidi_pin": "error",
-      "missing_input_pin": "error",
+      "missing_bidi_pin": "warning",
+      "missing_input_pin": "warning",
       "missing_power_pin": "error",
-      "missing_unit": "error",
+      "missing_unit": "warning",
       "multiple_net_names": "warning",
       "net_not_bus_member": "warning",
-      "no_connect_connected": "error",
+      "no_connect_connected": "warning",
       "no_connect_dangling": "warning",
       "pin_not_connected": "error",
-      "pin_not_driven": "warning",
-      "pin_to_pin": "ignore",
-      "power_pin_not_driven": "warning",
+      "pin_not_driven": "error",
+      "pin_to_pin": "error",
+      "power_pin_not_driven": "error",
       "similar_labels": "warning",
-      "simulation_model_issue": "warning",
+      "simulation_model_issue": "error",
       "unannotated": "error",
       "unit_value_mismatch": "error",
       "unresolved_variable": "error",
@@ -572,6 +572,14 @@
     [
       "12cc3c39-e34e-4801-bd3f-38f875d59424",
       ""
+    ],
+    [
+      "995cfa46-b3b3-40e4-aa06-d5c279571078",
+      "Board2"
+    ],
+    [
+      "ce3e6f42-633a-42a8-b068-995248644b5f",
+      "Topboard"
     ]
   ],
   "text_variables": {}
