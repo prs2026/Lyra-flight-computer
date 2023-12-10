@@ -12,4 +12,10 @@ K
 F https://componentsearchengine.com/Datasheets/1/TSW-104-08-T-T-RA.pdf
 $ENDCMP
 #
+$CMP PKMCS0909E4000-R1
+D Piezo Buzzer 9x9mm 4kHz 1.9mm Murata Maximum of +/-12.5 V 65dB SMD Sounder External Piezo Buzzer, Maximum of 4 kHz
+K
+F http://www.murata.com/~/media/webrenewal/products/sound/sounder/vppt-buzj083-d.ashx
+$ENDCMP
+#
 #End Doc Library
