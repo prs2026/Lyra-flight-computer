@@ -9,9 +9,9 @@ l = 0
 for i in content:
     output.append([0.0,0.0,0.0,0.0])
     output[l][0] = i[1]
-    output[l][1] = i[17]
-    output[l][2] = i[18]
-    output[l][3] = i[19]
+    output[l][1] = i[20]
+    output[l][2] = i[21]
+    output[l][3] = i[22]
     outstring = outstring + "{" + ','.join(output[l]) + "},\n"
     l = l+1
     
