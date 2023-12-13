@@ -2838,6 +2838,7 @@
     (at 194.31 115.443 180)
     (descr "module CMS SOT223 4 pins")
     (tags "CMS SOT")
+    (property "LCSC Part" "C6186")
     (property "Sheetfile" "Lyrav3.kicad_sch")
     (property "Sheetname" "")
     (property "ki_description" "1A 20V Fixed LDO Linear Regulator, 3.3V, SOT-89/SOT-223/TO-220/TO-252/TO-263")
