@@ -821,15 +821,15 @@ class MPCORE{
             //     Serial.print("testing");
             //     break;
 
-            case 't':
-                logtextentry("testing");
-                logtextentry("testing ",123);
-                logtextentry("testing ",0.2f);
-                break;
+            // case 't':
+            //     logtextentry("testing");
+            //     logtextentry("testing ",123);
+            //     logtextentry("testing ",0.2f);
+            //     break;
             
             case 'k':
                 Serial.println("testing radio");
-                ebyte.sendFixedData(0x1243,68,"10",true);
+                Serial1.print('2');
                 break;
             
             // case 'p':

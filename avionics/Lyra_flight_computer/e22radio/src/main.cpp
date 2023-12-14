@@ -1,4 +1,10 @@
 #include <Arduino.h>
+#include <E220.h>
+
+Stream &radioserial = (Stream &)Serial1;
+                    // m0m1aux
+E220 ebyte(&radioserial,2,3,4);
+
 
 bool mode = 0;
 

@@ -602,7 +602,7 @@ class RADIO{
 
         //Serial.printf("radio status: %d\n",error);
 
-
+        ebyte.setRadioMode(0);
 
         return 0;
     }
