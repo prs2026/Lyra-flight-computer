@@ -23,9 +23,12 @@ Bmi088Gyro gyrounit(Wire1,0x68);
 Adafruit_BMP3XX bmp;
 Adafruit_LIS3MDL mdl;
 
+Stream &radioserial = (Stream &)Serial1;
+                    //  m0         m1     aux
+E220 ebyte(&radioserial,SERVO4,UART0_RX,SERVO3);
 
-
-e22 ebytesimple(SERVO3,SERVO2);
+                // aux m1
+e22 ebytesimple(SERVO3,UART0_RX);
 
 const float SEALEVELPRESSURE = 1023.3;
 
@@ -571,12 +574,15 @@ class RADIO{
         Serial1.setRX(SERVO2);
         Serial1.setTX(SERVO1);
         Serial1.begin(9600);
-
+    
         ebytesimple.setup();
-        Stream &radioserial = (Stream &)Serial1;
-                            //  m0       m1     aux
-        E220 ebyte(&radioserial,UART0_TX,UART0_RX,SERVO3);
+
         uint32_t inittime = millis();
+        // while (Serial1.available() >= 0);
+        // {
+        //     Serial1.read();
+        // }
+        
         while (millis()-inittime < 1000)
         {
             delay(200);

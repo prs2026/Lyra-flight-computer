@@ -125,7 +125,7 @@ public:
         // setreg(0x06,0b01100000);
         printreg(0x00,8);
         setmode(0);
-        Serial1.write(0x32);
+        //Serial1.write(0x32);
         return 0;
     }
     

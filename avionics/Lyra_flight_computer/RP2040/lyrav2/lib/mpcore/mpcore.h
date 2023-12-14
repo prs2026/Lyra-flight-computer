@@ -827,10 +827,10 @@ class MPCORE{
                 logtextentry("testing ",0.2f);
                 break;
             
-            // case 'k':
-            //     Serial.println("testing radio");
-            //     Serial1.write(0x32);
-            //     break;
+            case 'k':
+                Serial.println("testing radio");
+                ebyte.sendFixedData(0x1243,68,"10",true);
+                break;
             
             // case 'p':
             //     Serial.println("printing radio config");

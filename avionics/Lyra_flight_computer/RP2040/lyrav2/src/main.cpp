@@ -174,14 +174,14 @@ void loop() { // main core loop
 
 
     
-    if ((millis() - MP.prevtime.sendtelemetry >= MP.intervals[MP._sysstate.r.state].sendtelemetry) && MP._sysstate.r.errorflag %19 != 0)
-    {
-        uint32_t prevtelemmicros = micros();
-        MP.sendtelemetry();
-        MP.prevtime.sendtelemetry = millis();
-        eventsfired += 4;
-        //Serial.printf("telemetry sending took: %d \n",micros() - prevtelemmicros);
-    }
+    // if ((millis() - MP.prevtime.sendtelemetry >= MP.intervals[MP._sysstate.r.state].sendtelemetry) && MP._sysstate.r.errorflag %19 != 0)
+    // {
+    //     uint32_t prevtelemmicros = micros();
+    //     MP.sendtelemetry();
+    //     MP.prevtime.sendtelemetry = millis();
+    //     eventsfired += 4;
+    //     //Serial.printf("telemetry sending took: %d \n",micros() - prevtelemmicros);
+    // }
 
     if (radio.available())
     {
