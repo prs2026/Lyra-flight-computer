@@ -816,10 +816,10 @@ class MPCORE{
                 logtextentry("got new pad offset: ",float(baro.padalt));
                 break;
 
-            case 'p':
-                Serial1.write("testing");
-                Serial.print("testing");
-                break;
+            // case 'p':
+            //     Serial1.write("testing");
+            //     Serial.print("testing");
+            //     break;
 
             case 't':
                 logtextentry("testing");
@@ -827,10 +827,15 @@ class MPCORE{
                 logtextentry("testing ",0.2f);
                 break;
             
-            case 'k':
-                Serial.println("testing radio");
-                Serial1.write(0x32);
-                break;
+            // case 'k':
+            //     Serial.println("testing radio");
+            //     Serial1.write(0x32);
+            //     break;
+            
+            // case 'p':
+            //     Serial.println("printing radio config");
+            //     ebyte.printreg(0x00,8);
+            //     break;
 
             
             default:

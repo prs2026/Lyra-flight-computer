@@ -30,7 +30,8 @@ public:
     }
 
     // radio must be in config mode, set with setmode()
-    void readreg(uint8_t *buf, uint8_t address, uint8_t len){ 
+    void readreg(uint8_t *buf, uint8_t address, uint8_t len){
+        setmode(1); 
         uint8_t sendbuf[3] = {0xC1,address,len};
 
         //Serial.printf("sending: %x %x %x ",sendbuf[0],sendbuf[1],sendbuf[2]);
@@ -48,13 +49,16 @@ public:
         {
             buf[j] = Serial1.read();
             j++;
+            delay(10);
         }
+        
         return;
     }
 
 
 
     void setreg(uint8_t address, uint8_t value){
+        setmode(1);
         uint8_t sendbuf[4] = {0xC0,address,0x01,value};
         Serial1.write(sendbuf,4);
         uint32_t sendtime = millis();
@@ -73,25 +77,27 @@ public:
         }
         j = 0;
         
-
+        setmode(0);
         return;
 
     }
 
     void printreg(uint8_t address, uint8_t len){
+        
         uint8_t readbuf[15] = {};
         readreg(readbuf,address,len);
         Serial.printf("reg addr 0x%x, len %d\n",address,len);
         Serial.println("hex: bin: dec:");
         int j = 0;
-        for (int i = 0; i < 4+len; i++)
+        while (j < 3+len)
         {
             Serial.printf("0x%x, ",readbuf[j]);
             printBin(readbuf[j]);
             Serial.printf(", %d\n",readbuf[j]);
             j++;
         }
-
+        
+        return;
     }
 
     int setup(){
@@ -106,19 +112,18 @@ public:
 
         uint8_t recivebuf[10];
         setmode(CONFIG);
-        Serial1.begin(9600);
+        // Serial1.begin(9600);
 
         //Serial.println("recived:");
         //Serial.print(digitalRead(AUXPIN));
-        printreg(0x00,2);
-        printreg(0x03,2);
-        printreg(0x05,2);
-        setreg(0x05,68);
-        printreg(0x05,2);
-        setreg(0x00,0xFF);
-        setreg(0x00,0xFF);
-        setreg(0x04,0b11000000);
-        printreg(0x00,3);
+        // setreg(0x00,0xff);
+        // setreg(0x01,0xff);
+        // setreg(0x02,0);
+        // setreg(0x03,0b01000011);
+        // setreg(0x04,0b11000000);
+        // setreg(0x05,68);
+        // setreg(0x06,0b01100000);
+        printreg(0x00,8);
         setmode(0);
         Serial1.write(0x32);
         return 0;

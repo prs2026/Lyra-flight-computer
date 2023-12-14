@@ -11,6 +11,7 @@
 #include <Adafruit_LIS3MDL.h>
 
 #include <generallib.h>
+#include <E220.h>
 #include <e22.h>
 
 
@@ -22,7 +23,9 @@ Bmi088Gyro gyrounit(Wire1,0x68);
 Adafruit_BMP3XX bmp;
 Adafruit_LIS3MDL mdl;
 
-e22 ebyte(SERVO3,SERVO4);
+
+
+e22 ebytesimple(SERVO3,SERVO2);
 
 const float SEALEVELPRESSURE = 1023.3;
 
@@ -565,13 +568,31 @@ class RADIO{
         Serial.println("starting e22 init");
         //MP.logtextentry("starting e22 init");
         Serial1.end();
-        Serial1.setRX(SERVO2);
-        Serial1.setTX(SERVO1);
-        //Serial1.begin(9600);
+        Serial1.setRX(UART0_RX);
+        Serial1.setTX(UART0_TX);
+        Serial1.begin(9600);
 
-        ebyte.setup();
+        ebytesimple.setup();
+        Stream &radioserial = (Stream &)Serial1;
+                            //  m0       m1     aux
+        E220 ebyte(&radioserial,SERVO1,SERVO2,SERVO3);
+        uint32_t inittime = millis();
+        while (millis()-inittime < 1000)
+        {
+            delay(200);
+            if (ebyte.init())
+            {
+                Serial.println("radio init sucess");
+            }
+            
+        }
+
+        Serial.printf("error %d, new address: %d \n",ebyte.setAddress(1234,true),ebyte.getAddress());
+
+        Serial.printf("error %d, new power: %d \n",ebyte.setPower(Power_21,true),ebyte.getPower());
         
-    
+        Serial.printf("error %d, new channel: %d \n",ebyte.setChannel(68,true),ebyte.getChannel());
+
 
         //Serial.printf("radio status: %d\n",error);
 

@@ -210,6 +210,20 @@ void loop() { // main core loop
     
     MP.prevtime.loop = micros();
     MP._sysstate.r.state >= 1 ? MP.missionelasped = millis() - MP.liftofftime : MP.missionelasped = 0, MP.landedtime = millis();
+
+    if (Serial1.available())
+    {
+        Serial.println("newradiomessage");
+        while (Serial1.available() > 0)
+        {
+            uint8_t readbuf = Serial1.read();
+            Serial.printf("0x%x, ",readbuf);
+            printBin(readbuf);
+            Serial.printf(", %d\n",readbuf);
+        }
+        
+    }
+    
 }
 
 

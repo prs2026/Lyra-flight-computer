@@ -19,13 +19,11 @@ void setup() {
   while (!Serial) delay(100);
   Serial.println("\n\n init");
 
-  Serial1.end();
-  Serial1.setTX(0);
-  Serial1.setRX(1);
+  // Serial1.end();
+  // Serial1.setTX(0);
+  // Serial1.setRX(1);
   Serial1.begin(9600);
-  
 
-  // Serial.printf("radio status: %d\n",error);
 }
 
 void loop() {
@@ -36,6 +34,7 @@ void loop() {
     while (Serial.available() > 0)
     {
       readbuf[j] = Serial.read();
+      //Serial.write(readbuf[j]);
       j++;
     }
     if (readbuf[0] == 'M')
