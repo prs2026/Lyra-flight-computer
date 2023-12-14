@@ -568,14 +568,14 @@ class RADIO{
         Serial.println("starting e22 init");
         //MP.logtextentry("starting e22 init");
         Serial1.end();
-        Serial1.setRX(UART0_RX);
-        Serial1.setTX(UART0_TX);
+        Serial1.setRX(SERVO2);
+        Serial1.setTX(SERVO1);
         Serial1.begin(9600);
 
         ebytesimple.setup();
         Stream &radioserial = (Stream &)Serial1;
                             //  m0       m1     aux
-        E220 ebyte(&radioserial,SERVO1,SERVO2,SERVO3);
+        E220 ebyte(&radioserial,UART0_TX,UART0_RX,SERVO3);
         uint32_t inittime = millis();
         while (millis()-inittime < 1000)
         {
