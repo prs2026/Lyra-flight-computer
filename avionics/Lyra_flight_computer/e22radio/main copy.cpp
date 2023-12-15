@@ -18,40 +18,53 @@ void printBin(byte aByte) {
 void setup() {
   // put your setup code here, to run once:
   pinMode(LED_BUILTIN,OUTPUT);
+  pinMode(Mpin,OUTPUT);
   digitalWrite(LED_BUILTIN,HIGH);
-
+  digitalWrite(Mpin,mode);
   Serial.begin(115200);
   while (!Serial) delay(100);
   Serial.println("\n\n init");
+
+  // Serial1.end();
+  // Serial1.setTX(0);
+  // Serial1.setRX(1);
   Serial1.begin(9600);
-  while (!ebyte.init())
-  {
-    Serial.println("radio init fail");
-  }
-  Serial.printf("error: %d new address: %x \n",ebyte.setAddress(0xffff,true),ebyte.getAddress());
 
-  Serial.printf("error: %d new power: %d \n",ebyte.setPower(Power_21,true),ebyte.getPower());
-
-  Serial.printf("error: %d new channel: %d \n",ebyte.setChannel(68,true),ebyte.getChannel());
-  
-  ebyte.printBoardParameters();
 }
 
 void loop() {
   if (Serial.available())
   {
-    char readbuf = Serial.read();
-    uint8_t sendbyte = Serial.read();
-    switch (readbuf)
+    uint8_t readbuf[20] = {};
+    int j = 0;
+    while (Serial.available() > 0)
     {
-    case 's':
+      readbuf[j] = Serial.read();
+      //Serial.write(readbuf[j]);
+      j++;
+    }
+    if (readbuf[0] == 'M')
+    {
+      mode = !mode;
+      Serial.printf("switching modes, mode %d\n",mode);
+      digitalWrite(Mpin,mode);
+    }
+    else
+    {
+      if (readbuf[0]==0xC1)
+      {
+        Serial.print("sending: ");
+        Serial.printf("%x,%x,%x\n",readbuf[0],readbuf[1],readbuf[2]);
+        Serial1.write(readbuf,3);
+      }
+      else
+      {
+        Serial.print("sending: ");
+        Serial.printf("%x,%x,%x,%x\n",readbuf[0],readbuf[1],readbuf[2],readbuf[3]);
+        Serial1.write(readbuf,4);
+      }
       
-      Serial.printf("sending: %d",sendbyte);
-      ebyte.sendTransparentData(&sendbyte,1);
-      break;
-    
-    default:
-      break;
+      
     }
   }
   if (Serial1.available())

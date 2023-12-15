@@ -12,7 +12,7 @@
 
 #include <generallib.h>
 #include <E220.h>
-#include <e22.h>
+// #include <e22.h>
 
 
 /* accelunit object */
@@ -25,10 +25,10 @@ Adafruit_LIS3MDL mdl;
 
 Stream &radioserial = (Stream &)Serial1;
                     //  m0         m1     aux
-E220 ebyte(&radioserial,SERVO4,UART0_RX,SERVO3);
+E220 ebyte(&radioserial,SERVO4,26,SERVO3);
 
                 // aux m1
-e22 ebytesimple(SERVO3,UART0_RX);
+// e22 ebytesimple(SERVO3,UART0_RX);
 
 const float SEALEVELPRESSURE = 1023.3;
 
@@ -569,41 +569,32 @@ class RADIO{
 
     int E22init(){
         Serial.println("starting e22 init");
-        //MP.logtextentry("starting e22 init");
+    
         Serial1.end();
         Serial1.setRX(SERVO2);
         Serial1.setTX(SERVO1);
         Serial1.begin(9600);
     
-        ebytesimple.setup();
 
-        uint32_t inittime = millis();
-        // while (Serial1.available() >= 0);
-        // {
-        //     Serial1.read();
-        // }
-        
+        uint32_t inittime = millis();    
         while (millis()-inittime < 1000)
         {
             delay(200);
             if (ebyte.init())
             {
                 Serial.println("radio init sucess");
+                break;
             }
             
         }
 
-        Serial.printf("error %d, new address: %d \n",ebyte.setAddress(1234,true),ebyte.getAddress());
+        Serial.printf("error %d, new address: %d \n",ebyte.setAddress(0xffff,true),ebyte.getAddress());
 
         Serial.printf("error %d, new power: %d \n",ebyte.setPower(Power_21,true),ebyte.getPower());
         
         Serial.printf("error %d, new channel: %d \n",ebyte.setChannel(68,true),ebyte.getChannel());
-
-
-        //Serial.printf("radio status: %d\n",error);
-
-        ebyte.setRadioMode(0);
-
+        ebyte.setSubPacketSize(SPS_200,true);
+        ebyte.printBoardParameters();
         return 0;
     }
 

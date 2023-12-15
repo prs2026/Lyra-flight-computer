@@ -829,9 +829,11 @@ class MPCORE{
             
             case 'k':
                 Serial.println("testing radio");
-                Serial1.print('2');
+                ebyte.setRadioMode(MODE_NORMAL);
+                Serial.printf("error %d \n",ebyte.sendTransparentData("1"));
                 break;
             
+
             // case 'p':
             //     Serial.println("printing radio config");
             //     ebyte.printreg(0x00,8);
