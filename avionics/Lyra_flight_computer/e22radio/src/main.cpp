@@ -41,24 +41,28 @@ void loop() {
   if (Serial.available())
   {
     char readbuf = Serial.read();
+    Serial.printf("recived: %d,",readbuf);
     uint8_t sendbyte = Serial.read();
+    Serial.printf("%d\n",sendbyte);
     switch (readbuf)
     {
     case 's':
       
-      Serial.printf("sending: %d",sendbyte);
-      ebyte.sendTransparentData(&sendbyte,1);
+      Serial.printf("sending: %d \n",sendbyte);
+      Serial1.print(sendbyte);
       break;
     
     default:
       break;
     }
+    Serial.println("out of sending");
   }
-  if (Serial1.available())
+  if (Serial1.available() > 0)
   {
     Serial.println("new message: ");
     while (Serial1.available() > 0)
     {
+      
       uint8_t buf = Serial1.read();
       Serial.printf("0x%x, ",buf);
       printBin(buf);
