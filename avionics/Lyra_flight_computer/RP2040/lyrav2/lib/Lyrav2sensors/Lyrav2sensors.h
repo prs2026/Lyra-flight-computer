@@ -592,8 +592,9 @@ class RADIO{
 
         Serial.printf("error %d, new power: %d \n",ebyte.setPower(Power_21,true),ebyte.getPower());
         
-        Serial.printf("error %d, new channel: %d \n",ebyte.setChannel(68,true),ebyte.getChannel());
-        ebyte.setSubPacketSize(SPS_200,true);
+        Serial.printf("error %d, new channel: %d \n",ebyte.setChannel(0,true),ebyte.getChannel());
+        ebyte.setSubPacketSize(SPS_128,true);
+        ebyte.setEncryptionKey(0,true);
         ebyte.printBoardParameters();
         return 0;
     }
