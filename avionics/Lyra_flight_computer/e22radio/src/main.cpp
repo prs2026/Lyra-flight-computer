@@ -1,43 +1,92 @@
 #include <Arduino.h>
-#include "E220.h"
-// #include <SoftwareSerial.h>
+#include <E220.h>
 
-//Define the pins we need to use later to create the object
-#define m0 2
-#define m1 3
-#define aux 4
+Stream &radioserial = (Stream &)Serial1;
+                    // m0m1aux
+E220 ebyte(&radioserial,3,2,4);
 
-//SoftwareSerial receiver(3,2)
-Stream &mySerial = (Stream &)Serial1;
-void setup(){
-    //begin all of our UART connections
-    Serial.begin(9600);
-    Serial1.begin(9600); //default baud is 9600
-    //receiver.begin(9600);
+uint32_t ledtime = 0;
+bool ledstate = true;
 
-    //initiate the radio module
-
-    E220 radioModule(&mySerial, m0, m1, aux);
-
-    //Stream &mySerial = (Stream &)receiver;
-    //E220 radioModule(&mySerial, m0, m1, aux);
-
-    //initialise the module and check it communicates with us, else loop and keep trying
-    while(!radioModule.init()){
-        delay(5000);
-    }
+void printBin(byte aByte) {
+  for (int8_t aBit = 7; aBit >= 0; aBit--)
+    Serial.write(bitRead(aByte, aBit) ? '1' : '0');
 }
 
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(LED_BUILTIN,OUTPUT);
+  digitalWrite(LED_BUILTIN,HIGH);
 
-void loop(){
-    //loop and look for user input on the serial port
-    if(Serial.available()){
-        //parse the serial message into a string and send it out to the module
-        String message = Serial.readString();
-        mySerial.print(message);
-        mySerial.flush();
-        //output confirmation to the user that we have sent their message
-        Serial.print("Sent: ");
-        Serial.println(message);
+  Serial.begin(115200);
+  while (!Serial) delay(100);
+  Serial.println("\n\n init");
+  Serial1.begin(9600);
+  while (!ebyte.init())
+  {
+    Serial.println("radio init fail");
+  }
+  ebyte.setAddress(0xffff,true);
+  ebyte.setPower(Power_21,true);
+  ebyte.setChannel(68,true);
+  ebyte.setSubPacketSize(SPS_64,true);
+  ebyte.setAirDataRate(UDR_1200,true);
+  ebyte.setEncryptionKey(0,true);
+  ebyte.setLBT(true,true);
+  ebyte.printBoardParameters();
+  // Serial.println("testintinting");
+
+  // Serial.end();
+  // delay(2000);
+  // Serial1.write(0x34);
+  // delay(500);
+  // Serial.begin();
+  // Serial.println("done");
+  // delay(3000);
+  // Serial1.write(0x54);
+}
+
+void loop() {
+  if (millis()-ledtime > 1000)
+  {
+    ledtime = millis();
+    digitalWrite(LED_BUILTIN,ledstate);
+    ledstate = !ledstate;
+  }
+  
+  if (Serial.available())
+  {
+    char readbuf = Serial.read();
+    Serial.printf("recived: %d,",readbuf);
+    uint8_t sendbyte = Serial.read();
+    Serial.printf("%d\n",sendbyte);
+    switch (readbuf)
+    {
+    case 0xc6:
+      
+      Serial.printf("sending: %d \n",sendbyte);
+      Serial1.write(sendbyte);
+      break;
+    
+    default:
+      break;
     }
+    Serial.println("out of sending");
+  }
+  if (Serial1.available() > 0)
+  {
+    Serial.println("new message: ");
+    while (Serial1.available() > 0)
+    {
+
+      uint8_t buf = Serial1.read();
+      Serial.printf("0x%x, ",buf);
+      printBin(buf);
+      Serial.printf(", %d\n",buf);
+      delay(50);
+    }
+    
+  }
+
+  
 }

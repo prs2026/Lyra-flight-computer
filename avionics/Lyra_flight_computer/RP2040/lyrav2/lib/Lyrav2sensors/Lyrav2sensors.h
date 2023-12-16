@@ -588,13 +588,13 @@ class RADIO{
             
         }
 
-        Serial.printf("error %d, new address: %d \n",ebyte.setAddress(0xffff,true),ebyte.getAddress());
-
-        Serial.printf("error %d, new power: %d \n",ebyte.setPower(Power_21,true),ebyte.getPower());
-        
-        Serial.printf("error %d, new channel: %d \n",ebyte.setChannel(0,true),ebyte.getChannel());
-        ebyte.setSubPacketSize(SPS_128,true);
+        ebyte.setAddress(0xffff,true);
+        ebyte.setPower(Power_21,true);
+        ebyte.setChannel(68,true);
+        ebyte.setSubPacketSize(SPS_64,true);
+        ebyte.setAirDataRate(UDR_1200,true);
         ebyte.setEncryptionKey(0,true);
+        ebyte.setLBT(true,true);
         ebyte.printBoardParameters();
         return 0;
     }
