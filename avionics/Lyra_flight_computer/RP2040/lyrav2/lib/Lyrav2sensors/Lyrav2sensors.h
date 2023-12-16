@@ -609,6 +609,11 @@ class RADIO{
         return 1;
     }
 
+    int sendpacket(telepacket packet){
+        ebyte.setRadioMode(MODE_NORMAL);
+        Serial1.write(packet.data,sizeof(packet.data));
+        return 0;
+    }
 };
 
 

@@ -66,8 +66,8 @@ void setup1() { // nav core setup
     // initpacket.r.errorflag = NAV._sysstate.r.errorflag;
     // NAV.sendpacket(initpacket);
     baro.getpadoffset();
-    NAV.getsensordata();
     NAV.KFinit();
+    NAV.getsensordata();
     rp2040.fifo.push(0xAB);
 }
 
@@ -171,23 +171,18 @@ void loop() { // main core loop
     }
 
     
-
-
-    
-    // if ((millis() - MP.prevtime.sendtelemetry >= MP.intervals[MP._sysstate.r.state].sendtelemetry) && MP._sysstate.r.errorflag %19 != 0)
-    // {
-    //     uint32_t prevtelemmicros = micros();
-    //     MP.sendtelemetry();
-    //     MP.prevtime.sendtelemetry = millis();
-    //     eventsfired += 4;
-    //     //Serial.printf("telemetry sending took: %d \n",micros() - prevtelemmicros);
-    // }
-
-    if (radio.available())
+    if ((millis() - MP.prevtime.sendtelemetry >= MP.intervals[MP._sysstate.r.state].sendtelemetry) && MP._sysstate.r.errorflag %19 != 0)
     {
-        char buf;
-        radio.read(&buf,1);
-        MP.parsecommand(buf);
+        uint32_t prevtelemmicros = micros();
+        MP.sendtelemetry();
+        MP.prevtime.sendtelemetry = millis();
+        eventsfired += 4;
+        //Serial.printf("telemetry sending took: %d \n",micros() - prevtelemmicros);
+    }
+
+    if (Serial1.available())
+    {
+        MP.parsecommand(Serial1.read());
     }
     
     if ( dataismoved == false)

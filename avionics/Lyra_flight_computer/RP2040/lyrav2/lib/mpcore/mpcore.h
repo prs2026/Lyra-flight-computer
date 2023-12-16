@@ -852,20 +852,21 @@ class MPCORE{
             telepacket packettosend;
             uint8_t databufs[32];
             
-
             packettosend = statetopacket(_sysstate,NAV._sysstate);
-            int j = 0;
-            for (int i = 0; i < sizeof(databufs); i++)
-            {
-                databufs[j] = packettosend.data[j];
-                j++;
-            }
-            radio.stopListening();
-            bool error = radio.write(&databufs,sizeof(databufs),true);
-            //radio.txStandBy(100);
+            telemetryradio.sendpacket(packettosend);
+
+            // int j = 0;
+            // for (int i = 0; i < sizeof(databufs); i++)
+            // {
+            //     databufs[j] = packettosend.data[j];
+            //     j++;
+            // }
+            // radio.stopListening();
+            // bool error = radio.write(&databufs,sizeof(databufs),true);
+            // //radio.txStandBy(100);
             
-            radio.startListening();
-            // if (!error)
+            // radio.startListening();
+            // // if (!error)
 
             
             return 0;

@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <E220.h>
+#include <macros.h>
 
 Stream &radioserial = (Stream &)Serial1;
                     // m0m1aux
@@ -12,6 +13,25 @@ void printBin(byte aByte) {
   for (int8_t aBit = 7; aBit >= 0; aBit--)
     Serial.write(bitRead(aByte, aBit) ? '1' : '0');
 }
+
+telepacket recivepacket(){
+  telepacket downpacket;
+  if (!Serial.available())
+  {
+    Serial.println("no packet");
+    return downpacket;
+  }
+  if (Serial.peek() != 0xAB)
+  {
+    Serial.printf("invalid packet, expected 0xAB got 0x%x \n",Serial.read());
+    return downpacket;
+  }
+  
+  Serial.readBytes(downpacket.data,sizeof(downpacket));
+  return downpacket;
+}
+
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -56,22 +76,9 @@ void loop() {
   
   if (Serial.available())
   {
-    char readbuf = Serial.read();
-    Serial.printf("recived: %d,",readbuf);
-    uint8_t sendbyte = Serial.read();
-    Serial.printf("%d\n",sendbyte);
-    switch (readbuf)
-    {
-    case 0xc6:
-      
-      Serial.printf("sending: %d \n",sendbyte);
-      Serial1.write(sendbyte);
-      break;
-    
-    default:
-      break;
-    }
-    Serial.println("out of sending");
+    int buf = Serial.read();
+    Serial.printf("echo %d %c\n",buf);
+    Serial1.write(buf);
   }
   if (Serial1.available() > 0)
   {
@@ -88,5 +95,4 @@ void loop() {
     
   }
 
-  
 }
