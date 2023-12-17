@@ -147,7 +147,7 @@ union navpacket
         Vector3float orientationeuler;
         Quatstruct orientationquat;
         Quatstruct orientationquatadj;
-        variences confidence;
+        variences uncertainty;
         position filtered;
         //Vector3float vel;
         

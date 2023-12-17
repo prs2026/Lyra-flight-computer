@@ -198,7 +198,7 @@ void loop() { // main core loop
     MP._sysstate.r.uptime = millis();
     if (MP.sendserialon && MP.sendtoteleplot)
     {
-        Serial.printf(">looptime: %f \n", float(micros() - MP.prevtime.loop)/1000);
+        Serial.printf(">looptime: %f \n", 1/(float(micros() - MP.prevtime.loop)/1e6));
         Serial.printf(">eventstranspired: %d \n", eventsfired);
         Serial.print(">shouldlog: 0 \n");
     }
@@ -230,20 +230,32 @@ void loop1() { // nav core loop
     }
     else
     {
-        NAV.alpha = 0.98;
+        NAV.alpha = 1;
         //Serial.printf(">navalpha: 0.98\n");
     }
-    
+    NAV.prevtime.getdata = micros();
     NAV.getsensordata();
+    if (MP.sendserialon && MP.sendtoteleplot)
+    {
+            Serial.printf(">sensordatatime: %f \n",float(micros()-NAV.prevtime.getdata)/1000);
+            NAV.prevtime.predictkf = micros();
+    }
     NAV.KFpredict();
+    //Serial.printf(">kfpredicttime: %f \n",float(micros()-NAV.prevtime.predictkf)/1000);
 
     if (millis() - NAV.prevtime.kfupdate >= 300)
     {
+        NAV.prevtime.updatekf = micros();
         NAV.KFupdate();
         NAV.prevtime.kfupdate = millis();
+        //Serial.printf(">kfupdatetime: %f \n",float(micros()-NAV.prevtime.updatekf)/1000);
     }
     
-
+    if (MP.sendserialon && MP.sendtoteleplot)
+    {
+        Serial.printf(">navlooprate: %f \n", 1/(float(micros() - NAV.prevtime.looptime)/1e6));
+        NAV.prevtime.looptime = micros();
+    }
     
     
     

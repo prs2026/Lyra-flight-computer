@@ -134,7 +134,7 @@ public:
             return 0;
         }
 
-    void read(int oversampling = 50){
+    void read(int oversampling = 32){
         IMUdata _data;
         Vector3d accel;
         Vector3d gyro;
@@ -155,7 +155,7 @@ public:
             gyro.y() += -gyrounit.getGyroY_rads();
             gyro.z() += gyrounit.getGyroX_rads(); // when the radians to degrees calculation of 180/PI is done at runtime, it breaks but this works so 
 
-            delayMicroseconds(500);
+            delayMicroseconds(5);
             gyro.x() < -73786 || gyro.x() > 73786 ? gyro.x() = data.gyro.x : gyro.x() = gyro.x();
             gyro.y() < -73786 || gyro.y() > 73786 ? gyro.y() = data.gyro.x : gyro.y() = gyro.y();
             gyro.z() < -73786 || gyro.z() > 73786 ? gyro.z() = data.gyro.x : gyro.z() = gyro.z();
@@ -173,18 +173,11 @@ public:
         gyro.x() /= oversampling;
         gyro.y() /= oversampling;
         gyro.z() /= oversampling;
-        
-        //float currmeas[3] = {_data.accel.x-bcali[0],_data.accel.y-bcali[1],_data.accel.z-bcali[2]};
-        //Serial.printf("%f, %f, %f gainadj: %f, %f, %f ",_data.accel.x,_data.accel.y,_data.accel.z,currmeas[0],currmeas[1],currmeas[2]);
-        // _data.accel.x = acali[0][0]*currmeas[0]+acali[1][0]*currmeas[1]+acali[2][0]*currmeas[2];
-        // _data.accel.y = acali[0][1]*currmeas[0]+acali[1][1]*currmeas[1]+acali[2][1]*currmeas[2];
-        // _data.accel.z = acali[0][2]*currmeas[0]+acali[1][2]*currmeas[1]+acali[2][2]*currmeas[2];
-        //
 
         // accel calibration
-       accel = accel - bcal;
+        accel = accel - bcal;
 
-       accel = acal * accel;
+        accel = acal * accel;
 
         // low pass filter
         gyro.x() = gyroal*prevdata.gyro.x + (1-gyroal)*gyro.x();
@@ -196,9 +189,9 @@ public:
         accel.z() = accelal*prevdata.accel.z + (1-accelal)*accel.z();
 
 
-       _data.accel = vector3tofloat(accel);
-       _data.gyro = vector3tofloat(gyro);
-        //Serial.printf("multiplied: %f, %f, %f \n",_data.accel.x,_data.accel.y,_data.accel.z);
+        _data.accel = vector3tofloat(accel);
+        _data.gyro = vector3tofloat(gyro);
+
         _data.temp = accelunit.getTemperature_C();
 
         data = _data;
@@ -215,7 +208,7 @@ class BARO
 {
 float prevverticalvel[5];
 float prevalt;
-float hpfmomentum;
+
 int address = 0;
 uint64_t prevtime;
 
@@ -256,7 +249,7 @@ public:
             //MP.logtextentry("BMP init fail");
             return 1;
         }
-        bmp.setPressureOversampling(BMP3_OVERSAMPLING_8X);
+        bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
         bmp.setOutputDataRate(BMP3_ODR_100_HZ);
         getpadoffset();
         Serial.println("BMP init success");
@@ -265,12 +258,12 @@ public:
     }
     void readsensor(){
         BAROdata _data;
-        
+        bmp.performReading();
 
         float timestep = (micros() - prevtime)/1e6;
         // float hpfgain = hpfcutoff / (2* M_PI * 1/timestep);
 
-        _data.altitude = bmp.readAltitude(SEALEVELPRESSURE);
+        _data.altitude = 44330.0 * (1.0 - pow((bmp.pressure/100.0F) / SEALEVELPRESSURE, 0.1903));
 
         _data.altitude = lpfal*prevalt + (1-lpfal)*_data.altitude;
         // _data.altitude = _data.altitude - hpfstate;
@@ -279,8 +272,8 @@ public:
 
 
         _data.altitudeagl = _data.altitude-padalt;
-        _data.pressure = bmp.readPressure();
-        _data.temp = bmp.readTemperature();
+        _data.pressure = bmp.pressure;
+        _data.temp = bmp.temperature;
 
         
         //Serial.printf(">timestep: %f \n",timestep);
@@ -482,8 +475,8 @@ public:
             ,navstate.r.filtered.alt
             , state.r.state
             ,navstate.r.barodata.altitudeagl
-            ,navstate.r.confidence.alt
-            ,navstate.r.confidence.vvel
+            ,navstate.r.uncertainty.alt
+            ,navstate.r.uncertainty.vvel
             ,navstate.r.barodata.temp
                 );
                 // this is ugly, but better than a million seperate prints
@@ -574,17 +567,20 @@ class RADIO{
         Serial1.setRX(SERVO2);
         Serial1.setTX(SERVO1);
         Serial1.begin(9600);
+
+        Serial.println("Serial inited");
     
+
 
         uint32_t inittime = millis();    
         while (millis()-inittime < 1000)
         {
-            delay(200);
             if (ebyte.init())
             {
                 Serial.println("radio init sucess");
                 break;
             }
+            Serial.println("radio init attempt fail");
             
         }
 
@@ -592,9 +588,10 @@ class RADIO{
         ebyte.setPower(Power_21,true);
         ebyte.setChannel(68,true);
         ebyte.setSubPacketSize(SPS_64,true);
-        ebyte.setAirDataRate(UDR_1200,true);
+        ebyte.setAirDataRate(ADR_0300,true);
         ebyte.setEncryptionKey(0,true);
         ebyte.setLBT(true,true);
+        ebyte.setFixedTransmission(false,true);
         ebyte.printBoardParameters();
         return 0;
     }
@@ -610,8 +607,16 @@ class RADIO{
     }
 
     int sendpacket(telepacket packet){
-        ebyte.setRadioMode(MODE_NORMAL);
-        Serial1.write(packet.data,sizeof(packet.data));
+        //Serial1.write(packet.data,sizeof(packet.data));
+
+        uint8_t testpacket[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32};
+        Serial1.write(testpacket,sizeof(testpacket));
+
+        if (Serial1.available() && Serial1.read() == 0xFF)
+        {
+            ebyte.setRadioMode(MODE_NORMAL);
+        }
+        
         return 0;
     }
 };

@@ -50,7 +50,7 @@ void setup() {
   ebyte.setPower(Power_21,true);
   ebyte.setChannel(68,true);
   ebyte.setSubPacketSize(SPS_64,true);
-  ebyte.setAirDataRate(UDR_1200,true);
+  ebyte.setAirDataRate(ADR_0300,true);
   ebyte.setEncryptionKey(0,true);
   ebyte.setLBT(true,true);
   ebyte.printBoardParameters();
@@ -82,6 +82,7 @@ void loop() {
   }
   if (Serial1.available() > 0)
   {
+    int len = 0;
     Serial.println("new message: ");
     while (Serial1.available() > 0)
     {
@@ -90,8 +91,10 @@ void loop() {
       Serial.printf("0x%x, ",buf);
       printBin(buf);
       Serial.printf(", %d\n",buf);
-      delay(50);
+      delay(10);
+      len++;
     }
+    Serial.printf("len: %d\n",len);
     
   }
 

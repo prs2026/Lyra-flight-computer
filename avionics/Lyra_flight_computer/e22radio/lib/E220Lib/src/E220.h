@@ -35,6 +35,8 @@
 
 // air data rates (certain types of modules)
 // (must be the same for transmitter and receiver)
+#define ADR_0300 0b000		    // 0300 baud
+#define ADR_1200 0b001  	    // 0300 baud
 #define ADR_2400 0b010		    // 2400 baud
 #define ADR_4800 0b011		    // 4800 baud
 #define ADR_9600 0b100		    // 9600 baud
@@ -98,7 +100,7 @@ private:
  int _AUX;
 
  Stream *_streamSerial;
- uint8_t _Params[9] = {};
+ uint8_t _Params[9];
  uint8_t _setting;
 
  uint16_t _address;

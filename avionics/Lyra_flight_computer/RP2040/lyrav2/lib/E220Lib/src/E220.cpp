@@ -34,13 +34,16 @@ E220::E220(Stream *s, int PIN_M0, int PIN_M1, int PIN_AUX){
  */
 bool E220::init() {
     //set up the pins
+    Serial.println("entered library init");
     pinMode(_AUX, INPUT);
     pinMode(_M0, OUTPUT);
     pinMode(_M1, OUTPUT);
     //set the global board mode
+    Serial.println("pins set");
     _setting = MODE_NORMAL;
     setMode(_setting);
     //read board default settings and assign global values
+    Serial.println("mode set");
     bool check = readBoardData();
     //check if we were able to communicate with the board
     if(!check){
@@ -59,7 +62,8 @@ bool E220::init() {
  * @param mode The mode to swap to
  */
 void E220::setMode(uint8_t mode){
-    while(digitalRead(_AUX) == LOW){
+    uint32_t hangtime = millis();
+    while(digitalRead(_AUX) == LOW && millis() - hangtime < 20){
       delayMicroseconds(1); //if the AUX pin is low this means some data is still being written, don't change the module settings
     }
     //time for the pins to recover, sheet says 2ms, 10 is safe
@@ -87,7 +91,8 @@ void E220::setMode(uint8_t mode){
             break;
     }
     delay(20);
-    while(digitalRead(_AUX) == LOW){
+    hangtime = millis();
+    while(digitalRead(_AUX) == LOW && millis() - hangtime < 30){
       delay(1); //if the AUX pin is low this means the module is still processing the change
     }
     delay(2); //delay as stated on data sheet, aux high must last for 2ms before mode change is complete
@@ -847,6 +852,13 @@ void E220::printBoardParameters() {
         }
         Serial.print("Air Data Rate setting: ");
         switch (_airDataRate) {
+
+            case 0b000:
+                Serial.println("ADR_0300");
+                break;
+            case 0b001:
+                Serial.println("ADR_1200");
+            break;
             case 0b010:
                 Serial.println("ADR_2400");
                 break;

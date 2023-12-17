@@ -74,7 +74,7 @@ class MPCORE{
             uint32_t loop;
         };
         timings intervals[7] = {
-            {2000,1000,50,200,30000,10}, // ground idle
+            {2000,1000,50,1000,30000,10}, // ground idle
             {10,200,100, 200, 500,10}, // launch detect
             {10,500,100, 200, 1000,10}, // powered ascent
             {10,500,100,200, 1000,10}, // unpowered ascent
@@ -851,7 +851,7 @@ class MPCORE{
         int sendtelemetry(){
             telepacket packettosend;
             uint8_t databufs[32];
-            
+
             packettosend = statetopacket(_sysstate,NAV._sysstate);
             telemetryradio.sendpacket(packettosend);
 

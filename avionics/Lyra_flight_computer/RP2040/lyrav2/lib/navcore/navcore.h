@@ -41,11 +41,10 @@ class NAVCORE{
             _sysstate.r.filtered.vvel = _sysstate.r.barodata.verticalvel;
             _sysstate.r.filtered.accel = _sysstate.r.accelworld;
            
-            _sysstate.r.confidence.alt = 100;
-            _sysstate.r.confidence.vvel = 100;
-            _sysstate.r.confidence.vaccel = 100;
+            _sysstate.r.uncertainty.alt = 100;
+            _sysstate.r.uncertainty.vvel = 100;
+            _sysstate.r.uncertainty.vaccel = 100;
             prevsysstate = _sysstate;
-            prevtime.kfpredict = micros();
             prevtime.kfupdate = micros();
         }
 
@@ -67,8 +66,11 @@ class NAVCORE{
         struct timings{
             uint32_t sendpacket;
             uint32_t intergrateorientation;
-            uint32_t kfpredict;
             uint32_t kfupdate;
+            uint32_t looptime;
+            uint32_t getdata;
+            uint32_t predictkf;
+            uint32_t updatekf;
         };
         timings intervals[7] = {
             {50}, // ground idle
@@ -149,9 +151,23 @@ class NAVCORE{
         }
 
         void getsensordata(){
+            #if defined(VERBOSETIMES)
+            uint32_t timestep = micros();
+            imu.read();
+            Serial.printf(">imureadtime: %f \n", float(micros()-timestep)/1000);
+            timestep = micros();
+            baro.readsensor();
+            Serial.printf(">baroreadtime: %f \n", float(micros()-timestep)/1000);
+            timestep = micros();
+            mag.read();
+            Serial.printf(">magreadtime: %f \n", float(micros()-timestep)/1000);
+            #endif // VERBOSETIMES
+            
+            #if !defined(VERBOSETIMES)
             imu.read();
             baro.readsensor();
             mag.read();
+            #endif // VERBOSETIMES
 
 
             _sysstate.r.magdata = mag.data;
@@ -169,8 +185,8 @@ class NAVCORE{
             extrapolatedsysstate.r.filtered.vvel = _sysstate.r.filtered.vvel + (timestep*_sysstate.r.accelworld.y); 
 
 
-            extrapolatedsysstate.r.confidence.alt = _sysstate.r.confidence.alt + ((timestep*timestep)*_sysstate.r.confidence.vvel) + ALTVAR; // extrapolate variences with velocity dynamics
-            extrapolatedsysstate.r.confidence.vvel = _sysstate.r.confidence.vvel + VVELVAR;
+            extrapolatedsysstate.r.uncertainty.alt = _sysstate.r.uncertainty.alt + ((timestep*timestep)*_sysstate.r.uncertainty.vvel) + ALTVAR; // extrapolate variences with velocity dynamics
+            extrapolatedsysstate.r.uncertainty.vvel = _sysstate.r.uncertainty.vvel + VVELVAR;
 
 
 
@@ -191,8 +207,8 @@ class NAVCORE{
             double timestep = (micros() - kfupdatetime)/1e6;
 
             variences kgain; // calc new kalman gain
-            kgain.alt = _sysstate.r.confidence.alt/(_sysstate.r.confidence.alt+ALTNOISE);
-            kgain.vvel = _sysstate.r.confidence.vvel/(_sysstate.r.confidence.vvel+VVELNOISE);
+            kgain.alt = _sysstate.r.uncertainty.alt/(_sysstate.r.uncertainty.alt+ALTNOISE);
+            kgain.vvel = _sysstate.r.uncertainty.vvel/(_sysstate.r.uncertainty.vvel+VVELNOISE);
             //Serial.printf(">kalman gain: %f\n",kgain.alt);
             
             _sysstate.r.filtered.alt = prevsysstate.r.filtered.alt + kgain.alt*(_sysstate.r.barodata.altitudeagl - prevsysstate.r.filtered.alt); // state update
@@ -200,8 +216,8 @@ class NAVCORE{
 
             
 
-            _sysstate.r.confidence.alt = (1-kgain.alt)*prevsysstate.r.confidence.alt; // variences update
-            _sysstate.r.confidence.vvel = (1-kgain.vvel)*prevsysstate.r.confidence.vvel;
+            _sysstate.r.uncertainty.alt = (1-kgain.alt)*prevsysstate.r.uncertainty.alt; // variences update
+            _sysstate.r.uncertainty.vvel = (1-kgain.vvel)*prevsysstate.r.uncertainty.vvel;
             
             //adjustwithaccel();
 
