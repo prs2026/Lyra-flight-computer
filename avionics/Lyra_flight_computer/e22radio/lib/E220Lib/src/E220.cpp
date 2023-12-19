@@ -125,34 +125,37 @@ bool E220::readBoardData(){
     else{
         //values in register 0&1
         _address =  (_Params[3] << 8) | (_Params[4]);
-        //values in register 2
-        //uart
-        _baudRate = (_Params[5] & 0b11100000) >> 5;
-        //Parity
-        _parityBit = (_Params[5] & 0b00011000) >> 3;
-        //ADR
-        _airDataRate = (_Params[5] & 0b00000111);
+        //value in register 2
+        _netID = _Params[5];
 
         //values in register 3
-        //Sub Packet
-        _subPacketSize = (_Params[6] & 0b11000000) >> 6;
-        //Ambient Noise
-        _RSSIAmbientNoise = (_Params[6] & 0b00100000) >> 5;
-        //Power Setting
-        _transmitPower = (_Params[6] & 0b00000011);
+        //uart
+        _baudRate = (_Params[6] & 0b11100000) >> 5;
+        //Parity
+        _parityBit = (_Params[6] & 0b00011000) >> 3;
+        //ADR
+        _airDataRate = (_Params[6] & 0b00000111);
 
         //values in register 4
-        _channel = _Params[7];
+        //Sub Packet
+        _subPacketSize = (_Params[7] & 0b11000000) >> 6;
+        //Ambient Noise
+        _RSSIAmbientNoise = (_Params[7] & 0b00100000) >> 5;
+        //Power Setting
+        _transmitPower = (_Params[7] & 0b00000011);
 
         //values in register 5
+        _channel = _Params[8];
+
+        //values in register 6
         //RSSI Byte
-        _RSSIByte = (_Params[8] & 0b10000000) >> 7;
+        _RSSIByte = (_Params[9] & 0b10000000) >> 7;
         //Transmission Method
-        _transmissionMethod = (_Params[8] & 0b01000000) >> 6;
+        _transmissionMethod = (_Params[9] & 0b01000000) >> 6;
         //LBT
-        _LBTSetting = (_Params[8] & 0b00010000) >> 4;
+        _LBTSetting = (_Params[9] & 0b00010000) >> 4;
         //WOR
-        _WORCycle = (_Params[8] & 0b00000111);
+        _WORCycle = (_Params[9] & 0b00000111);
 
         setMode(_setting);
         return true;
@@ -241,12 +244,12 @@ bool E220::setBaud(uint8_t newUART, bool permanent){
     finalByte = finalByte | _airDataRate;
     uint8_t registerParams[] = {finalByte};
     if(permanent){
-        if(!writeCommand(0xC0, 0x02, 0x01, registerParams)){
+        if(!writeCommand(0xC0, 0x03, 0x01, registerParams)){
             return false;
         }
     }
     else{
-        if(!writeCommand(0xC2, 0x02, 0x01, registerParams)){
+        if(!writeCommand(0xC2, 0x03, 0x01, registerParams)){
             return false;
         }
     }
@@ -291,12 +294,12 @@ bool E220::setParity(uint8_t newParity, bool permanent) {
     finalByte = finalByte | _airDataRate;
     uint8_t registerParams[] = {finalByte};
     if(permanent){
-        if(!writeCommand(0xC0, 0x02, 0x01, registerParams)){
+        if(!writeCommand(0xC0, 0x03, 0x01, registerParams)){
             return false;
         }
     }
     else{
-        if(!writeCommand(0xC2, 0x02, 0x01, registerParams)){
+        if(!writeCommand(0xC2, 0x03, 0x01, registerParams)){
             return false;
         }
     }
@@ -334,12 +337,12 @@ bool E220::setAirDataRate(uint8_t newAirData, bool permanent) {
     finalByte = finalByte | newAirData;
     uint8_t registerParams[] = {finalByte};
     if(permanent){
-        if(!writeCommand(0xC0, 0x02, 0x01, registerParams)){
+        if(!writeCommand(0xC0, 0x03, 0x01, registerParams)){
             return false;
         }
     }
     else{
-        if(!writeCommand(0xC2, 0x02, 0x01, registerParams)){
+        if(!writeCommand(0xC2, 0x03, 0x01, registerParams)){
             return false;
         }
     }
@@ -388,12 +391,12 @@ bool E220::setSubPacketSize(uint8_t newSize, bool permanent) {
     finalByte = finalByte | _transmitPower;
     uint8_t registerParams[] = {finalByte};
     if(permanent){
-        if(!writeCommand(0xC0, 0x03, 0x01, registerParams)){
+        if(!writeCommand(0xC0, 0x04, 0x01, registerParams)){
             return false;
         }
     }
     else{
-        if(!writeCommand(0xC2, 0x03, 0x01, registerParams)){
+        if(!writeCommand(0xC2, 0x04, 0x01, registerParams)){
             return false;
         }
     }
@@ -432,12 +435,12 @@ bool E220::setRSSIAmbient(uint8_t ambientSetting, bool permanent) {
     finalByte = finalByte | _transmitPower;
     uint8_t registerParams[] = {finalByte};
     if(permanent){
-        if(!writeCommand(0xC0, 0x03, 0x01, registerParams)){
+        if(!writeCommand(0xC0, 0x04, 0x01, registerParams)){
             return false;
         }
     }
     else{
-        if(!writeCommand(0xC2, 0x03, 0x01, registerParams)){
+        if(!writeCommand(0xC2, 0x04, 0x01, registerParams)){
             return false;
         }
     }
@@ -496,12 +499,12 @@ bool E220::setPower(uint8_t newPower, bool permanent) {
     finalByte = finalByte | newPower;
     uint8_t registerParams[] = {finalByte};
     if(permanent){
-        if(!writeCommand(0xC0, 0x03, 0x01, registerParams)){
+        if(!writeCommand(0xC0, 0x04, 0x01, registerParams)){
             return false;
         }
     }
     else{
-        if(!writeCommand(0xC2, 0x03, 0x01, registerParams)){
+        if(!writeCommand(0xC2, 0x04, 0x01, registerParams)){
             return false;
         }
     }
@@ -544,12 +547,12 @@ bool E220::setChannel(int newChannel, bool permanent) {
     else{
         uint8_t registerParams[] = {static_cast<uint8_t>(newChannel)};
         if(permanent){
-            if(!writeCommand(0xC0, 0x04, 0x01, registerParams)){
+            if(!writeCommand(0xC0, 0x05, 0x01, registerParams)){
                 return false;
             }
         }
         else{
-            if(!writeCommand(0xC2, 0x04, 0x01, registerParams)){
+            if(!writeCommand(0xC2, 0x05, 0x01, registerParams)){
                 return false;
             }
         }
@@ -567,6 +570,38 @@ int E220::getChannel() {
 }
 
 /**
+ * Function used to set the channel between 0-80 in register 4
+ * @param newChannel {int} the new channel
+ * @param permanent {bool} this as a non-volatile parameter
+ * @return {bool} the success factor
+ */
+bool E220::setNetID(int newid, bool permanent) {
+
+    uint8_t registerParams[] = {static_cast<uint8_t>(newid)};
+    if(permanent){
+        if(!writeCommand(0xC0, 0x03, 0x01, registerParams)){
+            return false;
+        }
+    }
+    else{
+        if(!writeCommand(0xC2, 0x03, 0x01, registerParams)){
+            return false;
+        }
+    }
+    _netID = newid;
+    return true;
+}
+
+
+/**
+ * getter for the netid parameter
+ * @return {int} The netid
+ */
+int E220::getNetID() {
+    return _netID;
+}
+
+/**
  * Setter for the RSSIByte toggle
  * @param setting {bool} The desired setting
  * @param permanent {bool} Set this as a non-volatile parameter
@@ -581,12 +616,12 @@ bool E220::setRSSIByteToggle(bool Setting, bool permanent) {
     finalByte = finalByte | _WORCycle;
     uint8_t registerParams[] = {finalByte};
     if(permanent){
-        if(!writeCommand(0xC0, 0x05, 0x01, registerParams)){
+        if(!writeCommand(0xC0, 0x06, 0x01, registerParams)){
             return false;
         }
     }
     else{
-        if(!writeCommand(0xC2, 0x05, 0x01, registerParams)){
+        if(!writeCommand(0xC2, 0x06, 0x01, registerParams)){
             return false;
         }
     }
@@ -618,12 +653,12 @@ bool E220::setFixedTransmission(bool Setting, bool permanent) {
     finalByte = finalByte | _WORCycle;
     uint8_t registerParams[] = {finalByte};
     if(permanent){
-        if(!writeCommand(0xC0, 0x05, 0x01, registerParams)){
+        if(!writeCommand(0xC0, 0x06, 0x01, registerParams)){
             return false;
         }
     }
     else{
-        if(!writeCommand(0xC2, 0x05, 0x01, registerParams)){
+        if(!writeCommand(0xC2, 0x06, 0x01, registerParams)){
             return false;
         }
     }
@@ -655,12 +690,12 @@ bool E220::setLBT(bool Setting, bool permanent) {
     finalByte = finalByte | _WORCycle;
     uint8_t registerParams[] = {finalByte};
     if(permanent){
-        if(!writeCommand(0xC0, 0x05, 0x01, registerParams)){
+        if(!writeCommand(0xC0, 0x06, 0x01, registerParams)){
             return false;
         }
     }
     else{
-        if(!writeCommand(0xC2, 0x05, 0x01, registerParams)){
+        if(!writeCommand(0xC2, 0x06, 0x01, registerParams)){
             return false;
         }
     }
@@ -689,12 +724,12 @@ bool E220::setWORCycle(uint8_t WORSetting, bool permanent) {
     finalByte = finalByte | WORSetting;
     uint8_t registerParams[] = {finalByte};
     if(permanent){
-        if(!writeCommand(0xC0, 0x05, 0x01, registerParams)){
+        if(!writeCommand(0xC0, 0x06, 0x01, registerParams)){
             return false;
         }
     }
     else{
-        if(!writeCommand(0xC2, 0x05, 0x01, registerParams)){
+        if(!writeCommand(0xC2, 0x06, 0x01, registerParams)){
             return false;
         }
     }
@@ -739,12 +774,12 @@ bool E220::setEncryptionKey(unsigned int key, bool permanent) {
     uint8_t keyL = lowByte(key);
     uint8_t keys[] = {keyH, keyL};
     if(permanent){
-        if(!writeCommand(0xC0, 0x06, 0x02, keys)){
+        if(!writeCommand(0xC0, 0x07, 0x02, keys)){
             return false;
         }
     }
     else{
-        if(!writeCommand(0xC2, 0x06, 0x02, keys)){
+        if(!writeCommand(0xC2, 0x07, 0x02, keys)){
             return false;
         }
     }
@@ -780,37 +815,43 @@ void E220::printBoardParameters() {
          */
         //values in register 0&1
         _address =  (_Params[3] << 8) | (_Params[4]);
-        //values in register 2
-        //uart
-        _baudRate = (_Params[5] & 0b11100000) >> 5;
-        //Parity
-        _parityBit = (_Params[5] & 0b00011000) >> 3;
-        //ADR
-        _airDataRate = (_Params[5] & 0b00000111);
+        //value in register 2
+        _netID = _Params[5];
 
         //values in register 3
-        //Sub Packet
-        _subPacketSize = (_Params[6] & 0b11000000) >> 6;
-        //Ambient Noise
-        _RSSIAmbientNoise = (_Params[6] & 0b00100000) >> 5;
-        //Power Setting
-        _transmitPower = (_Params[6] & 0b00000011);
+        
+        //uart
+        _baudRate = (_Params[6] & 0b11100000) >> 5;
+        //Parity
+        _parityBit = (_Params[6] & 0b00011000) >> 3;
+        //ADR
+        _airDataRate = (_Params[6] & 0b00000111);
 
         //values in register 4
-        _channel = _Params[7];
+        //Sub Packet
+        _subPacketSize = (_Params[7] & 0b11000000) >> 6;
+        //Ambient Noise
+        _RSSIAmbientNoise = (_Params[7] & 0b00100000) >> 5;
+        //Power Setting
+        _transmitPower = (_Params[7] & 0b00000011);
 
         //values in register 5
+        _channel = _Params[8];
+
+        //values in register 6
         //RSSI Byte
-        _RSSIByte = (_Params[8] & 0b10000000) >> 7;
+        _RSSIByte = (_Params[9] & 0b10000000) >> 7;
         //Transmission Method
         _transmissionMethod = (_Params[8] & 0b01000000) >> 6;
         //LBT
-        _LBTSetting = (_Params[8] & 0b00010000) >> 4;
+        _LBTSetting = (_Params[9] & 0b00010000) >> 4;
         //WOR
-        _WORCycle = (_Params[8] & 0b00000111);
+        _WORCycle = (_Params[9] & 0b00000111);
 
         Serial.print("Address: ");
         Serial.println(_address);
+        Serial.print("NETID: ");
+        Serial.println(_netID);
         Serial.print("Baud Rate setting: ");
         switch (_baudRate) {
             case 0b000:

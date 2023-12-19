@@ -171,18 +171,21 @@ void loop() { // main core loop
     }
 
     
-    if ((millis() - MP.prevtime.sendtelemetry >= MP.intervals[MP._sysstate.r.state].sendtelemetry) && MP._sysstate.r.errorflag %19 != 0)
-    {
-        uint32_t prevtelemmicros = micros();
-        MP.sendtelemetry();
-        MP.prevtime.sendtelemetry = millis();
-        eventsfired += 4;
-        //Serial.printf("telemetry sending took: %d \n",micros() - prevtelemmicros);
-    }
+    // if ((millis() - MP.prevtime.sendtelemetry >= MP.intervals[MP._sysstate.r.state].sendtelemetry) && MP._sysstate.r.errorflag %19 != 0)
+    // {
+    //     uint32_t prevtelemmicros = micros();
+    //     MP.sendtelemetry();
+    //     MP.prevtime.sendtelemetry = millis();
+    //     eventsfired += 4;
+    //     //Serial.printf("telemetry sending took: %d \n",micros() - prevtelemmicros);
+    // }
 
     if (Serial1.available())
     {
-        MP.parsecommand(Serial1.read());
+        int buf = Serial1.read();
+        Serial.printf("recived %x from radio",buf);
+        MP.parsecommand(buf);
+        
     }
     
     if ( dataismoved == false)
@@ -206,18 +209,18 @@ void loop() { // main core loop
     MP.prevtime.loop = micros();
     MP._sysstate.r.state >= 1 ? MP.missionelasped = millis() - MP.liftofftime : MP.missionelasped = 0, MP.landedtime = millis();
 
-    if (Serial1.available())
-    {
-        Serial.println("newradiomessage");
-        while (Serial1.available() > 0)
-        {
-            uint8_t readbuf = Serial1.read();
-            Serial.printf("0x%x, ",readbuf);
-            printBin(readbuf);
-            Serial.printf(", %d\n",readbuf);
-        }
+    // if (Serial1.available())
+    // {
+    //     Serial.println("newradiomessage");
+    //     while (Serial1.available() > 0)
+    //     {
+    //         uint8_t readbuf = Serial1.read();
+    //         Serial.printf("0x%x, ",readbuf);
+    //         printBin(readbuf);
+    //         Serial.printf(", %d\n",readbuf);
+    //     }
         
-    }
+    // }
     
 }
 

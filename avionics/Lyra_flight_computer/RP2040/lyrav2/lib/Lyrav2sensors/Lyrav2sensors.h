@@ -587,11 +587,12 @@ class RADIO{
         ebyte.setAddress(0xffff,true);
         ebyte.setPower(Power_21,true);
         ebyte.setChannel(68,true);
+        ebyte.setNetID(0,true);
+        ebyte.setBaud(UDR_9600,true);
         ebyte.setSubPacketSize(SPS_64,true);
         ebyte.setAirDataRate(ADR_0300,true);
         ebyte.setEncryptionKey(0,true);
         ebyte.setLBT(true,true);
-        ebyte.setFixedTransmission(false,true);
         ebyte.printBoardParameters();
         return 0;
     }
@@ -607,10 +608,10 @@ class RADIO{
     }
 
     int sendpacket(telepacket packet){
-        //Serial1.write(packet.data,sizeof(packet.data));
+        Serial1.write(packet.data,sizeof(packet.data));
 
-        uint8_t testpacket[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32};
-        Serial1.write(testpacket,sizeof(testpacket));
+        //uint8_t testpacket[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32};
+        //Serial1.write(testpacket,sizeof(testpacket));
 
         if (Serial1.available() && Serial1.read() == 0xFF)
         {

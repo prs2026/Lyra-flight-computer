@@ -115,6 +115,7 @@ private:
  uint8_t _transmissionMethod;
  uint8_t _LBTSetting;
  uint8_t _WORCycle;
+ uint8_t _netID;
 
  char escapeCharacter = '\n';
 
@@ -152,6 +153,9 @@ public:
 
  bool setChannel(int newChannel, bool permanent);
  int getChannel();
+
+ bool setNetID(int newid, bool permanent);
+ int getNetID();
 
  bool setRSSIByteToggle(bool Setting, bool permanent);
  bool getRSSIByteToggle();
