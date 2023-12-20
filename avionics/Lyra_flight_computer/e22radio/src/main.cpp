@@ -101,16 +101,7 @@ void setup() {
   ebyte.setRadioMode(MODE_NORMAL);
 
 
-  // Serial.println("testintinting");
-
-  // Serial.end();
-  // delay(2000);
-  // Serial1.write(0x34);
-  // delay(500);
-  // Serial.begin();
-  // Serial.println("done");
-  // delay(3000);
-  // Serial1.write(0x54);
+  Serial1.begin(9600);
 }
 
 void loop() {
@@ -128,8 +119,9 @@ void loop() {
     if (buf == '_')
     {
       uint8_t sendbuf = Serial.read();
+      Serial1.write('t');
       Serial.printf("sending %d\n",sendbuf);
-      Serial1.write(sendbuf);
+      
     }
     else{
       switch (buf)
