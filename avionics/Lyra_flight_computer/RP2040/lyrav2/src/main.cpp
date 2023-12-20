@@ -15,8 +15,8 @@ void setup() { // main core setup
     MP.initperipherials();
     MP.logtextentry("\n\n MP init");
 
-    // MP.handshake();
 
+    
     MP.flashinit();
     MP.initsd();
     MP.movedata();
@@ -59,7 +59,7 @@ void setup() { // main core setup
 
 void setup1() { // nav core setup
     // NAV.handshake();
-    delay(200);
+    delay(5000);
     NAV.initi2c();
     NAV.sensorinit();
     // navpacket initpacket;

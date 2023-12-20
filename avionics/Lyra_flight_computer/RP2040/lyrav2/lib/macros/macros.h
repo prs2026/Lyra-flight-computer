@@ -162,6 +162,7 @@ union mpstate{
         uint32_t uptime;
         uint32_t MET;
         uint32_t state;
+        float batterystate;
         //navpacket navsysstate;
     } r;
     uint32_t data[sizeof(r)/sizeof(uint32_t)];

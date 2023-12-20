@@ -23,6 +23,7 @@ SERIALPORT port;
 RADIO telemetryradio;
 
 NAVCORE NAV;
+ADC adc;
 
 
 class MPCORE{
@@ -99,6 +100,8 @@ class MPCORE{
             digitalWrite(LEDRED, LOW);
             digitalWrite(LEDGREEN, HIGH);
             digitalWrite(LEDBLUE, HIGH);
+
+            adc.setuppins();
             return;
         }
 
@@ -262,6 +265,8 @@ class MPCORE{
 
         int logdata(){
             uint32_t openingtime = micros();
+            adc.readbatt();
+            _sysstate.r.batterystate = adc.battvoltage;
 
             logpacket datatolog = preplogentry(_sysstate,NAV._sysstate);
             //Serial.print(datatolog.r.checksum2);
@@ -366,7 +371,7 @@ class MPCORE{
             }
             
             fs::File readfile = LittleFS.open("/log.csv", "r");
-            sdfile.println("checksum,uptime mp,uptime nav, errorflag mp, errorflag nav,accel x, accel y, accel z, accelworld x,accelworld y,accelworld z, gyro x, gyro y, gyro z, mag x, mag y, mag z, magraw x, magraw y, magraw z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, pressure, verticalvel,filteredvvel,maxrecorded alt,altitudeagl,filteredalt,imutemp, barotemp, state,checksum2");
+            sdfile.println("checksum,uptime mp,uptime nav, errorflag mp, errorflag nav,accel x, accel y, accel z, accelworld x,accelworld y,accelworld z, gyro x, gyro y, gyro z, mag x, mag y, mag z, magraw x, magraw y, magraw z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, pressure, verticalvel,filteredvvel,maxrecorded alt,altitudeagl,filteredalt,imutemp, barotemp, state,battery voltage,checksum2");
 
             Serial.printf("flash amount used: %d\n",readfile.size());
 
@@ -451,7 +456,8 @@ class MPCORE{
                     readentry.r.navsysstate.r.filtered.accel.z,
                     readentry.r.navsysstate.r.imudata.temp,
                     readentry.r.navsysstate.r.barodata.temp,
-                    readentry.r.MPstate.r.state
+                    readentry.r.MPstate.r.state,
+                    readentry.r.MPstate.r.batterystate
                     );
             }
 

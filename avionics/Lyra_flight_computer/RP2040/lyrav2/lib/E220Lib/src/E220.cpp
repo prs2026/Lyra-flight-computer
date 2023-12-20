@@ -34,16 +34,16 @@ E220::E220(Stream *s, int PIN_M0, int PIN_M1, int PIN_AUX){
  */
 bool E220::init() {
     //set up the pins
-    Serial.println("entered library init");
+    //Serial.println("entered library init");
     pinMode(_AUX, INPUT);
     pinMode(_M0, OUTPUT);
     pinMode(_M1, OUTPUT);
     //set the global board mode
-    Serial.println("pins set");
+    //Serial.println("pins set");
     _setting = MODE_NORMAL;
     setMode(_setting);
     //read board default settings and assign global values
-    Serial.println("mode set");
+    //Serial.println("mode set");
     bool check = readBoardData();
     //check if we were able to communicate with the board
     if(!check){

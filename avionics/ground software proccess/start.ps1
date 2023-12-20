@@ -1,0 +1,1 @@
+.\proccess\env\Scripts\Activate.ps1

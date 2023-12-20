@@ -18,11 +18,11 @@ uint32_t ledtime = 0;
 bool ledstate = true;
 
 uint32_t packettime = 0;
-uint32_t senddatatime =0;
+uint32_t senddatatime = 0;
 
 telepacket currentpacket;
 
-
+bool senddata = false;
 
 
 telepacket recivepacket(){
@@ -125,12 +125,31 @@ void loop() {
   {
     int buf = Serial.read();
     Serial.printf("echo %d %c\n",buf);
-    Serial1.write(buf);
-    uint32_t sendtime = millis();
-    while (millis()-sendtime < 100)
+    if (buf == '_')
     {
-      Serial.print(digitalRead(AUX));
+      uint8_t sendbuf = Serial.read();
+      Serial.printf("sending %d\n",sendbuf);
+      Serial1.write(sendbuf);
     }
+    else{
+      switch (buf)
+      {
+      case 'o':
+        Serial.print("send start");
+        senddata = true;
+        break;
+      
+      case '+':
+        Serial.print("send off");
+        senddata = false;
+      break;
+      
+      default:
+        break;
+      }
+    }
+    
+
     
     
   }
@@ -142,7 +161,7 @@ void loop() {
     currentpacket = recivepacket();
     
   }
-  if (millis()-senddatatime > 500)
+  if (millis()-senddatatime > 100 && senddata)
   {
     senddatatoserial(currentpacket);
     senddatatime = millis();

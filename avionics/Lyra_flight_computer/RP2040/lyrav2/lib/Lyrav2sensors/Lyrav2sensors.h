@@ -431,6 +431,7 @@ public:
             ">altitudeagl : %f \n"
             ">varience alt : %f \n"
             ">varience vvel : %f \n"
+            ">battery vol : %f \n"
             ">baro temp : %f \n",
             state.r.uptime
             ,navstate.r.uptime
@@ -473,10 +474,11 @@ public:
 
             ,navstate.r.barodata.maxrecordedalt
             ,navstate.r.filtered.alt
-            , state.r.state
+            ,state.r.state
             ,navstate.r.barodata.altitudeagl
             ,navstate.r.uncertainty.alt
             ,navstate.r.uncertainty.vvel
+            ,state.r.batterystate
             ,navstate.r.barodata.temp
                 );
                 // this is ugly, but better than a million seperate prints
@@ -561,14 +563,14 @@ class RADIO{
 
 
     int E22init(){
-        Serial.println("starting e22 init");
+        //Serial.println("starting e22 init");
     
         Serial1.end();
         Serial1.setRX(SERVO2);
         Serial1.setTX(SERVO1);
         Serial1.begin(9600);
 
-        Serial.println("Serial inited");
+        //Serial.println("Serial inited");
     
 
 
@@ -600,8 +602,8 @@ class RADIO{
 
     int begin(int radiotype = 0){
         int error;
-        error = NRF24init();
-        if (error == 0){ return 0; }
+        // error = NRF24init();
+        // if (error == 0){ return 0; }
 
         error = E22init();
         return 1;
@@ -622,7 +624,24 @@ class RADIO{
     }
 };
 
+class ADC{
 
+public:
+    ADC(){};
+
+    float battvoltage = 0;
+    
+    void setuppins(){
+        pinMode(BATT_SENSE, INPUT);
+        return;
+    }
+
+    void readbatt(){
+        float buffer = analogRead(BATT_SENSE);
+        battvoltage = map(buffer,0,4096,0,15);
+    }
+
+};
 
 
 

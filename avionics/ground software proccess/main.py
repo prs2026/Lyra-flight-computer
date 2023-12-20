@@ -91,34 +91,39 @@ except:
 
 def getserialdata():
     while not quit:
-        if serialport.isOpen():
-             while serialport.inWaiting() > 0:
-                reciveddata = str(serialport.readline())
-                #print(reciveddata)
-                reciveddata = reciveddata.replace("b'","")
-                reciveddata = reciveddata.replace("'","")
-                reciveddata = reciveddata.replace(" \\n","")
-                #print(reciveddata)
-                reciveddata = reciveddata.split(",")
-                reciveddata[len(reciveddata)-1] = reciveddata[len(reciveddata)-1].replace("\\r\\n'","")
-                print(reciveddata)
-                if reciveddata[0] != "AB" or reciveddata[len(reciveddata)-1] != "CD":
-                    print("badpacket")
-                    break
-                #print(reciveddata)
-                for i in range(1,len(reciveddata)-1):
-                    if databuf[list(databuf)[i]] != '':
-                        try:
-                            databuf[list(databuf)[i]] = round(float(reciveddata[i]),2)
-                        except:
-                            print("bad num at index: " + str(i))
-                if databuf["dataage"] > 15000:
-                    databuf["state"] = 7
-                else:
-                    databuf["state"] = int(databuf["state"])
-        else:
-            databuf["state"] = 8
+        try:
+            if serialport.isOpen():
+                while serialport.inWaiting() > 0:
+                    reciveddata = str(serialport.readline())
+                    #print(reciveddata)
+                    reciveddata = reciveddata.replace("b'","")
+                    reciveddata = reciveddata.replace("'","")
+                    reciveddata = reciveddata.replace(" \\n","")
+                    #print(reciveddata)
+                    reciveddata = reciveddata.split(",")
+                    reciveddata[len(reciveddata)-1] = reciveddata[len(reciveddata)-1].replace("\\r\\n'","")
+                    # print(reciveddata)
+                    if reciveddata[0] != "AB" or reciveddata[len(reciveddata)-1] != "CD":
+                        # print("badpacket")
+                        break
+                    #print(reciveddata)
+                    for i in range(1,len(reciveddata)-1):
+                        if databuf[list(databuf)[i]] != '':
+                            try:
+                                databuf[list(databuf)[i]] = round(float(reciveddata[i]),2)
+                            except:
+                                print("bad num at index: " + str(i))
+                    if databuf["dataage"] > 15000:
+                        databuf["state"] = 7
+                    else:
+                        databuf["state"] = int(databuf["state"])
+            else:
+                databuf["state"] = 8
+        except:
+            print("error in serial port")
+            time.sleep(1)
         time.sleep(0.001)
+
     
 
 
@@ -171,12 +176,14 @@ class MainWidget(BoxLayout):
         try:
             serialport.open()
             self.ids.serialbutton.text = "Connect to Serial \nOpened Port\n" + port
+            serialport.write(b'o')
         except:
             self.ids.serialbutton.text = "Connect to Serial \nCant Open Port \n" + port
 
     def launch(self):
         if self.launcharmed:
             try:
+                serialport.write(b'_')
                 serialport.write(b'l')
                 print("sent launch command")
             except:
@@ -186,6 +193,7 @@ class MainWidget(BoxLayout):
     
     def abort(self):
         try:
+            serialport.write(b'_')
             serialport.write(b'a')
             print("sent abort command")
         except:
@@ -193,6 +201,7 @@ class MainWidget(BoxLayout):
 
     def movedata(self):
         try:
+            serialport.write(b'_')
             serialport.write(b'm')
             print("sent movedata command")
         except:
@@ -200,6 +209,7 @@ class MainWidget(BoxLayout):
         
     def getnewpadoffset(self):
         try:
+            serialport.write(b'_')
             serialport.write(b'o')
             print("sent getpadoffset command")
         except:
