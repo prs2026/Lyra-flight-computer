@@ -119,6 +119,7 @@ bool E220::readBoardData(){
     //check the first 3 parts of the data are the same
     if((_Params[0] != 0xC1) | (_Params[1] != 0x00) | (_Params[2] != 0x06)){
         Serial.println("Error reading module config, check the wiring");
+        Serial.printf("expected c10006, got %x%x%x\n",_Params[0],_Params[1],_Params[2]);
         setMode(_setting);
         return false;
     }
