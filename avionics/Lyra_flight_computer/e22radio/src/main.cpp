@@ -92,9 +92,10 @@ void setup() {
   ebyte.setNetID(0,true);
   ebyte.setBaud(UDR_9600,true);
   ebyte.setSubPacketSize(SPS_64,true);
-  ebyte.setAirDataRate(ADR_0300,true);
+  ebyte.setAirDataRate(ADR_2400,true);
   ebyte.setEncryptionKey(0,true);
   ebyte.setLBT(true,true);
+  ebyte.setFixedTransmission(false,true);
   ebyte.printBoardParameters();
   ebyte.setRadioMode(MODE_PROGRAM);
   ebytesimple.printreg(0x00,0x08);
@@ -119,7 +120,7 @@ void loop() {
     if (buf == '_')
     {
       uint8_t sendbuf = Serial.read();
-      Serial1.write('t');
+      Serial1.write(sendbuf);
       Serial.printf("sending %d\n",sendbuf);
       
     }

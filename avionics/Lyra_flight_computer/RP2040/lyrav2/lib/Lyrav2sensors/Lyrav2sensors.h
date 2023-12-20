@@ -592,7 +592,7 @@ class RADIO{
         ebyte.setNetID(0,true);
         ebyte.setBaud(UDR_9600,true);
         ebyte.setSubPacketSize(SPS_64,true);
-        ebyte.setAirDataRate(ADR_0300,true);
+        ebyte.setAirDataRate(ADR_2400,true);
         ebyte.setEncryptionKey(0,true);
         ebyte.setLBT(true,true);
         ebyte.printBoardParameters();
