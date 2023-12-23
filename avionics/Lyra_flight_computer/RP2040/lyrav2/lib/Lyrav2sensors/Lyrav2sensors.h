@@ -30,7 +30,7 @@ E220 ebyte(&radioserial,SERVO4,26,SERVO3);
                 // aux m1
 // e22 ebytesimple(SERVO3,UART0_RX);
 
-const float SEALEVELPRESSURE = 	1016.1;
+const float SEALEVELPRESSURE = 	1018.626;
 
 const uint16_t groundaddress = 0x4321;
 
