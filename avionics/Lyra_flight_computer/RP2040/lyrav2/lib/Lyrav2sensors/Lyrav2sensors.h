@@ -265,7 +265,7 @@ public:
         float timestep = (micros() - prevtime)/1e6;
         // float hpfgain = hpfcutoff / (2* M_PI * 1/timestep);
 
-        _data.altitude = 44330.0 * (1.0 - pow((bmp.pressure/100.0F) / SEALEVELPRESSURE, 0.1903));
+        _data.altitude = bmp.readAltitude(SEALEVELPRESSURE);//44330.0 * (1.0 - pow((bmp.pressure/100.0F) / SEALEVELPRESSURE, 0.1903));
 
         _data.altitude = lpfal*prevalt + (1-lpfal)*_data.altitude;
         // _data.altitude = _data.altitude - hpfstate;
