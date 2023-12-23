@@ -371,7 +371,20 @@ class MPCORE{
             }
             
             fs::File readfile = LittleFS.open("/log.csv", "r");
-            sdfile.println("checksum,uptime mp,uptime nav, errorflag mp, errorflag nav,accel x, accel y, accel z, accelworld x,accelworld y,accelworld z, gyro x, gyro y, gyro z, mag x, mag y, mag z, magraw x, magraw y, magraw z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, pressure, verticalvel,filteredvvel,maxrecorded alt,altitudeagl,filteredalt,imutemp, barotemp, state,battery voltage,checksum2");
+            sdfile.println(" checksum,"
+            "uptime mp,uptime nav," 
+            "errorflag mp,errorflag NAV," 
+            "accel x, accel y, accel z," 
+            "accelworld x, accelworld y, accelworld z," 
+            "gyro x, gyro y, gyro z," 
+            "mag x, mag y, mag z," 
+            "magraw x, magraw y, magraw z," 
+            "euler x, euler y, euler z," 
+            "quat w, quat x, quat y,quat z," 
+            "altitude, presusre, verticalvel,filtered vvel, maxrecorded alt,altitudeagl, filtered alt," 
+            "imutemp, barotemp," 
+            "state, batt state, checksum2");
+
 
             Serial.printf("flash amount used: %d\n",readfile.size());
 
@@ -405,59 +418,45 @@ class MPCORE{
                 }
                 
                 sdfile.printf(
-                    "101,"//checksum // checksum,uptime mp,uptime nav, errorflag mp, accel x, accel y, accel z, gyro x, gyro y, gyro z, mag x, mag y, mag z, magraw x, magraw y, magraw z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, pressure, verticalvel,filteredaccel x, filteredaccel y, filteredaccel z, imutemp, barotemp, state,checksum
+                    "101,"// checksum,
+                    // uptime mp,uptime nav, 
+                    // errorflag mp,errorflag NAV, 
+                    // accel x, accel y, accel z, 
+                    // accelworld x, accelworld y, accelworld z, 
+                    // gyro x, gyro y, gyro z, 
+                    // mag x, mag y, mag z, 
+                    // magraw x, magraw y, magraw z, 
+                    // euler x, euler y, euler z, 
+                    // quat w, quat x, quat y, quat z, 
+                    // altitude, presusre, verticalvel,filtered vvel, altitudeagl, filtered alt, 
+                    // imutemp, barotemp,mag temp, 
+                    // state, checksum2
                     "%d,%d,"//uptimes
                     "%d,%d,"//errorflag
                     "%f,%f,%f," // accel
+                    "%f,%f,%f," // accel world
                     "%f,%f,%f," // gyro
                     "%f,%f,%f," // mag
                     "%f,%f,%f," // magraw
                     "%f,%f,%f," // orientation euler"
                     "%f,%f,%f,%f," // orientation quat"
                     "%f,%f,%f,%f,%f,%f,%f," //altitude, presusre, verticalvel,filtered vvel, altitudeagl, filtered alt
-                    "%f,%f,%f," // accel
-                    "%f,%f," // temps, imu baro mag
-                    "%d,202\n", //state
-                    readentry.r.MPstate.r.uptime,
-                    readentry.r.navsysstate.r.uptime,
-                    readentry.r.MPstate.r.errorflag,
-                    readentry.r.navsysstate.r.errorflag,
-                    readentry.r.navsysstate.r.imudata.accel.x,
-                    readentry.r.navsysstate.r.imudata.accel.y,
-                    readentry.r.navsysstate.r.imudata.accel.z,
-                    readentry.r.navsysstate.r.accelworld.x,
-                    readentry.r.navsysstate.r.accelworld.y,
-                    readentry.r.navsysstate.r.accelworld.z,
+                    "%f,%f," // temps, imu baroP>
+                    "%d,%f,202\n", //state, battstate
+                    readentry.r.MPstate.r.uptime, readentry.r.navsysstate.r.uptime,
+                    readentry.r.MPstate.r.errorflag, readentry.r.navsysstate.r.errorflag,
+                    readentry.r.navsysstate.r.imudata.accel.x, readentry.r.navsysstate.r.imudata.accel.y, readentry.r.navsysstate.r.imudata.accel.z,
+                    readentry.r.navsysstate.r.accelworld.x, readentry.r.navsysstate.r.accelworld.y, readentry.r.navsysstate.r.accelworld.z,
                     readentry.r.navsysstate.r.imudata.gyro.x*(180/M_PI),
                     readentry.r.navsysstate.r.imudata.gyro.y*(180/M_PI),
                     readentry.r.navsysstate.r.imudata.gyro.z*(180/M_PI),
-                    readentry.r.navsysstate.r.magdata.utesla.x,
-                    readentry.r.navsysstate.r.magdata.utesla.y,
-                    readentry.r.navsysstate.r.magdata.utesla.z,
-                    readentry.r.navsysstate.r.magdata.gauss.x,
-                    readentry.r.navsysstate.r.magdata.gauss.y,
-                    readentry.r.navsysstate.r.magdata.gauss.z,
-                    readentry.r.navsysstate.r.orientationeuler.x*(180/M_PI),
-                    readentry.r.navsysstate.r.orientationeuler.y*(180/M_PI),
-                    readentry.r.navsysstate.r.orientationeuler.z*(180/M_PI),
-                    readentry.r.navsysstate.r.orientationquat.w,
-                    readentry.r.navsysstate.r.orientationquat.x,
-                    readentry.r.navsysstate.r.orientationquat.y,
-                    readentry.r.navsysstate.r.orientationquat.z,
-                    readentry.r.navsysstate.r.barodata.altitude,
-                    readentry.r.navsysstate.r.barodata.pressure,
-                    readentry.r.navsysstate.r.barodata.verticalvel,
-                    readentry.r.navsysstate.r.filtered.vvel,
-                    readentry.r.navsysstate.r.barodata.maxrecordedalt,
-                    readentry.r.navsysstate.r.barodata.altitudeagl,
-                    readentry.r.navsysstate.r.filtered.alt,
-                    readentry.r.navsysstate.r.filtered.accel.x,
-                    readentry.r.navsysstate.r.filtered.accel.y,
-                    readentry.r.navsysstate.r.filtered.accel.z,
-                    readentry.r.navsysstate.r.imudata.temp,
-                    readentry.r.navsysstate.r.barodata.temp,
-                    readentry.r.MPstate.r.state,
-                    readentry.r.MPstate.r.batterystate
+                    readentry.r.navsysstate.r.magdata.utesla.x, readentry.r.navsysstate.r.magdata.utesla.y, readentry.r.navsysstate.r.magdata.utesla.z,
+                    readentry.r.navsysstate.r.magdata.gauss.x, readentry.r.navsysstate.r.magdata.gauss.y, readentry.r.navsysstate.r.magdata.gauss.z,
+                    readentry.r.navsysstate.r.orientationeuler.x*(180/M_PI), readentry.r.navsysstate.r.orientationeuler.y*(180/M_PI), readentry.r.navsysstate.r.orientationeuler.z*(180/M_PI),
+                    readentry.r.navsysstate.r.orientationquat.w, readentry.r.navsysstate.r.orientationquat.x, readentry.r.navsysstate.r.orientationquat.y, readentry.r.navsysstate.r.orientationquat.z,
+                    readentry.r.navsysstate.r.barodata.altitude, readentry.r.navsysstate.r.barodata.pressure, readentry.r.navsysstate.r.barodata.verticalvel, readentry.r.navsysstate.r.filtered.vvel, readentry.r.navsysstate.r.barodata.maxrecordedalt, readentry.r.navsysstate.r.barodata.altitudeagl,readentry.r.navsysstate.r.filtered.alt,
+                    readentry.r.navsysstate.r.imudata.temp,readentry.r.navsysstate.r.barodata.temp,
+                    readentry.r.MPstate.r.state,readentry.r.MPstate.r.batterystate
                     );
             }
 
@@ -687,6 +686,7 @@ class MPCORE{
                     _sysstate.r.state = 2;
                     detectiontime = millis();
                     logtextentry("liftoff detected");
+                    ebyte.setPower(Power_27,true);
                 }
                 
             }
@@ -791,6 +791,7 @@ class MPCORE{
 
             else if (input == 'a' && (_sysstate.r.state < 3 || _sysstate.r.state >= 6 )){
                 _sysstate.r.state = 0;
+                ebyte.setPower(Power_21,true);
                 logtextentry("aborted from state: ",int(_sysstate.r.state));
                 return 0;
             }

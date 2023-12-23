@@ -30,7 +30,9 @@ E220 ebyte(&radioserial,SERVO4,26,SERVO3);
                 // aux m1
 // e22 ebytesimple(SERVO3,UART0_RX);
 
-const float SEALEVELPRESSURE = 1023.3;
+const float SEALEVELPRESSURE = 	1016.1;
+
+const uint16_t groundaddress = 0x4321;
 
 
 
@@ -586,7 +588,7 @@ class RADIO{
             
         }
 
-        ebyte.setAddress(0xffff,true);
+        ebyte.setAddress(0x1234,true);
         ebyte.setPower(Power_21,true);
         ebyte.setChannel(68,true);
         ebyte.setNetID(0,true);
@@ -595,6 +597,7 @@ class RADIO{
         ebyte.setAirDataRate(ADR_2400,true);
         ebyte.setEncryptionKey(0,true);
         ebyte.setLBT(true,true);
+        ebyte.setFixedTransmission(true,true);
         ebyte.printBoardParameters();
         return 0;
     }
@@ -610,7 +613,7 @@ class RADIO{
     }
 
     int sendpacket(telepacket packet){
-        Serial1.write(packet.data,sizeof(packet.data));
+        ebyte.sendFixedData(groundaddress,68,packet.data,sizeof(packet.data),false);
 
         //uint8_t testpacket[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32};
         //Serial1.write(testpacket,sizeof(testpacket));

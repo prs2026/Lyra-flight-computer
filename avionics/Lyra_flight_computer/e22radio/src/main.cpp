@@ -24,18 +24,18 @@ telepacket currentpacket;
 
 bool senddata = false;
 
+const uint16_t rockyaddress = 0x1234;
 
-telepacket recivepacket(){
-  telepacket downpacket;
+void recivepacket(){
   if (!Serial1.available())
   {
     Serial1.println("no packet");
-    return downpacket;
+    return;
   }
   if (Serial1.peek() != 0x12)
   {
     Serial.printf("invalid packet, expected 0x12 got 0x%x \n",Serial1.read());
-    return downpacket;
+    return;
   }
   uint8_t databuf[32] = {};
 
@@ -44,18 +44,17 @@ telepacket recivepacket(){
   if (databuf[0] != 0x12 && databuf[31] != 0x34)
   {
     Serial.println("invalid packet, markers didnt pass");
-    return downpacket;
+    return;
   }
 
   Serial.println("good data packet");
   int j = 0;
   for (int i = 0; i < 32; i++)
   {
-    downpacket.data[j] = databuf[j];
+    currentpacket.data[j] = databuf[j];
     j++;
   }
   packettime = millis();
-  return downpacket;
 }
 
 void senddatatoserial(telepacket data){
@@ -86,8 +85,8 @@ void setup() {
   {
     Serial.println("radio init fail");
   }
-  ebyte.setAddress(0xffff,true);
-  ebyte.setPower(Power_21,true);
+  ebyte.setAddress(0x4321,true);
+  ebyte.setPower(Power_24,true);
   ebyte.setChannel(68,true);
   ebyte.setNetID(0,true);
   ebyte.setBaud(UDR_9600,true);
@@ -95,7 +94,7 @@ void setup() {
   ebyte.setAirDataRate(ADR_2400,true);
   ebyte.setEncryptionKey(0,true);
   ebyte.setLBT(true,true);
-  ebyte.setFixedTransmission(false,true);
+  ebyte.setFixedTransmission(true,true);
   ebyte.printBoardParameters();
   ebyte.setRadioMode(MODE_PROGRAM);
   ebytesimple.printreg(0x00,0x08);
@@ -120,7 +119,7 @@ void loop() {
     if (buf == '_')
     {
       uint8_t sendbuf = Serial.read();
-      Serial1.write(sendbuf);
+      ebyte.sendFixedData(rockyaddress,68,&sendbuf,1,false);
       Serial.printf("sending %d\n",sendbuf);
       
     }
@@ -151,7 +150,7 @@ void loop() {
     int len = 0;
     uint8_t databuf[50] = {};
     Serial.println("new message: ");
-    currentpacket = recivepacket();
+    recivepacket();
     
   }
   if (millis()-senddatatime > 100 && senddata)
