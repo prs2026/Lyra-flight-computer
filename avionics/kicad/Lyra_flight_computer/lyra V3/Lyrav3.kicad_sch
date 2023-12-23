@@ -6211,7 +6211,7 @@
     (property "Value" "1000uf" (at 307.975 58.42 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Capacitor_SMD:CP_Elec_6.3x3.9" (at 305.435 57.15 0)
+    (property "Footprint" "Capacitor_THT:CP_Radial_D8.0mm_P3.80mm" (at 305.435 57.15 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 305.435 57.15 0)
