@@ -23,9 +23,8 @@ public:
     void fire(uint32_t preset);
 
 
-    void getcont();
     int getcont();
-}
+};
 
 
 #endif //PYROBATTLIB

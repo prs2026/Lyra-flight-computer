@@ -18,7 +18,7 @@ void MPCORE::setuppins(){
     digitalWrite(LEDGREEN, HIGH);
     digitalWrite(LEDBLUE, HIGH);
 
-    adc.setuppins();
+    // adc.setuppins();
     return;
 }
 
@@ -123,7 +123,7 @@ int MPCORE::logcurrentstate(){
 int MPCORE::initperipherials(){
     port.init();
     int error = telemetryradio.init();
-    adc.setuppins();
+    // adc.setuppins();
     
     return 0;
 }
@@ -132,8 +132,8 @@ int MPCORE::initperipherials(){
 
 int MPCORE::logdata(){
     uint32_t openingtime = micros();
-    adc.readbatt();
-    _sysstate.r.batterystate = adc.battvoltage;
+    // adc.readbatt();
+    // _sysstate.r.batterystate = adc.battvoltage;
 
     logpacket datatolog = preplogentry(_sysstate,NAV._sysstate);
     //Serial.print(datatolog.r.checksum2);

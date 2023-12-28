@@ -13,15 +13,15 @@ BARO baro;
 
 class NAVCORE{
 
-    const float ALTVAR 0.5 
-    const float VVELVAR 0.8
-    const float VACCELVAR 0.6
-    const float ORIENTVAR 0.4
+    const float ALTVAR = 0.5;
+    const float VVELVAR = 0.8;
+    const float VACCELVAR = 0.6;
+    const float ORIENTVAR = 0.4;
 
-    const float ALTNOISE 0.1
-    const float VVELNOISE 1.5
-    const float VACCELNOISE 0.2
-    const float ORIENTNOISE 0.4
+    const float ALTNOISE = 0.1;
+    const float VVELNOISE = 1.5;
+    const float VACCELNOISE = 0.2;
+    const float ORIENTNOISE = 0.4;
 
     
     navpacket prevsysstate;

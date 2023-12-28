@@ -33,8 +33,8 @@ using Eigen::AngleAxisd;
 
 #define P1_EN 6
 #define P2_EN 7
-#define P1_EN 6
-#define P2_EN 7
+#define P3_EN 6
+#define P4_EN 7
 
 
 #define P1_CONT 28

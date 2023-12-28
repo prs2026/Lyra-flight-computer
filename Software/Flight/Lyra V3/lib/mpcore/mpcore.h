@@ -13,8 +13,6 @@ SERIALPORT port;
 RADIO telemetryradio;
 
 NAVCORE NAV;
-ADC adc;
-
 
 class MPCORE{
     

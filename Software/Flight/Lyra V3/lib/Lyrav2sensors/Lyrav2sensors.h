@@ -11,7 +11,6 @@ Bmi088Accel accelunit(Wire1,0x18);
 Bmi088Gyro gyrounit(Wire1,0x68);
 
 Adafruit_BMP3XX bmp;
-Adafruit_LIS3MDL mdl;
 
 Stream &radioserial = (Stream &)Serial1;
                     //  m0         m1     aux
@@ -52,7 +51,7 @@ float lpfal = 0.7;
 float lpfalv = 0.7;
 
 public:
-    BARO();;
+    BARO();
     BAROdata data;
     double padalt = 0;
 

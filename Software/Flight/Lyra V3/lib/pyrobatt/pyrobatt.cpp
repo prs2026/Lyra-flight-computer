@@ -2,7 +2,7 @@
 
 
 PYROCHANNEL::PYROCHANNEL(int _identifier){
-    identity = _identifer;
+    identity = _identifier;
     EN_PIN = enpins[identity];
     CONT_PIN = contpins[identity];
 }
@@ -17,12 +17,8 @@ void PYROCHANNEL::fire(uint32_t preset){
 }
 
 
-void PYROCHANNEL::getcont(){
-    contuinty = digitalRead(CONT_PIN);
-    return;
-}
 
 int PYROCHANNEL::getcont(){
-    contuinty = digitalRead(CONT_PIN);
-    return contuinty;
+    continuity = digitalRead(CONT_PIN);
+    return continuity;
 }

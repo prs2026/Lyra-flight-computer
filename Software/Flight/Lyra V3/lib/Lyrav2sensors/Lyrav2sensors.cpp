@@ -288,14 +288,3 @@ int RADIO::sendpacket(telepacket packet){
     }
     return 0;
 }
-
-
-void ADC::setuppins(){
-    pinMode(BATT_SENSE, INPUT);
-    return;
-}
-
-void ADC::readbatt(){
-        float buffer = analogRead(BATT_SENSE);
-        battvoltage = map(buffer,0,4096,0,15);
-    }
