@@ -1,6 +1,8 @@
 #include <navcore.h>
 
 
+
+
 void NAVCORE::KFinit(){
     _sysstate.r.filtered.alt = _sysstate.r.barodata.altitudeagl;
     _sysstate.r.filtered.vvel = _sysstate.r.barodata.verticalvel;
@@ -259,3 +261,7 @@ Vector3float NAVCORE::getworldaccel(navpacket _state){
     return vector3tofloat(_accelworld);
 
 };
+
+void NAVCORE::getpadoffset(){
+    baro.getpadoffset();
+}

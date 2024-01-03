@@ -1,9 +1,10 @@
 #include <Arduino.h>
-#include "generallib.h"
-#include "navcore.h"
+
 #include "mpcore.h"
 
 MPCORE MP;
+
+
 
 bool dataismoved = false;
 
@@ -26,14 +27,14 @@ void setup() { // main core setup
     if (NAV._sysstate.r.errorflag * MP._sysstate.r.errorflag != 1)
     {
         MP.ledcolor = BLUE;
-        //Serial.println("core error");
+        Serial.println("core error");
     }
     else if (NAV._sysstate.r.errorflag * MP._sysstate.r.errorflag < 0){
         MP.ledcolor = RED;
     }
     else{
         MP.ledcolor = GREEN;
-        //Serial.println("cores good");
+        Serial.println("cores good");
     }
     
 
@@ -42,22 +43,18 @@ void setup() { // main core setup
 
     Serial.print("MP boot complete error code: ");
     Serial.println(MP._sysstate.r.errorflag);
-
-    //MP.fetchnavdata();
     
     Serial.print("NAV boot complete, error code :");
     Serial.println(NAV._sysstate.r.errorflag);
-    
-    //MP.readdata();
 
-    //MP.beep();
+    MP.beep();
 }
 
 void setup1() { // nav core setup
     // NAV.handshake();
     NAV.initi2c();
     NAV.sensorinit();
-    baro.getpadoffset();
+    NAV.getpadoffset();
     NAV.KFinit();
     NAV.getsensordata();
 }

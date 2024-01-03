@@ -25,6 +25,8 @@ using Eigen::Matrix3d;
 using Eigen::Quaterniond;
 using Eigen::AngleAxisd;
 
+
+
 #define LEDRED 12
 #define LEDGREEN 13
 #define LEDBLUE 14
@@ -85,6 +87,7 @@ struct BAROdata{
     float verticalvel;
     float maxrecordedalt;
     float altitudeagl;
+    float padalt;
 };
 
 struct variences{

@@ -2,12 +2,7 @@
 #define NAVCOREHEADER
 
 #include <Lyrav2sensors.h>
-
-IMU imu;
-BARO baro;
-
-//using Eigen::MatrixXd;
-//using Eigen::Vector3d;
+#include <Lyrav2sensors.cpp>
 
 
 
@@ -32,14 +27,12 @@ class NAVCORE{
     
         navpacket _sysstate;
 
-        
-        
 
         float alpha = 0.98;
 
         void KFinit();
 
-        NAVCORE();;
+        NAVCORE();
         /*
         1 = no errors
         3 = failed handshake
@@ -78,6 +71,7 @@ class NAVCORE{
 
         void KFpredict();                                                         
         void KFupdate();
+        
 
         void intergrategyros(double timestep);
 
@@ -86,8 +80,12 @@ class NAVCORE{
         navpacket computeorientation(navpacket currentpacket);
         Vector3float getworldaccel(navpacket _state);
 
+        void getpadoffset();
+
         
 
 };
+
+extern NAVCORE NAV;
 
 #endif // NAVCOREHEADER

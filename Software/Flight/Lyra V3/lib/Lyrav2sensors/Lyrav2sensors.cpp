@@ -1,4 +1,20 @@
+#if !defined(LYRAV2SENSORCPP)
+#define LYRAV2SENSORCPP
 #include <Lyrav2sensors.h>
+
+
+/* accelunit object */
+Bmi088Accel accelunit(Wire1,0x18);
+/* gyrounit object */
+Bmi088Gyro gyrounit(Wire1,0x68);
+
+Adafruit_BMP3XX bmp;
+
+
+Stream &radioserial = (Stream &)Serial1;
+                    //  m0         m1     aux
+E220 ebyte(&radioserial,11,26,11);
+
 
 IMU::IMU(){
         
@@ -92,8 +108,8 @@ void IMU::read(int oversampling){
     accel.z() = accelal*prevdata.accel.z + (1-accelal)*accel.z();
 
 
-    _data.accel = vector3tofloat(accel);
-    _data.gyro = vector3tofloat(gyro);
+    // _data.accel = vector3tofloat(accel);
+    // _data.gyro = vector3tofloat(gyro);
 
     _data.temp = accelunit.getTemperature_C();
 
@@ -102,19 +118,25 @@ void IMU::read(int oversampling){
     
     return;
 }
+extern IMU imu;
+
+
+BARO::BARO(){
+    return;
+}
     
 int BARO::getpadoffset(int samplesize){
     double _padalt = 0;
     // for (int i = 0; i < samplesize; i++)
     // {
-        _padalt += bmp.readAltitude(SEALEVELPRESSURE);
+        _padalt = bmp.readAltitude(SEALEVELPRESSURE);
         delayMicroseconds(100);
     // }
 
-    _padalt /= samplesize;
+    //_padalt /= samplesize;
     Serial.printf("new pad offset: %f\n",_padalt);
     //MP.logtextentry("BMP new pad offset: ",float(_padalt));
-    padalt = _padalt;
+    data.padalt = _padalt;
     data.maxrecordedalt = 0;
     return 0;
 }
@@ -149,7 +171,7 @@ void BARO::readsensor(){
     // hpfstate += hpfgain * _data.altitude;
 
 
-    _data.altitudeagl = _data.altitude-padalt;
+    _data.altitudeagl = _data.altitude-data.padalt;
     _data.pressure = bmp.pressure;
     _data.temp = bmp.temperature;
 
@@ -183,6 +205,10 @@ void BARO::readsensor(){
     data = _data;
 }
 
+extern BARO baro;
+
+
+
 int SERIALPORT::init(){
             Serial.begin(115200);
 
@@ -200,6 +226,9 @@ int SERIALPORT::init(){
                 return 1;
             }
     }
+
+extern SERIALPORT port;
+
 
 int SERIALPORT::senddata(mpstate state,navpacket navstate){
         if (sendtoplot)
@@ -288,3 +317,28 @@ int RADIO::sendpacket(telepacket packet){
     }
     return 0;
 }
+
+int RADIO::setpower(int power){
+    switch (power)
+    {
+    case 21:
+        ebyte.setPower(Power_21,true);
+        break;
+    
+    case 27:
+        ebyte.setPower(Power_27,true);
+        break;
+    case 30:
+        ebyte.setPower(Power_30,true);
+        break;
+    
+    default:
+        Serial.println("invailid power setting");
+        break;
+    }
+    return 0;
+}
+
+extern RADIO telemetryradio;
+
+#endif

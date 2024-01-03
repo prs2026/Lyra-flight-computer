@@ -1,6 +1,12 @@
 #include <mpcore.h>
 
 
+Stream &radioserial2 = (Stream &)Serial1;
+                    //  m0         m1     aux
+E220 ebyte2(&radioserial2,11,26,11);
+
+
+
 
 MPCORE::MPCORE(){
     _sysstate.r.state = 0;
@@ -287,7 +293,7 @@ int MPCORE::changestate(){
             _sysstate.r.state = 2;
             detectiontime = millis();
             logtextentry("liftoff detected");
-            ebyte.setPower(Power_27,true);
+            ebyte2.setPower(Power_27,true);
         }
         
     }
@@ -392,7 +398,7 @@ int MPCORE::parsecommand(char input){
 
     else if (input == 'a' && (_sysstate.r.state < 3 || _sysstate.r.state >= 6 )){
         _sysstate.r.state = 0;
-        ebyte.setPower(Power_21,true);
+        ebyte2.setPower(Power_21,true);
         logtextentry("aborted from state: ",int(_sysstate.r.state));
         return 0;
     }
@@ -416,13 +422,13 @@ int MPCORE::parsecommand(char input){
         break;
     
     case 'o':
-        baro.getpadoffset();
-        logtextentry("got new pad offset: ",float(baro.padalt));
+        NAV.getpadoffset();
+        logtextentry("got new pad offset: ",float(NAV._sysstate.r.barodata.padalt));
         break;
     
     case 'k':
         Serial.println("testing radio");
-        ebyte.setRadioMode(MODE_NORMAL);
+        ebyte2.setRadioMode(MODE_NORMAL);
         Serial1.print(0x32);
         break;
 

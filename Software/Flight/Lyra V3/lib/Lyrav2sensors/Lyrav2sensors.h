@@ -1,20 +1,9 @@
-#if !defined(Lyrav2sensors)
-#define Lyrav2sensors
+#if !defined(LYRAV2SENSORSLIB)
+#define LYRAV2SENSORSLIB
 
 #include <generallib.h>
-// #include <e22.h>
 
 
-/* accelunit object */
-Bmi088Accel accelunit(Wire1,0x18);
-/* gyrounit object */
-Bmi088Gyro gyrounit(Wire1,0x68);
-
-Adafruit_BMP3XX bmp;
-
-Stream &radioserial = (Stream &)Serial1;
-                    //  m0         m1     aux
-E220 ebyte(&radioserial,11,26,11);
 
 const float SEALEVELPRESSURE = 	1018.626;
 
@@ -53,7 +42,6 @@ float lpfalv = 0.7;
 public:
     BARO();
     BAROdata data;
-    double padalt = 0;
 
     int getpadoffset(int samplesize = 1);
     int init();
@@ -72,6 +60,7 @@ public:
 
 };
 
+
 class RADIO{
 
     uint16_t groundaddress = 0x1234; 
@@ -83,8 +72,9 @@ class RADIO{
 
     int init();
     int sendpacket(telepacket packet);
+    int setpower(int power);
 };
 
 
 
-#endif // Lyrav2sensors
+#endif // LYRAV2SENSORSLIB

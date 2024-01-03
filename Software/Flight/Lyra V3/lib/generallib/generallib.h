@@ -3,7 +3,8 @@
 
 #include "macros.h"
 
-Vector3float vector3tofloat(Eigen::Vector3d v){
+
+inline Vector3float vector3tofloat(Eigen::Vector3d v){
     Vector3float result;
     result.x = v.x();
     result.y = v.y();
@@ -11,7 +12,7 @@ Vector3float vector3tofloat(Eigen::Vector3d v){
     return result;
 }
 
-Eigen::Vector3d vectorfloatto3(Vector3float v){
+inline Eigen::Vector3d vectorfloatto3(Vector3float v){
     Eigen::Vector3d result;
     result.x() = v.x;
     result.y() = v.y;
@@ -19,7 +20,7 @@ Eigen::Vector3d vectorfloatto3(Vector3float v){
     return result;
 }
 
-Quaterniond quatstructtoeigen(Quatstruct q){
+inline Quaterniond quatstructtoeigen(Quatstruct q){
     Quaterniond result;
     result.w() = q.w;
     result.x() = q.x;
@@ -28,7 +29,7 @@ Quaterniond quatstructtoeigen(Quatstruct q){
     return result;
 }
 
-Quatstruct eigentoquatstruct(Quaterniond q){
+inline Quatstruct eigentoquatstruct(Quaterniond q){
     Quatstruct result;
     result.w = q.w();
     result.x = q.x();
@@ -37,7 +38,7 @@ Quatstruct eigentoquatstruct(Quaterniond q){
     return result;
 }
 
-Vector3float quat2euler(Quatstruct inquatstruct){
+inline Vector3float quat2euler(Quatstruct inquatstruct){
     Quaterniond quat = quatstructtoeigen(inquatstruct);
     
     Matrix3d R = quat.toRotationMatrix();
@@ -48,7 +49,7 @@ Vector3float quat2euler(Quatstruct inquatstruct){
 }
 
 
-logpacket preplogentry(mpstate MPstate, navpacket NAVstate){
+inline logpacket preplogentry(mpstate MPstate, navpacket NAVstate){
     logpacket result;
     result.r.checksum1 = 0xAB;
     result.r.checksum2 = 0xCD;
@@ -58,7 +59,7 @@ logpacket preplogentry(mpstate MPstate, navpacket NAVstate){
     return result;
 }
 
-telepacket statetopacket(mpstate state,navpacket navstate){
+inline telepacket statetopacket(mpstate state,navpacket navstate){
     telepacket packet;
     packet.r.checksum = 0x12;
     packet.r.checksum2 = 0x34;
@@ -84,12 +85,12 @@ telepacket statetopacket(mpstate state,navpacket navstate){
     return packet;
 }
 
-void printBin(byte aByte) {
+inline void printBin(byte aByte) {
   for (int8_t aBit = 7; aBit >= 0; aBit--)
     Serial.write(bitRead(aByte, aBit) ? '1' : '0');
 }
 
-uint8_t scani2c(bool printout){
+inline uint8_t scani2c(bool printout){
     byte error, address;
     int nDevices;
      printout ? Serial.print("Scanning..")  : 0;

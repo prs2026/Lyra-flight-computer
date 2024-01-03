@@ -5,14 +5,9 @@
 #include <navcore.h>
 #include <pyrobatt.h>
 
-
 //fs::File logtofile;
 
 
-SERIALPORT port;
-RADIO telemetryradio;
-
-NAVCORE NAV;
 
 class MPCORE{
     
