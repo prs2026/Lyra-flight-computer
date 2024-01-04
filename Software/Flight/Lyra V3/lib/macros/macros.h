@@ -27,24 +27,24 @@ using Eigen::AngleAxisd;
 
 
 
-#define LEDRED 12
-#define LEDGREEN 13
-#define LEDBLUE 14
+#define LEDRED 11
+#define LEDGREEN 10
+#define LEDBLUE 9
 
 #define BUZZERPIN 21
 
-#define P1_EN 6
-#define P2_EN 7
-#define P3_EN 6
+#define P1_EN 5
+#define P2_EN 3
+#define P3_EN 1
 #define P4_EN 7
 
 
-#define P1_CONT 28
-#define P2_CONT 27
-#define P3_CONT 28
-#define P4_CONT 27
+#define P1_CONT 4
+#define P2_CONT 2
+#define P3_CONT 0
+#define P4_CONT 6
 
-#define BATT_SENSE 2
+#define BATT_SENSE 26
 
 #define SDA 22
 #define SCL 23
@@ -53,6 +53,15 @@ using Eigen::AngleAxisd;
 #define RED 1
 #define GREEN 2
 #define BLUE 3
+
+#define BRKOUT1 25 // 
+#define BRKOUT2 27 // 
+#define BRKOUT3 28 // 
+#define BRKOUT4 29 //
+
+#define BRKOUT5 16 //  
+#define BRKOUT6 17 // 
+#define BRKOUT7 18 // 
 
 struct Vector3float
 {

@@ -662,6 +662,7 @@ int Bmi088Accel::begin()
   if (isFatalErr()) {
     return -10;
   }
+  
   return 1;
 }
 

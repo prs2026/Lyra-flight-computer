@@ -50,6 +50,7 @@ IMU::IMU(){
 int IMU::init(){
     int status;
     status = accelunit.begin();
+    
 
     if (status < 0 )
     {
@@ -134,7 +135,7 @@ void IMU::read(int oversampling){
     // _data.gyro = vector3tofloat(gyro);
 
     _data.temp = accelunit.getTemperature_C();
-
+    
     data = _data;
     prevdata = _data;
     

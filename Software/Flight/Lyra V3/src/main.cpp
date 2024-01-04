@@ -50,6 +50,7 @@ void setup() { // main core setup
 
 void setup1() { // nav core setup
     // NAV.handshake();
+    delay(6000);
     NAV.initi2c();
     NAV.sensorinit();
     NAV.getpadoffset();
@@ -90,7 +91,7 @@ void loop() { // main core loop
 
     if (MP.sendserialon & millis() - MP.prevtime.serial >= MP.intervals[MP._sysstate.r.state].serial)
     {
-        // port.senddata(MP._sysstate,NAV._sysstate);
+        port.senddata(MP._sysstate,NAV._sysstate);
         MP.prevtime.serial = millis();
         //eventsfired += 20;
     }
@@ -204,39 +205,5 @@ void loop1() { // nav core loop
         NAV.prevtime.looptime = micros();
     }
     
-    
-    
-
-    // if ((millis() - NAV.prevtime.sendpacket) >= 50)
-    // {
-    //     int inbuf = rp2040.fifo.available();
-    //     int error = NAV.sendpacket(NAV._sysstate);
-    //     if (error > 0)
-    //     {
-    //         //Serial.printf("packet send failure at iteration %d and timestamp %d with %d bytes already in fifo \n"
-    //         //,error,NAV._sysstate.r.uptime,inbuf);
-    //     }
-    //     else
-    //     {
-    //         //Serial.print("packet sent on iteration ");
-    //         //Serial.print(error);
-    //     }
-        
-    //     NAV.prevtime.sendpacket = millis();
-        
-    // }
-    
     NAV._sysstate.r.uptime = millis();
 }
-
-
-
-    // if (rp2040.fifo.available())
-    // {
-    //     uint32_t gettingnavdata = micros();
-    //     int _avalible = rp2040.fifo.available();
-    //     int _error = MP.fetchnavdata();
-    //     eventsfired += 1;
-    //     //Serial.printf("fetching nav data took %d \n",micros() - gettingnavdata);
-    //     //Serial.printf("recived packet at timestamp : %d with error %d and %d bytes in the fifo",MP._sysstate.r.uptime,_error,_avalible);
-    // }

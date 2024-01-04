@@ -213,7 +213,7 @@ int MPCORE::logcurrentstate(){
 
 int MPCORE::initperipherials(){
     port.init();
-    int error = telemetryradio.init();
+    //int error = telemetryradio.init();
     // adc.setuppins();
     
     return 0;
@@ -531,7 +531,7 @@ int MPCORE::sendtelemetry(){
     uint8_t databufs[32];
 
     packettosend = statetopacket(_sysstate,NAV._sysstate);
-    telemetryradio.sendpacket(packettosend);
+    //telemetryradio.sendpacket(packettosend);
 
     
     return 0;

@@ -150,16 +150,13 @@ void NAVCORE::getsensordata(){
     timestep = micros();
     baro.readsensor();
     Serial.printf(">baroreadtime: %f \n", float(micros()-timestep)/1000);
-    timestep = micros();
-    mag.read();
-    Serial.printf(">magreadtime: %f \n", float(micros()-timestep)/1000);
-    #endif // VERBOSETIMES
+   #endif // VERBOSETIMES
     
     #if !defined(VERBOSETIMES)
     imu.read();
     baro.readsensor();
     #endif // VERBOSETIMES
-
+    
 
     _sysstate.r.imudata = imu.data;
     _sysstate.r.barodata = baro.data;
