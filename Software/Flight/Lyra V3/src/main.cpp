@@ -4,8 +4,6 @@
 
 MPCORE MP;
 
-
-
 bool dataismoved = false;
 
 
@@ -92,7 +90,7 @@ void loop() { // main core loop
 
     if (MP.sendserialon & millis() - MP.prevtime.serial >= MP.intervals[MP._sysstate.r.state].serial)
     {
-        port.senddata(MP._sysstate,NAV._sysstate);
+        // port.senddata(MP._sysstate,NAV._sysstate);
         MP.prevtime.serial = millis();
         //eventsfired += 20;
     }
