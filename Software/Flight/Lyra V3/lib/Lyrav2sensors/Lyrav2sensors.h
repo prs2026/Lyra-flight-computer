@@ -14,6 +14,8 @@ Bmi088Gyro gyrounit(Wire1,0x68);
 
 Adafruit_BMP3XX bmp;
 
+Adafruit_ADXL375 adxl375((int32_t)12345,&Wire1);
+
 
 Stream &radioserial = (Stream &)Serial1;
                     //  m0         m1     aux
@@ -89,13 +91,14 @@ void IMU::read(int oversampling){
         accelunit.readSensor();
         gyrounit.readSensor();
 
-        accel.x() += accelunit.getAccelZ_mss();
-        accel.y() += accelunit.getAccelY_mss();
+        accel.x() += accelunit.getAccelY_mss();
+        accel.y() += accelunit.getAccelZ_mss();
         accel.z() += -accelunit.getAccelX_mss();
+        //Serial.printf("new accelmss z : %f \n",accel.z());
 
-        gyro.x() += -gyrounit.getGyroZ_rads();
-        gyro.y() += -gyrounit.getGyroY_rads();
-        gyro.z() += gyrounit.getGyroX_rads(); // when the radians to degrees calculation of 180/PI is done at runtime, it breaks but this works so 
+        gyro.x() += -gyrounit.getGyroY_rads();
+        gyro.y() += -gyrounit.getGyroZ_rads();
+        gyro.z() += gyrounit.getGyroX_rads();
 
         delayMicroseconds(5);
         gyro.x() < -73786 || gyro.x() > 73786 ? gyro.x() = data.gyro.x : gyro.x() = gyro.x();
@@ -130,9 +133,9 @@ void IMU::read(int oversampling){
     accel.y() = accelal*prevdata.accel.y + (1-accelal)*accel.y();
     accel.z() = accelal*prevdata.accel.z + (1-accelal)*accel.z();
 
-
-    // _data.accel = vector3tofloat(accel);
-    // _data.gyro = vector3tofloat(gyro);
+    //Serial.printf("new accelmss z : %f \n",accel.x());
+    _data.accel = vector3tofloat(accel);
+    _data.gyro = vector3tofloat(gyro);
 
     _data.temp = accelunit.getTemperature_C();
     
@@ -140,6 +143,56 @@ void IMU::read(int oversampling){
     prevdata = _data;
     
     return;
+}
+
+/*--------------------------------------------------------------------------------------*/
+class ADXL
+{
+private:
+    
+public:
+    ADXLdata data;
+    ADXL();
+    int init();
+    int read();
+};
+
+ADXL::ADXL()
+{
+    return;
+}
+
+int ADXL::init()
+{
+    Serial.println("starting adxl init");
+    if (!adxl375.begin(0x53))
+    {
+        Serial.println("adxl init fail");
+        return 1;
+    }
+
+    adxl375.setDataRate(ADXL3XX_DATARATE_200_HZ);
+    adxl375.printSensorDetails();
+    Serial.println("adxk init sucess");
+    return 0;
+    
+}
+
+int ADXL::read()
+{
+    Vector3d _accel;
+
+    sensors_event_t event;
+
+    adxl375.getEvent(&event);
+
+    _accel.x() = event.acceleration.x;
+    _accel.y() = event.acceleration.y;
+    _accel.z() = event.acceleration.z;
+
+    data.accel = vector3tofloat(_accel);
+
+    return 0;
 }
 
 /*--------------------------------------------------------------------------------------*/
@@ -292,6 +345,9 @@ int SERIALPORT::senddata(mpstate state,navpacket navstate){
             Serial.printf(">accel x: %f \n",navstate.r.imudata.accel.x );
             Serial.printf(">accel y: %f \n",navstate.r.imudata.accel.y);
             Serial.printf(">accel z: %f \n",navstate.r.imudata.accel.z);
+            Serial.printf(">highaccel x: %f \n",navstate.r.adxldata.accel.x );
+            Serial.printf(">highaccel y: %f \n",navstate.r.adxldata.accel.y);
+            Serial.printf(">highaccel z: %f \n",navstate.r.adxldata.accel.z);
             Serial.printf(">accelworld x: %f \n",navstate.r.accelworld.x);
             Serial.printf(">accelworld y: %f \n",navstate.r.accelworld.y);
             Serial.printf(">accelworld z: %f \n"  ,navstate.r.accelworld.z);

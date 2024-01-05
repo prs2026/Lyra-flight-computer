@@ -86,6 +86,7 @@ class MPCORE{
         int logdata();
         int erasedata();
         int flashinit();
+        int dumpdata();
 
         int changestate();
         int parsecommand(char input);
@@ -271,6 +272,109 @@ int MPCORE::erasedata(){
     
 }
 
+int MPCORE::dumpdata(){
+    Serial.println("dumping data to serial");
+    Serial.println("index, checksum,uptime mp,uptime nav,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, accelhighg x, accelhighg y, accelhighg z, gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, presusre, verticalvel,filtered vvel, altitudeagl, filtered alt, imutemp, barotemp,state, checksum2");
+    
+    fs::File readfile = LittleFS.open("/log.csv", "r");
+    uint32_t entrynum = 0;
+
+    while (readfile.available() > 0)
+    {
+        logpacket readentry;
+        uint8_t buf[sizeof(logpacket)];
+        readfile.read(buf,sizeof(logpacket));
+        int j = 0;
+        for (int i = 0; i < sizeof(logpacket); i++)
+        {
+            readentry.data[j] = buf[j];
+            j++;
+        }
+        if (readentry.r.checksum1 != 0xAB || readentry.r.checksum2 != 0xCD)
+        {
+            uint32_t starttime = millis();
+            while (millis() - starttime < 5000 && readfile.available() > 0)
+            {   
+                int thisbyte = readfile.read();
+                if (thisbyte == 0xAB)
+                {
+                    Serial.printf("found start of next entry at pos %d\n",readfile.position());
+                    readfile.seek(readfile.position() - 1);
+                    break;
+                }
+                Serial.printf("waiting for start of next entry, exp 0xAB got %x \n", thisbyte);
+                
+            }
+            
+        }
+
+        Serial.printf(
+        "%d, 101,"// index checksum,
+        "%d,%d,"//uptimes
+        "%d,%d,"//errorflag
+        "%f,%f,%f," // accel
+        "%f,%f,%f," // accel world
+        "%f,%f,%f," // high g accel
+        "%f,%f,%f," // gyro
+        "%f,%f,%f," // orientation euler"
+        "%f,%f,%f,%f," // orientation quat"
+        "%f,%f," //altitude, presusre
+        "%f,%f," //verticalvel,filtered vvel,
+        "%f,%f,%f," // max alt, altitudeagl, filtered alt
+        "%f,%f," // temps, imu baro
+        "%d,%f,202\n", //state, battstate
+        entrynum,
+        readentry.r.MPstate.r.uptime, 
+        readentry.r.navsysstate.r.uptime,
+
+        readentry.r.MPstate.r.errorflag, 
+        readentry.r.navsysstate.r.errorflag,
+
+        readentry.r.navsysstate.r.imudata.accel.x, 
+        readentry.r.navsysstate.r.imudata.accel.y, 
+        readentry.r.navsysstate.r.imudata.accel.z,
+
+        readentry.r.navsysstate.r.accelworld.x, 
+        readentry.r.navsysstate.r.accelworld.y, 
+        readentry.r.navsysstate.r.accelworld.z,
+
+        readentry.r.navsysstate.r.adxldata.accel.x, 
+        readentry.r.navsysstate.r.adxldata.accel.y, 
+        readentry.r.navsysstate.r.adxldata.accel.z,
+
+        readentry.r.navsysstate.r.imudata.gyro.x*(180/M_PI),
+        readentry.r.navsysstate.r.imudata.gyro.y*(180/M_PI),
+        readentry.r.navsysstate.r.imudata.gyro.z*(180/M_PI),
+
+        readentry.r.navsysstate.r.orientationeuler.x*(180/M_PI), 
+        readentry.r.navsysstate.r.orientationeuler.y*(180/M_PI), 
+        readentry.r.navsysstate.r.orientationeuler.z*(180/M_PI),
+
+        readentry.r.navsysstate.r.orientationquat.w, 
+        readentry.r.navsysstate.r.orientationquat.x,
+        readentry.r.navsysstate.r.orientationquat.y, 
+        readentry.r.navsysstate.r.orientationquat.z,
+
+        readentry.r.navsysstate.r.barodata.altitude, 
+        readentry.r.navsysstate.r.barodata.pressure, 
+
+        readentry.r.navsysstate.r.barodata.verticalvel, 
+        readentry.r.navsysstate.r.filtered.vvel, 
+
+        readentry.r.navsysstate.r.barodata.maxrecordedalt, 
+        readentry.r.navsysstate.r.barodata.altitudeagl,
+        readentry.r.navsysstate.r.filtered.alt,
+
+        readentry.r.navsysstate.r.imudata.temp,
+        readentry.r.navsysstate.r.barodata.temp,
+
+        readentry.r.MPstate.r.state,
+        readentry.r.MPstate.r.batterystate
+        );
+        entrynum++;
+    }
+    return 0;
+}
 
 int MPCORE::flashinit(){
         Serial.println("flash init start");
@@ -503,7 +607,8 @@ int MPCORE::parsecommand(char input){
         break;
 
     case 'D':
-        logdata();
+
+        dumpdata();
         break;
     
     case 'o':
@@ -515,6 +620,31 @@ int MPCORE::parsecommand(char input){
         Serial.println("testing radio");
         ebyte.setRadioMode(MODE_NORMAL);
         Serial1.print(0x32);
+        break;
+    
+    case 'e':
+        Serial.println("erasing flash?");
+        if (Serial.read() == 'e')
+        {
+            Serial.println("erasing flash");
+            uint32_t erasestarttime = millis();
+            uint32_t messagetime = millis();
+            while (millis()-erasestarttime < 10000)
+            {
+                if (millis()- messagetime > 500)
+                {
+                    Serial.println("ERASING FLASH ------ ERASING FLASH ------ ERASING FLASH ------ TO ABORT ERASION DISCONNECT POWER OR TYPE A CHARACTER");
+                }
+                if (Serial.available())
+                {
+                    return 1;
+                }
+                
+            }
+            
+            erasedata();
+        }
+        
         break;
 
     

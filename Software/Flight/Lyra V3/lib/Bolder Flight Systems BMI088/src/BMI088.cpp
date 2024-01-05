@@ -870,6 +870,7 @@ void Bmi088Accel::readSensor()
   accel_mss[0] = (float) (accel[0] * tX[0] + accel[1] * tX[1] + accel[2] * tX[2]) / 32768.0f * accel_range_mss;
   accel_mss[1] = (float) (accel[0] * tY[0] + accel[1] * tY[1] + accel[2] * tY[2]) / 32768.0f * accel_range_mss;
   accel_mss[2] = (float) (accel[0] * tZ[0] + accel[1] * tZ[1] + accel[2] * tZ[2]) / 32768.0f * accel_range_mss;
+  //Serial.printf("new accelmss z : %f \n",accel_mss[2]);
   /* time data */
   current_time_counter = (_buffer[8] << 16) | (_buffer[7] << 8) | _buffer[6];
   time_counter = current_time_counter - prev_time_counter;

@@ -3,8 +3,11 @@
 
 #include <Lyrav2sensors.h>
 
+//#define VERBOSETIMES
+
 IMU imu;
 BARO baro;
+ADXL adxl;
 
 class NAVCORE{
 
@@ -73,11 +76,11 @@ class NAVCORE{
         void KFupdate();
         
 
-        void intergrategyros(double timestep);
+        Quatstruct intergrategyros(double timestep);
 
-        void adjustwithaccel();
+        Quatstruct adjustwithaccel();
 
-        navpacket computeorientation(navpacket currentpacket);
+        
         Vector3float getworldaccel(navpacket _state);
 
         void getpadoffset();
@@ -109,7 +112,7 @@ NAVCORE::NAVCORE(){
 7 = accel init fail
 11 = gyro init fail
 13 = baro init fail
-17 = mag init fail
+17 = adxl init fail
 19 = packet send fail
 negative = fatal error
 */
@@ -126,14 +129,16 @@ int NAVCORE::initi2c(){
 uint32_t NAVCORE::sensorinit(){
     int imustatus;
     int barostatus;
-    int magstatus;
+    int adxlstatus;
     imustatus = imu.init();;
     imustatus == 1 ? _sysstate.r.errorflag *= 7 : _sysstate.r.errorflag *= 1;
     imustatus == 2 ? _sysstate.r.errorflag *= 11 : _sysstate.r.errorflag *= 1;
     barostatus = baro.init();
     barostatus ? _sysstate.r.errorflag *= 13 : _sysstate.r.errorflag *= 1;
+    adxlstatus = adxl.init();
+    barostatus ? _sysstate.r.errorflag *= 17 : _sysstate.r.errorflag *= 1;
 
-    if (magstatus != 0 || imustatus != 0 || barostatus != 0)
+    if (adxlstatus != 0 || imustatus != 0 || barostatus != 0)
     {
         _sysstate.r.errorflag *= -1;
     }
@@ -155,9 +160,10 @@ void NAVCORE::getsensordata(){
     #if !defined(VERBOSETIMES)
     imu.read();
     baro.readsensor();
+    adxl.read();
     #endif // VERBOSETIMES
     
-
+    _sysstate.r.adxldata = adxl.data;
     _sysstate.r.imudata = imu.data;
     _sysstate.r.barodata = baro.data;
     return;
@@ -178,7 +184,7 @@ void NAVCORE::KFpredict(){
 
 
     //intergrategyros(timestep);
-    extrapolatedsysstate = computeorientation(extrapolatedsysstate);
+    extrapolatedsysstate.r.orientationquat = intergrategyros(timestep);
     extrapolatedsysstate.r.accelworld = getworldaccel(extrapolatedsysstate);
     extrapolatedsysstate.r.orientationeuler = quat2euler(extrapolatedsysstate.r.orientationquat);
 
@@ -201,18 +207,17 @@ void NAVCORE::KFupdate(){
     _sysstate.r.filtered.alt = prevsysstate.r.filtered.alt + kgain.alt*(_sysstate.r.barodata.altitudeagl - prevsysstate.r.filtered.alt); // state update
     _sysstate.r.filtered.vvel = prevsysstate.r.filtered.vvel + kgain.vvel*(_sysstate.r.barodata.verticalvel - prevsysstate.r.filtered.vvel);
 
-    
 
     _sysstate.r.uncertainty.alt = (1-kgain.alt)*prevsysstate.r.uncertainty.alt; // variences update
     _sysstate.r.uncertainty.vvel = (1-kgain.vvel)*prevsysstate.r.uncertainty.vvel;
-    
-    //adjustwithaccel();
+
+    _sysstate.r.orientationquat = adjustwithaccel();
 
     prevsysstate = _sysstate;
     kfupdatetime = micros();
 }
 
-void NAVCORE::intergrategyros(double timestep){
+Quatstruct NAVCORE::intergrategyros(double timestep){
     Quaterniond orientationquat = quatstructtoeigen(_sysstate.r.orientationquat);
     Vector3d gyro = vectorfloatto3(_sysstate.r.imudata.gyro);
     
@@ -220,13 +225,11 @@ void NAVCORE::intergrategyros(double timestep){
 
     orientationquat = orientationquat * qdelta;
 
-    _sysstate.r.orientationquat = eigentoquatstruct(orientationquat);
-
-    return;
+    return eigentoquatstruct(orientationquat);
 }
 
 
-void NAVCORE::adjustwithaccel(){
+Quatstruct NAVCORE::adjustwithaccel(){
     Quaterniond orientationquat = quatstructtoeigen(_sysstate.r.orientationquat);
     Vector3d accel = vectorfloatto3(_sysstate.r.imudata.accel);
 
@@ -256,67 +259,9 @@ void NAVCORE::adjustwithaccel(){
 
     orientationquat = accelrotquat * orientationquat;
 
+    return eigentoquatstruct(orientationquat);
 }
 
-
-navpacket NAVCORE::computeorientation(navpacket currentpacket){
-    double timestep = (micros() - prevtime.intergrateorientation)/1e6;
-    Quaterniond orientationquat = quatstructtoeigen(currentpacket.r.orientationquat);
-    Vector3d gyro = vectorfloatto3(currentpacket.r.imudata.gyro);
-    Vector3d accel = vectorfloatto3(currentpacket.r.imudata.accel);
-    Vector3d orientationeuler = vectorfloatto3(currentpacket.r.orientationeuler);
-    
-    Quaterniond qdelta(AngleAxisd(timestep*gyro.norm(), gyro.normalized()));
-
-    orientationquat = orientationquat * qdelta;
-
-    prevtime.intergrateorientation = micros();
-
-    Quaterniond accelquat;
-
-    accelquat.x() = accel.x();
-    accelquat.y() = accel.y();
-    accelquat.z() = accel.z();
-
-    accelquat = orientationquat * accelquat * orientationquat.inverse();
-
-    accel.x() = accelquat.x();
-    accel.y() = accelquat.y();
-    accel.z() = accelquat.z();
-    
-
-    Vector3d accelnorm(accel.normalized());
-
-    float phi = acos(accelnorm.y());
-
-    Vector3d naxis(accelnorm.cross(Vector3d(0,1,0)));
-
-    naxis = naxis.normalized();
-
-
-    Quaterniond accelrotquat(AngleAxisd((1-alpha)*phi,naxis));
-
-    orientationquat = accelrotquat * orientationquat;
-
-
-    Vector3d adjaxis(1,0,0);
-    Quaterniond quatadj(AngleAxisd(M_PI_2,adjaxis));
-    
-
-    Quaterniond orientationquatadj = quatadj*orientationquat;
-
-    Matrix3d R = orientationquat.toRotationMatrix();
-
-    orientationeuler = R.eulerAngles(0,1,2);
-
-    
-
-    currentpacket.r.orientationquatadj = eigentoquatstruct(orientationquatadj);
-    currentpacket.r.orientationquat = eigentoquatstruct(orientationquat);
-    currentpacket.r.orientationeuler = vector3tofloat(orientationeuler);
-    
-    return currentpacket;
-}
 
 Vector3float NAVCORE::getworldaccel(navpacket _state){
     Vector3d accelvec = vectorfloatto3(_state.r.imudata.accel);

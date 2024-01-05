@@ -143,13 +143,13 @@ void loop() { // main core loop
     
     
     
-    MP._sysstate.r.uptime = millis();
-    if (MP.sendserialon && MP.sendtoteleplot)
-    {
-        Serial.printf(">looptime: %f \n", 1/(float(micros() - MP.prevtime.loop)/1e6));
-        Serial.printf(">eventstranspired: %d \n", eventsfired);
-        Serial.print(">shouldlog: 0 \n");
-    }
+    // MP._sysstate.r.uptime = millis();
+    // if (MP.sendserialon && MP.sendtoteleplot)
+    // {
+    //     Serial.printf(">looptime: %f \n", 1/(float(micros() - MP.prevtime.loop)/1e6));
+    //     Serial.printf(">eventstranspired: %d \n", eventsfired);
+    //     Serial.print(">shouldlog: 0 \n");
+    // }
     
     MP.prevtime.loop = micros();
     MP._sysstate.r.state >= 1 ? MP.missionelasped = millis() - MP.liftofftime : MP.missionelasped = 0, MP.landedtime = millis();
@@ -174,12 +174,10 @@ void loop1() { // nav core loop
     if (MP._sysstate.r.state == 0)
     {
         NAV.alpha = 0.8;
-        //Serial.printf(">navalpha: 0.8\n");
     }
     else
     {
         NAV.alpha = 1;
-        //Serial.printf(">navalpha: 0.98\n");
     }
     NAV.prevtime.getdata = micros();
     NAV.getsensordata();

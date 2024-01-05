@@ -10,6 +10,7 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP3XX.h>
 #include <E220.h>
+#include <Adafruit_ADXL375.h>
 
 #include "SPI.h"
 #include <Wire.h>
@@ -89,6 +90,10 @@ struct IMUdata{
     float temp;
 };
 
+struct ADXLdata{
+    Vector3float accel;
+};
+
 struct BAROdata{
     float pressure;
     float altitude;
@@ -120,6 +125,7 @@ union navpacket
         uint32_t uptime;
         IMUdata imudata;
         BAROdata barodata;
+        ADXLdata adxldata;
         Vector3float accelworld;
         Vector3float orientationeuler;
         Quatstruct orientationquat;
