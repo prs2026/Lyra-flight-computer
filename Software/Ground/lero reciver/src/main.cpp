@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <MACROS.h>
-#include <U8g2lib.h>
 #include <SPI.h>
 #include <SD.h>
 #include <E220.h>
@@ -13,6 +12,11 @@ E220 ebyte(&radioserial,11,26,11);
 void setup(void) {
 
   pinMode(LCDDI,OUTPUT);
+  pinMode(LCDRW,OUTPUT);
+  pinMode(LCDE,OUTPUT);
+  pinMode(MOSISD,OUTPUT);
+  pinMode(MISOSD,OUTPUT);
+  pinMode(SCKSD,OUTPUT);
   pinMode(LED_BUILTIN,OUTPUT);
 
   digitalWrite(LED_BUILTIN,HIGH);
@@ -27,20 +31,20 @@ void setup(void) {
   SPI.begin();
   SPI.end();
 
-  Serial.println("SPI init");
+  // Serial.println("SPI init");
 
-  if (!SD.begin(CS_SD,SPI))
-  {
-    Serial.println("SD init fail");
-  }
+  // if (!SD.begin(CS_SD,SPI))
+  // {
+  //   Serial.println("SD init fail");
+  // }
 
-  File dataFile = SD.open("/datalog.txt", FILE_WRITE);
-  if (!dataFile)
-  {
-    Serial.println("SD file init fail");
-  }
-  dataFile.print("testing");
-  dataFile.close();
+  // File dataFile = SD.open("/datalog.txt", FILE_WRITE);
+  // if (!dataFile)
+  // {
+  //   Serial.println("SD file init fail");
+  // }
+  // dataFile.print("testing");
+  // dataFile.close();
   
   Serial1.end();
   Serial1.setRX(11);
