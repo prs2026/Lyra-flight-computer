@@ -17,8 +17,22 @@
 #define MOSISD 19
 #define CS_SD 18
 
-#define LCDDI 22 // also cs
-#define LCDRW 11 // also mosi
-#define LCDE 10 // also sck
+#define LCDDI 6 // also cs
+#define LCDRW 5 // also mosi
+#define LCDE 4 // also sck
+#define LCDRST 13
+
+#define LCDCS1 14
+#define LCDCS2 15
+
+#define LCDDB0 3
+#define LCDDB1 2
+#define LCDDB2 19
+#define LCDDB3 18
+#define LCDDB4 17
+#define LCDDB5 16
+#define LCDDB6 15
+#define LCDDB7 14
+
 
 #endif // MACROS

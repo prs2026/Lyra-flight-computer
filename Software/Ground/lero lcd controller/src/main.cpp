@@ -1,7 +1,5 @@
 #include <Arduino.h>
 #include <MACROS.h>
-#include <SPI.h>
-#include <SD.h>
 #include "KS0108_GLCD.h"    // include KS0108 GLCD library
 
 
@@ -12,16 +10,10 @@ KS0108_GLCD display = KS0108_GLCD(LCDDI, LCDRW, LCDE, LCDDB0, LCDDB1, LCDDB2, LC
 
 void setup(void) {
 
-  pinMode(LCDDI,OUTPUT);
-  pinMode(LCDRW,OUTPUT);
-  pinMode(LCDE,OUTPUT);
-  pinMode(MOSISD,OUTPUT);
-  pinMode(MISOSD,OUTPUT);
-  pinMode(SCKSD,OUTPUT);
   pinMode(LED_BUILTIN,OUTPUT);
 
   digitalWrite(LED_BUILTIN,HIGH);
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial);
   delay(500);
   Serial.println("init");
@@ -29,43 +21,20 @@ void setup(void) {
   if ( display.begin(KS0108_CS_ACTIVE_HIGH) == false ) {
     Serial.println( F("display initialization failed!") );    // lack of RAM space
   }
-
+  Serial.println("display inited");
   display.display();
-  delay(2000); // Pause for 2 seconds
+  //delay(2000); // Pause for 2 seconds
 
   // Clear the buffer
   display.clearDisplay();
 
   // Draw a single pixel in white
-  display.drawPixel(50, 30, KS0108_ON);
+  display.drawCircle(64,32,10,1);
 
   // Show the display buffer on the screen. You MUST call display() after
   // drawing commands to make them visible on screen!
   display.display();
   delay(2000);
-
-  // SPI.setTX(MOSISD);
-  // SPI.setRX(MISOSD);
-  // SPI.setSCK(SCKSD);
-  // SPI.begin();
-  // SPI.transfer(0xab);
-  // SPI.end();
-
-  // Serial.println("SPI init");
-
-  // if (!SD.begin(CS_SD,SPI))
-  // {
-  //   Serial.println("SD init fail");
-  // }
-
-  // File dataFile = SD.open("/datalog.txt", FILE_WRITE);
-  // if (!dataFile)
-  // {
-  //   Serial.println("SD file init fail");
-  // }
-  // dataFile.print("testing");
-  // dataFile.close();
-  
 
   digitalWrite(LED_BUILTIN,LOW);
   delay(500);
