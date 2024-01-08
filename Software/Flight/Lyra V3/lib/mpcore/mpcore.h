@@ -605,6 +605,11 @@ int MPCORE::parsecommand(char input){
         sendserialon = !sendserialon;
         port.sendtoplot = false;
         break;
+    
+    case 'X':
+        Serial.println("getting new offsets for adxl");
+        adxl.getnewoffsets();
+        break;
 
     case 'D':
 
