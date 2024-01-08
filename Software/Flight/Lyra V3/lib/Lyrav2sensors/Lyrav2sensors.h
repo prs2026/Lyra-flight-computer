@@ -42,11 +42,13 @@ public:
 
 IMU::IMU(){
         
-        bcal << 0.02305,0.0063,0.003;
+        bcal << -0.02915,
+                0.10045,
+                -0.04105;
 
-        acal << 1.004078865,0,0,
-                0,1.003614894,0,
-                0,0,1.007061535;
+        acal << 1.003008163,	0.00512152468,	-0.002092967527,
+                -0.00148623638,	1.002671656,	-0.002092967527,
+                -0.00148623638,	0.00512152468,	1.006097903;
 };
 
 int IMU::init(){
@@ -91,13 +93,13 @@ void IMU::read(int oversampling){
         accelunit.readSensor();
         gyrounit.readSensor();
 
-        accel.x() += accelunit.getAccelY_mss();
+        accel.x() += accelunit.getAccelX_mss();
         accel.y() += accelunit.getAccelZ_mss();
-        accel.z() += -accelunit.getAccelX_mss();
+        accel.z() += accelunit.getAccelY_mss();
         //Serial.printf("new accelmss z : %f \n",accel.z());
 
-        gyro.x() += -gyrounit.getGyroY_rads();
-        gyro.y() += -gyrounit.getGyroZ_rads();
+        gyro.x() += gyrounit.getGyroY_rads();
+        gyro.y() += gyrounit.getGyroZ_rads();
         gyro.z() += gyrounit.getGyroX_rads();
 
         delayMicroseconds(5);
@@ -149,16 +151,26 @@ void IMU::read(int oversampling){
 class ADXL
 {
 private:
-    
+    Vector3d bcal;
+    Matrix3d acal;
+
 public:
     ADXLdata data;
     ADXL();
     int init();
     int read();
+    int getnewoffsets();
 };
 
 ADXL::ADXL()
 {
+    bcal << 0,
+            0,
+            0;
+
+    acal << 1,0,0,
+            0,1,0,
+            0,0,1;
     return;
 }
 
@@ -173,9 +185,33 @@ int ADXL::init()
 
     adxl375.setDataRate(ADXL3XX_DATARATE_200_HZ);
     adxl375.printSensorDetails();
-    Serial.println("adxk init sucess");
+    Serial.println("adxl init sucess");
+    
     return 0;
     
+}
+
+int ADXL::getnewoffsets(){
+    int16_t x, y, z;
+    x = adxl375.getX();
+    y = adxl375.getY();
+    z = adxl375.getZ();
+    Serial.print("Raw X: "); Serial.print(x); Serial.print("  ");
+    Serial.print("Y: "); Serial.print(y); Serial.print("  ");
+    Serial.print("Z: "); Serial.print(z); Serial.print("  ");Serial.println(" counts");
+
+    // the trim offsets are in 'multiples' of 4, we want to round, so we add 2
+    adxl375.setTrimOffsets(-(x+2)/4, 
+                        -(y+2)/4, 
+                        -(z-20+2)/4);  // Z should be '20' at 1g (49mg per bit)
+    
+    int8_t x_offset, y_offset, z_offset;
+    adxl375.getTrimOffsets(&x_offset, &y_offset, &z_offset);
+    Serial.print("Current trim offsets: ");
+    Serial.print(x_offset);  Serial.print(", ");
+    Serial.print(y_offset);  Serial.print(", ");
+    Serial.println(z_offset);
+    return 0;
 }
 
 int ADXL::read()
@@ -186,9 +222,13 @@ int ADXL::read()
 
     adxl375.getEvent(&event);
 
-    _accel.x() = event.acceleration.x;
+    _accel.x() = event.acceleration.z;
     _accel.y() = event.acceleration.y;
-    _accel.z() = event.acceleration.z;
+    _accel.z() = event.acceleration.x;
+
+    _accel = _accel - bcal;
+
+    _accel = acal * _accel;
 
     data.accel = vector3tofloat(_accel);
 
