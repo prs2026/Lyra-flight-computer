@@ -2,13 +2,6 @@
 #include <MACROS.h>
 #include <SPI.h>
 #include <SD.h>
-<<<<<<< Updated upstream
-#include <E220.h>
-
-Stream &radioserial = (Stream &)Serial1;
-                    //  m0         m1     aux
-E220 ebyte(&radioserial,11,26,11);
-=======
 
 #include "AudioFileSourceSD.h"
 #include "AudioOutputI2S.h"
@@ -22,7 +15,6 @@ AudioFileSourceSD *source = NULL;
 AudioOutputI2S *output = NULL;
 AudioGeneratorMP3 *decoder = NULL;
 bool first = true;
->>>>>>> Stashed changes
 
 
 void setup(void) {
@@ -39,69 +31,18 @@ void setup(void) {
   delay(500);
   Serial.println("init");
 
-<<<<<<< Updated upstream
-=======
   audioLogger = &Serial;  
   source = new AudioFileSourceSD();
   output = new AudioOutputI2S(44100,BCLK,DIN);
   decoder = new AudioGeneratorMP3();
 
 
->>>>>>> Stashed changes
   SPI.setTX(MOSISD);
   SPI.setRX(MISOSD);
   SPI.setSCK(SCKSD);
   SPI.begin();
   SPI.end();
 
-<<<<<<< Updated upstream
-  // Serial.println("SPI init");
-
-  // if (!SD.begin(CS_SD,SPI))
-  // {
-  //   Serial.println("SD init fail");
-  // }
-
-  // File dataFile = SD.open("/datalog.txt", FILE_WRITE);
-  // if (!dataFile)
-  // {
-  //   Serial.println("SD file init fail");
-  // }
-  // dataFile.print("testing");
-  // dataFile.close();
-  
-  Serial1.end();
-  Serial1.setRX(11);
-  Serial1.setTX(11);
-  Serial1.begin(9600);
-
-
-
-  uint32_t inittime = millis();    
-  while (millis()-inittime < 1000)
-  {
-      if (ebyte.init())
-      {
-          Serial.println("radio init sucess");
-          break;
-      }
-      Serial.println("radio init attempt fail");
-      
-  }
-
-  ebyte.setAddress(0x1234,true);
-  ebyte.setPower(Power_21,true);
-  ebyte.setChannel(68,true);
-  ebyte.setNetID(0,true);
-  ebyte.setBaud(UDR_9600,true);
-  ebyte.setSubPacketSize(SPS_64,true);
-  ebyte.setAirDataRate(ADR_2400,true);
-  ebyte.setEncryptionKey(0,true);
-  ebyte.setLBT(true,true);
-  ebyte.setFixedTransmission(true,true);
-  ebyte.printBoardParameters();
-  
-=======
   Serial.println("SPI init");
 
   if (!SD.begin(CS_SD,SPI))
@@ -118,7 +59,6 @@ void setup(void) {
   dataFile.close();
 
 
->>>>>>> Stashed changes
 
   digitalWrite(LED_BUILTIN,LOW);
   delay(500);
