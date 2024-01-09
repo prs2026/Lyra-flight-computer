@@ -87,11 +87,13 @@ struct Quatstruct{
 struct IMUdata{
     Vector3float accel;
     Vector3float gyro;
+    float absaccel;
     float temp;
 };
 
 struct ADXLdata{
     Vector3float accel;
+    float absaccel;
 };
 
 struct BAROdata{

@@ -136,6 +136,8 @@ void IMU::read(int oversampling){
     accel.z() = accelal*prevdata.accel.z + (1-accelal)*accel.z();
 
     //Serial.printf("new accelmss z : %f \n",accel.x());
+
+    data.absaccel = accel.norm();
     _data.accel = vector3tofloat(accel);
     _data.gyro = vector3tofloat(gyro);
 
@@ -151,6 +153,7 @@ void IMU::read(int oversampling){
 class ADXL
 {
 private:
+    Vector3d offsets;
     Vector3d bcal;
     Matrix3d acal;
 
@@ -164,13 +167,17 @@ public:
 
 ADXL::ADXL()
 {
-    bcal << 0,
-            0,
-            0;
+    offsets << -7.71395,
+            6.74735,
+            -3.4178;
 
-    acal << 1,0,0,
-            0,1,0,
-            0,0,1;
+    bcal << -0.09085,
+            0.2385,
+            -0.1113;
+
+    acal << 0.9649217623,	0.01216011584,	-0.005674720725,
+            -0.004632060897,	1.002671656,	-0.002092967527,
+            -0.004632060897,	0.01216011584,	-0.005674720725;
     return;
 }
 
@@ -183,8 +190,9 @@ int ADXL::init()
         return 1;
     }
 
-    adxl375.setDataRate(ADXL3XX_DATARATE_200_HZ);
+    adxl375.setDataRate(ADXL3XX_DATARATE_400_HZ);
     adxl375.printSensorDetails();
+    adxl375.setTrimOffsets(0,0,0);
     Serial.println("adxl init sucess");
     
     return 0;
@@ -201,10 +209,8 @@ int ADXL::getnewoffsets(){
     Serial.print("Z: "); Serial.print(z); Serial.print("  ");Serial.println(" counts");
 
     // the trim offsets are in 'multiples' of 4, we want to round, so we add 2
-    adxl375.setTrimOffsets(-(x+2)/4, 
-                        -(y+2)/4, 
-                        -(z-20+2)/4);  // Z should be '20' at 1g (49mg per bit)
-    
+    adxl375.setTrimOffsets(-(x+2)/4, -(y+2)/4, -(z-20+2)/4);  // Z should be '20' at 1g (49mg per bit)
+    delay(100);
     int8_t x_offset, y_offset, z_offset;
     adxl375.getTrimOffsets(&x_offset, &y_offset, &z_offset);
     Serial.print("Current trim offsets: ");
@@ -222,13 +228,17 @@ int ADXL::read()
 
     adxl375.getEvent(&event);
 
-    _accel.x() = event.acceleration.z;
-    _accel.y() = event.acceleration.y;
-    _accel.z() = event.acceleration.x;
+    _accel.x() = -event.acceleration.x;
+    _accel.y() = -event.acceleration.z;
+    _accel.z() = event.acceleration.y;
+
+    _accel = _accel - offsets;
 
     _accel = _accel - bcal;
 
-    _accel = acal * _accel;
+    //_accel = acal * _accel;
+
+    data.absaccel = _accel.norm();
 
     data.accel = vector3tofloat(_accel);
 
@@ -385,9 +395,11 @@ int SERIALPORT::senddata(mpstate state,navpacket navstate){
             Serial.printf(">accel x: %f \n",navstate.r.imudata.accel.x );
             Serial.printf(">accel y: %f \n",navstate.r.imudata.accel.y);
             Serial.printf(">accel z: %f \n",navstate.r.imudata.accel.z);
+            Serial.printf(">accelabs: %f \n",navstate.r.adxldata.absaccel);
             Serial.printf(">highaccel x: %f \n",navstate.r.adxldata.accel.x );
             Serial.printf(">highaccel y: %f \n",navstate.r.adxldata.accel.y);
             Serial.printf(">highaccel z: %f \n",navstate.r.adxldata.accel.z);
+            Serial.printf(">highaccelabs: %f \n",navstate.r.adxldata.absaccel);
             Serial.printf(">accelworld x: %f \n",navstate.r.accelworld.x);
             Serial.printf(">accelworld y: %f \n",navstate.r.accelworld.y);
             Serial.printf(">accelworld z: %f \n"  ,navstate.r.accelworld.z);
