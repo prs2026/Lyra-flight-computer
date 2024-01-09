@@ -34,6 +34,7 @@ void setup(void) {
   // Show the display buffer on the screen. You MUST call display() after
   // drawing commands to make them visible on screen!
   display.display();
+  
   delay(2000);
 
   digitalWrite(LED_BUILTIN,LOW);
@@ -44,9 +45,7 @@ void setup(void) {
 }
 
 void loop() {
-  // u8g2.firstPage();
-  // do {
-  //   u8g2.setFont(u8g2_font_ncenB14_tr);
-  //   u8g2.drawStr(0,24,"Hello World!");
-  // } while ( u8g2.nextPage() );
+  display.display();
+  delay(1000);
+
 }
