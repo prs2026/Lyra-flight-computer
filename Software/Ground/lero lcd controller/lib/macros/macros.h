@@ -2,22 +2,22 @@
 #define MACROS
 #include <Arduino.h>
 
-#define LCDDI 6 // also cs
-#define LCDRW 5 // also mosi
+#define LCDDI 2 // also cs
+#define LCDRW 3 // also mosi
 #define LCDE 4 // also sck
-#define LCDRST 13
+#define LCDRST 14
 
-#define LCDCS1 15
-#define LCDCS2 14
+#define LCDCS1 16
+#define LCDCS2 15
 
-#define LCDDB0 3
-#define LCDDB1 2
-#define LCDDB2 21
-#define LCDDB3 20
-#define LCDDB4 19
-#define LCDDB5 18
-#define LCDDB6 17
-#define LCDDB7 16
+#define LCDDB0 10
+#define LCDDB1 11
+#define LCDDB2 12
+#define LCDDB3 21
+#define LCDDB4 20
+#define LCDDB5 19
+#define LCDDB6 18
+#define LCDDB7 17
 
 
 #endif // MACROS

@@ -34,7 +34,11 @@ void setup(void) {
   // Show the display buffer on the screen. You MUST call display() after
   // drawing commands to make them visible on screen!
   display.display();
+
+  display.invertDisplay(true);
   
+  display.display();
+
   delay(2000);
 
   digitalWrite(LED_BUILTIN,LOW);
@@ -45,7 +49,7 @@ void setup(void) {
 }
 
 void loop() {
-  display.display();
+  //display.display();
   delay(1000);
 
 }
