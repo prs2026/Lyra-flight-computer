@@ -7,6 +7,8 @@
 #include "AudioOutputI2S.h"
 #include "AudioGeneratorMP3.h"
 
+#include <radio.h>
+
 #define SPI_SPEED SD_SCK_MHZ(4)
 
 
@@ -16,6 +18,7 @@ AudioOutputI2S *output = NULL;
 AudioGeneratorMP3 *decoder = NULL;
 bool first = true;
 
+RADIO radio;
 
 void setup(void) {
 
@@ -58,6 +61,8 @@ void setup(void) {
   dataFile.print("testing");
   dataFile.close();
 
+  radio.init();
+
 
 
   digitalWrite(LED_BUILTIN,LOW);
@@ -65,8 +70,6 @@ void setup(void) {
   digitalWrite(LED_BUILTIN,HIGH);
 
   Serial.println("out of setup");
-
-
   
 }
 

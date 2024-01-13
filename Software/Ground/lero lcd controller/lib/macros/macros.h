@@ -1,6 +1,14 @@
 #if !defined(MACROS)
 #define MACROS
 #include <Arduino.h>
+#include <KS0108_GLCD.h>
+
+
+#define BUTTON1
+#define BUTTON2
+#define BUTTON3
+#define BUTTON4
+#define BUTTON5
 
 #define LCDDI 2 // also cs
 #define LCDRW 3 // also mosi
@@ -18,6 +26,15 @@
 #define LCDDB5 19
 #define LCDDB6 18
 #define LCDDB7 17
+
+union packet
+{
+    struct macros
+    {
+        /* data */
+    };
+    
+};
 
 
 #endif // MACROS
