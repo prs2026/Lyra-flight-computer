@@ -237,11 +237,11 @@ int MPCORE::dumpdata(){
                 int thisbyte = readfile.read();
                 if (thisbyte == 0xAB)
                 {
-                    Serial.printf("found start of next entry at pos %d\n",readfile.position());
+                    //Serial.printf("found start of next entry at pos %d\n",readfile.position());
                     readfile.seek(readfile.position() - 1);
                     break;
                 }
-                Serial.printf("waiting for start of next entry, exp 0xAB got %x \n", thisbyte);
+                //Serial.printf("waiting for start of next entry, exp 0xAB got %x \n", thisbyte);
                 
             }
             
@@ -614,7 +614,7 @@ int MPCORE::sendtelemetry(){
     uint8_t databufs[32];
 
     packettosend = statetopacket(_sysstate,NAV._sysstate);
-    telemetryradio.sendpacket(packettosend);
+    //telemetryradio.sendpacket(packettosend);
 
     
     return 0;

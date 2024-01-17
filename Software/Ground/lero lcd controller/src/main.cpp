@@ -2,9 +2,14 @@
 #include <MACROS.h>
 #include "KS0108_GLCD.h"    // include KS0108 GLCD library
 #include <lcdlib.h>
+#include "SerialTransfer.h"
 
+
+SerialTransfer myTransfer;
 
 LCDDISPLAY display;
+
+telepacket newpacket;
 
 
 void setup(void) {
@@ -20,6 +25,7 @@ void setup(void) {
   
 
   Serial1.begin(9600);
+  myTransfer.begin(Serial1);
 
   display.init();
 
@@ -37,11 +43,12 @@ void setup(void) {
 
 void loop() {
   //display.display();
-  if (Serial1.available());
+  if (myTransfer.available())
   {
-    Serial.print("new messsage: ");
-    Serial.println(Serial1.read());
+    myTransfer.rxObj(newpacket.r);
+    Serial.println(newpacket.r.altitude);
   }
+  
   Serial1.write(123);
   delay(500);
   

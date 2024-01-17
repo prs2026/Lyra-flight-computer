@@ -27,13 +27,50 @@
 #define LCDDB6 18
 #define LCDDB7 17
 
-union packet
+struct Vector3float
 {
-    struct macros
+    float x;
+    float y;
+    float z;
+};
+
+struct Vector3int{
+    int16_t x;
+    int16_t y;
+    int16_t z;
+};
+
+union telepacket{
+    struct 
     {
-        /* data */
-    };
-    
+        uint8_t checksum;
+        Vector3int orientationeuler;
+        Vector3int accel;
+        Vector3int gyro;
+        int16_t altitude;
+        int16_t verticalvel;
+        uint32_t uptime;
+        uint8_t errorflagmp;
+        uint8_t errorflagnav;
+        uint8_t state;
+        uint8_t checksum2;
+    } r;
+    uint8_t data[sizeof(r)];
+
+};
+
+struct sentpacket{
+    uint8_t checksum;
+    Vector3int orientationeuler;
+    Vector3int accel;
+    Vector3int gyro;
+    int16_t altitude;
+    int16_t verticalvel;
+    uint32_t uptime;
+    uint8_t errorflagmp;
+    uint8_t errorflagnav;
+    uint8_t state;
+    uint8_t checksum2;
 };
 
 

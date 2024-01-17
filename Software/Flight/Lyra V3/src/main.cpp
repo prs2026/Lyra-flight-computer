@@ -155,8 +155,9 @@ void loop() { // main core loop
     //         Serial.printf(", %d\n",readbuf);
     //     }
         
+        
     // }
-    
+    MP._sysstate.r.uptime = millis();
 }
 
 

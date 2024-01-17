@@ -2,19 +2,113 @@
 #include <MACROS.h>
 #include <SPI.h>
 #include <SD.h>
+#include <LittleFS.h>
+#include "pico/stdlib.h"
 
 #include <radio.h>
 #include <talker.h>
 
+#include <Wire.h>
+
+
+#include "SerialTransfer.h"
+
+
+SerialTransfer myTransfer;
+
 #define SPI_SPEED SD_SCK_MHZ(4)
 
-telepacket currentstate;
+telepacket currentpacket;
+telepacket prevpacket;
+
+telepacket testpacket;
+
 
 TALKIE talkie;
 RADIO radio;
 
+uint32_t packettime = 0;
 
-void recivepacket()
+void recivepacket(){
+  if (!Serial1.available())
+  {
+    Serial1.println("no packet");
+    return;
+  }
+  if (Serial1.peek() != 0x12)
+  {
+    Serial.printf("invalid packet, expected 0x12 got 0x%x \n",Serial1.read());
+    return;
+  }
+  uint8_t databuf[32] = {};
+
+  Serial1.readBytes(databuf,sizeof(databuf));
+
+  if (databuf[0] != 0x12 && databuf[31] != 0x34)
+  {
+    Serial.println("invalid packet, markers didnt pass");
+    return;
+  }
+
+  Serial.println("good data packet");
+  int j = 0;
+  for (int i = 0; i < 32; i++)
+  {
+    currentpacket.data[j] = databuf[j];
+    j++;
+  }
+  packettime = millis();
+  File logfile = SD.open("/log.csv",FILE_WRITE);
+
+
+  int error = logfile;
+  if (!error)
+  {
+    Serial.println("CANNOT OPEN SD CARD, CHECK CONNECTION");
+  }
+  
+
+  logfile.printf("AB,"
+  "%f,%f,%f," // orientation euler
+  "%f,%f,%f," // accel
+  "%f,%f,%f," // gyro
+  "%f," //alt
+  "%f," // vvel
+  "%d," // uptime lyra
+  "%d," // errorflag MP
+  "%d," // errorflag NAV
+  "%d," // state
+  "%d," // uptime reciver
+  "%d," // datage
+  ",CD\n"
+  ,(float(currentpacket.r.orientationeuler.x)/100)*(180/PI),(float(currentpacket.r.orientationeuler.y)/100)*(180/PI),(float(currentpacket.r.orientationeuler.z)/100)*(180/PI)
+  ,float(currentpacket.r.accel.x)/100,float(currentpacket.r.accel.y)/100,float(currentpacket.r.accel.z)/100
+  ,float(currentpacket.r.gyro.x)/100,float(currentpacket.r.gyro.y)/100,float(currentpacket.r.gyro.z)/100
+  ,float(currentpacket.r.altitude)/100
+  ,float(currentpacket.r.verticalvel)/100
+  ,currentpacket.r.uptime
+  ,currentpacket.r.errorflagmp
+  ,currentpacket.r.errorflagnav
+  ,currentpacket.r.state
+  ,millis()
+  ,millis() - packettime
+  );
+  logfile.close();
+  packettime = millis();
+    // uint8_t checksum;
+    // Vector3int orientationeuler;
+    // Vector3int accel;
+    // Vector3int gyro;
+    // int16_t altitude;
+    // int16_t verticalvel;
+    // uint32_t uptime;
+    // uint8_t errorflagmp;
+    // uint8_t errorflagnav;
+    // uint8_t state;
+    // uint8_t checksum2;
+}
+
+
 
 void setup(void) {
 
@@ -62,7 +156,9 @@ void setup(void) {
 
   radio.init();
 
+  myTransfer.begin(Serial2);
 
+  testpacket.r.altitude = 101;
 
   digitalWrite(LED_BUILTIN,LOW);
   delay(500);
@@ -78,7 +174,16 @@ void loop() {
   //talkie.saytest();
   if (Serial1.available())
   {
-    Serial.printf("new radio message %d",Serial1.read());
+    Serial.println("new radio message");
+    recivepacket();
+    talkie.ispacketinteresting(prevpacket,currentpacket);
+    prevpacket = currentpacket;
+    Serial.println(currentpacket.r.altitude);
+    myTransfer.sendDatum(&currentpacket.r);
+    
+    
   }
-  
+  myTransfer.sendDatum(&testpacket.r);
+  //delay(1000);
+  talkie.run();
 }
