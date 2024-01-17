@@ -12,13 +12,10 @@ void setup() { // main core setup
     MP.beep();
     MP.setled(BLUE);
     MP.initperipherials();
-    MP.logtextentry("\n\n MP init");
-
 
     
     MP.flashinit();
     MP.logdata();
-    MP.logcurrentstate();
     
 
 
@@ -45,7 +42,8 @@ void setup() { // main core setup
     Serial.print("NAV boot complete, error code :");
     Serial.println(NAV._sysstate.r.errorflag);
 
-    MP.beep();
+    MP.beep(10000,200);
+    Serial.println("mpcore out of setup");
 }
 
 void setup1() { // nav core setup
@@ -60,6 +58,7 @@ void setup1() { // nav core setup
 
 void loop() { // main core loop
     int eventsfired = 0;
+    MP.changestate();
 
     if (millis() - MP.prevtime.logdata >= MP.intervals[MP._sysstate.r.state].logdata)
     {
@@ -80,13 +79,6 @@ void loop() { // main core loop
         MP.prevtime.logdata = millis();
         eventsfired += 2;
         //Serial.printf("logging  took: %d \n",micros() - prevlogmicros);
-    }
-    
-    
-    if (millis()- MP.prevtime.detectstatechange >= MP.intervals[MP._sysstate.r.state].detectstatechange)
-    {
-        MP.changestate();
-        MP.prevtime.detectstatechange = millis();
     }
 
     if (MP.sendserialon & millis() - MP.prevtime.serial >= MP.intervals[MP._sysstate.r.state].serial)
@@ -141,8 +133,6 @@ void loop() { // main core loop
         
     }
     
-    
-    
     // MP._sysstate.r.uptime = millis();
     // if (MP.sendserialon && MP.sendtoteleplot)
     // {
@@ -171,14 +161,8 @@ void loop() { // main core loop
 
 
 void loop1() { // nav core loop
-    if (MP._sysstate.r.state == 0)
-    {
-        NAV.alpha = 0.8;
-    }
-    else
-    {
-        NAV.alpha = 1;
-    }
+    MP._sysstate.r.state = 0 ? NAV.useaccel = true : NAV.useaccel = false;
+    
     NAV.prevtime.getdata = micros();
     NAV.getsensordata();
     if (MP.sendserialon && MP.sendtoteleplot)
@@ -189,7 +173,7 @@ void loop1() { // nav core loop
     NAV.KFpredict();
     //Serial.printf(">kfpredicttime: %f \n",float(micros()-NAV.prevtime.predictkf)/1000);
 
-    if (millis() - NAV.prevtime.kfupdate >= 300)
+    if (millis() - NAV.prevtime.kfupdate >= 100)
     {
         NAV.prevtime.updatekf = micros();
         NAV.KFupdate();

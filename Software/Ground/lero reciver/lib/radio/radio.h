@@ -23,12 +23,12 @@ int RADIO::init(){
         Serial.println("radio start");
 
         Serial1.end();
-        Serial1.setRX(RADIORX);
-        Serial1.setTX(RADIOTX);
+        // Serial1.setRX(RADIORX);
+        // Serial1.setTX(RADIOTX);
         Serial1.begin(9600);
 
 
-
+        // Serial.println("uart started");
         uint32_t inittime = millis();    
         while (millis()-inittime < 1000)
         {

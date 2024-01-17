@@ -42,6 +42,8 @@ void loop() {
     Serial.print("new messsage: ");
     Serial.println(Serial1.read());
   }
+  Serial1.write(123);
+  delay(500);
   
 
 }

@@ -3,22 +3,18 @@
 #include <SPI.h>
 #include <SD.h>
 
-#include "AudioFileSourceSD.h"
-#include "AudioOutputI2S.h"
-#include "AudioGeneratorMP3.h"
-
 #include <radio.h>
+#include <talker.h>
 
 #define SPI_SPEED SD_SCK_MHZ(4)
 
+telepacket currentstate;
 
-File dir;
-AudioFileSourceSD *source = NULL;
-AudioOutputI2S *output = NULL;
-AudioGeneratorMP3 *decoder = NULL;
-bool first = true;
-
+TALKIE talkie;
 RADIO radio;
+
+
+void recivepacket()
 
 void setup(void) {
 
@@ -30,15 +26,16 @@ void setup(void) {
 
   digitalWrite(LED_BUILTIN,HIGH);
   Serial.begin(115200);
-  while (!Serial);
+  uint32_t starttime = millis();
+  while (!Serial && millis()-starttime < 5000);
   delay(500);
   Serial.println("init");
 
-  audioLogger = &Serial;  
-  source = new AudioFileSourceSD();
-  output = new AudioOutputI2S(44100,BCLK,DIN);
-  decoder = new AudioGeneratorMP3();
-
+  Serial2.setTX(NANOTX);
+  Serial2.setRX(9);
+  Serial.println("serial pins set");
+  Serial2.begin(9600);
+  Serial.println("serial init");
 
   SPI.setTX(MOSISD);
   SPI.setRX(MISOSD);
@@ -52,6 +49,8 @@ void setup(void) {
   {
     Serial.println("SD init fail");
   }
+
+  talkie.init();
 
   File dataFile = SD.open("/datalog.txt", FILE_WRITE);
   if (!dataFile)
@@ -71,26 +70,15 @@ void setup(void) {
 
   Serial.println("out of setup");
   
+  
+  
 }
 
 void loop() {
-  if ((decoder) && (decoder->isRunning())) {
-    if (!decoder->loop()) decoder->stop();
-  } else {
-    File file = SD.open("/hi.mp3");
-    if (file) { 
-      if (!first) {
-        source->close();
-        if (source->open(file.name())) { 
-          Serial.printf_P(PSTR("Playing '%s' from SD card...\n"), file.name());
-          decoder->begin(source, output);
-        } else {
-          Serial.printf_P(PSTR("Error opening '%s'\n"), file.name());
-        }
-      }else first = false;
-    } else {
-      Serial.println(F("Playback from SD card done\n"));
-      delay(1000);
-    }       
+  //talkie.saytest();
+  if (Serial1.available())
+  {
+    Serial.printf("new radio message %d",Serial1.read());
   }
+  
 }

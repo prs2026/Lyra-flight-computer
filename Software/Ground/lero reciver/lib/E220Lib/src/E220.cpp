@@ -42,9 +42,11 @@ bool E220::init() {
     //Serial.println("pins set");
     _setting = MODE_NORMAL;
     setMode(_setting);
+    // Serial.println("mode set");
     //read board default settings and assign global values
     //Serial.println("mode set");
     bool check = readBoardData();
+    // Serial.println("board read");
     //check if we were able to communicate with the board
     if(!check){
         Serial.println("Issue initiating the module");
@@ -112,10 +114,13 @@ bool E220::setRadioMode(uint8_t mode){
  */
 bool E220::readBoardData(){
     setMode(MODE_PROGRAM);
+    // Serial.println("mode set in read sent");
     byte configCommand[] = {0xC1, 0x00, 0x06};
     _streamSerial->write(configCommand, sizeof(configCommand));
+    // Serial.println("command sent");
     _streamSerial->readBytes((uint8_t*)&_Params, (uint8_t) sizeof(_Params));
     _streamSerial->flush();
+    // Serial.println("read and flushed");
     //check the first 3 parts of the data are the same
     if((_Params[0] != 0xC1) | (_Params[1] != 0x00) | (_Params[2] != 0x06)){
         Serial.println("Error reading module config, check the wiring");

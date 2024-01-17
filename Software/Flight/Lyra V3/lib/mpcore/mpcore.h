@@ -52,17 +52,16 @@ class MPCORE{
             uint32_t serial;
             uint32_t sendtelemetry;
             uint32_t beep;
-            uint32_t detectstatechange;
             uint32_t loop;
         };
         timings intervals[7] = {
-            {2000,1000,50,1000,30000,10}, // ground idle
-            {10,200,100, 200, 500,10}, // launch detect
-            {10,500,100, 200, 1000,10}, // powered ascent
-            {10,500,100,200, 1000,10}, // unpowered ascent
-            {10,500,100,200, 1000,10}, // ballistic descent
-            {10,800,100,200, 1000,10}, //ready to land
-            {1000,1500,100,200, 1000,10} // landed
+            {2000,1000,50,1000,10}, // ground idle
+            {10,200,100, 200,10}, // launch detect
+            {10,500,100, 200,10}, // powered ascent
+            {10,500,100,200,10}, // unpowered ascent
+            {10,500,100,200,10}, // ballistic descent
+            {10,800,100,200,10}, //ready to land
+            {1000,1500,100,200,10} // landed
         };
         timings prevtime;
         bool ledstate = false;
@@ -77,11 +76,6 @@ class MPCORE{
         void beep(int freq, unsigned int duration);
 
         void setled(int color);
-
-        int logtextentry(const char *entry);
-        int logtextentry(const char *entry, float val);
-        int logtextentry(const char *entry, int val);
-        int logcurrentstate();
 
         int logdata();
         int erasedata();
@@ -163,58 +157,10 @@ void MPCORE::setled(int color){
     }
 }
 
-int MPCORE::logtextentry(const char *entry){
-    fs::File textfile = LittleFS.open("/textlog.txt", "a+");
-    textfile.printf("| %d | %d | ", millis(),missionelasped);
-    textfile.print(entry);
-    textfile.println();
-    Serial.printf("| %d | %d | ", millis(),missionelasped);
-    Serial.print(entry);
-    Serial.println();
-
-    textfile.close();
-    return 0;
-}
-
-int MPCORE::logtextentry(const char *entry, float val){
-    fs::File textfile = LittleFS.open("/textlog.txt", "a+");
-    textfile.printf("| %d | %d | ", millis(),missionelasped);
-    textfile.print(entry);
-    textfile.print(val);
-    textfile.println();
-
-    textfile.close();
-    return 0;
-}
-
-int MPCORE::logtextentry(const char *entry, int val){
-    fs::File textfile = LittleFS.open("/textlog.txt", "a+");
-    
-    textfile.printf("| %d | %d | ", millis(),missionelasped);
-    textfile.print(entry);
-    textfile.print(val);
-    textfile.println();
-
-    textfile.close();
-    return 0;
-}
-
-int MPCORE::logcurrentstate(){
-    fs::File textfile = LittleFS.open("/textlog.txt", "a+");
-    textfile.printf("| %d | %d | ", millis(),0);
-    textfile.println("setup complete, status: ");
-    textfile.printf("\tMP errorflag: %d \n\tNAV errorflag: %d ",_sysstate.r.errorflag);
-
-
-    textfile.close();
-
-    return 0;
-}
-
 
 int MPCORE::initperipherials(){
     port.init();
-    //int error = telemetryradio.init();
+    int error = telemetryradio.init();
     // adc.setuppins();
     
     return 0;
@@ -261,13 +207,6 @@ int MPCORE::erasedata(){
         return 1;
     }
     Serial.println("file erase success");
-    error = LittleFS.remove("/textlog.txt");
-    if (error != 1)
-    {
-        Serial.println("log erase fail");
-        return 1;
-    }
-    Serial.println("log erase success");
     return 0;
     
 }
@@ -472,16 +411,15 @@ int MPCORE::changestate(){
 
     Vector3d accelvec = vectorfloatto3(NAV._sysstate.r.imudata.accel);
     Vector3d gyrovec  = vectorfloatto3(NAV._sysstate.r.imudata.gyro);
-    if (_sysstate.r.state == 1) // detect liftoff
+    if (_sysstate.r.state == 0) // detect liftoff
     {
         
         float accelmag = accelvec.norm();
-        accelmag > 20 ? detectiontime = detectiontime : detectiontime = millis();
-        if (millis() - detectiontime >= 50)
+        accelmag > 20 && NAV._sysstate.r.filtered.alt > 10 && NAV._sysstate.r.filtered.vvel > 5 ? detectiontime = detectiontime : detectiontime = millis();
+        if (millis() - detectiontime >= 400)
         {
             _sysstate.r.state = 2;
             detectiontime = millis();
-            logtextentry("liftoff detected");
             ebyte.setPower(Power_27,true);
         }
         
@@ -495,19 +433,17 @@ int MPCORE::changestate(){
         {
             _sysstate.r.state = 3;
             detectiontime = millis();
-            logtextentry("burnout detected");
         }
     }
 
     else if (_sysstate.r.state == 3) // detect appogee
     {
-        NAV._sysstate.r.barodata.altitudeagl < NAV._sysstate.r.barodata.maxrecordedalt*0.95 ?  detectiontime = detectiontime : detectiontime = millis();
+        NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt*0.95 ?  detectiontime = detectiontime : detectiontime = millis();
 
         if (millis() - detectiontime >= 100)
         {
             _sysstate.r.state = 4;
             detectiontime = millis();
-            logtextentry("apogee detected");
         }
     }
 
@@ -520,14 +456,11 @@ int MPCORE::changestate(){
         {
             _sysstate.r.state = 5;
             detectiontime = millis();
-            logtextentry("chutes opening detected");
         }
     }
 
     else if (_sysstate.r.state == 5) // detect landing
     {   
-
-        
 
         if (abs(NAV._sysstate.r.barodata.verticalvel) < 0.3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
         {
@@ -542,7 +475,25 @@ int MPCORE::changestate(){
             _sysstate.r.state = 6;
             detectiontime = millis();
             landedtime = millis();
-            logtextentry("landing detected");
+        }
+    }
+
+    else if (_sysstate.r.state == 6) // reset
+    {   
+
+        if (abs(NAV._sysstate.r.barodata.verticalvel) < 0.3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
+        {
+                detectiontime = detectiontime;
+        }
+        else{
+            detectiontime = millis();
+        }
+
+        if (millis() - detectiontime >= 30000)
+        {
+            _sysstate.r.state = 1;
+            detectiontime = millis();
+            landedtime = 0;
         }
     }
     
@@ -559,7 +510,6 @@ int MPCORE::changestate(){
             _sysstate.r.state = 6;
             detectiontime = millis();
             landedtime = millis();
-            logtextentry("landing detected");
     }
     
 
@@ -580,15 +530,14 @@ int MPCORE::parsecommand(char input){
     
 
     if (input == 'l' && _sysstate.r.state < 2){
-        _sysstate.r.state = 1;
-        logtextentry("put into launch detect state");
+        Serial.println("put into launch mode");
+        _sysstate.r.state = 2;
         return 0;
     }
 
-    else if (input == 'a' && (_sysstate.r.state < 3 || _sysstate.r.state >= 6 )){
+    else if (input == 'a' && (_sysstate.r.state < 4 || _sysstate.r.state >= 6 )){
         _sysstate.r.state = 0;
         ebyte.setPower(Power_21,true);
-        logtextentry("aborted from state: ",int(_sysstate.r.state));
         return 0;
     }
 
@@ -618,7 +567,6 @@ int MPCORE::parsecommand(char input){
     
     case 'o':
         NAV.getpadoffset();
-        logtextentry("got new pad offset: ",float(NAV._sysstate.r.barodata.padalt));
         break;
     
     case 'k':
@@ -666,7 +614,7 @@ int MPCORE::sendtelemetry(){
     uint8_t databufs[32];
 
     packettosend = statetopacket(_sysstate,NAV._sysstate);
-    //telemetryradio.sendpacket(packettosend);
+    telemetryradio.sendpacket(packettosend);
 
     
     return 0;
