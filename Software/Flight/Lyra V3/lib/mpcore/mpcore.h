@@ -23,6 +23,9 @@ class MPCORE{
         uint32_t landingdetectiontime = 0;
         uint32_t liftofftime = 0;
         uint32_t missionelasped = 0;
+        uint32_t P1firedtime = 0;
+        uint32_t P2firedtime = 0;
+        
 
 
 
@@ -56,7 +59,7 @@ class MPCORE{
         };
         timings intervals[7] = {
             {2000,1000,50,1000,10}, // ground idle
-            {10,200,100, 200,10}, // launch detect
+            {10,200,100, 200,10}, // launch detect // DEPRECATED
             {10,500,100, 200,10}, // powered ascent
             {10,500,100,200,10}, // unpowered ascent
             {10,500,100,200,10}, // ballistic descent
@@ -85,6 +88,7 @@ class MPCORE{
         int changestate();
         int parsecommand(char input);
         int sendtelemetry();
+        int checkforpyros();
 
 };
 
@@ -213,7 +217,7 @@ int MPCORE::erasedata(){
 
 int MPCORE::dumpdata(){
     Serial.println("dumping data to serial");
-    Serial.println("index, checksum,uptime mp,uptime nav,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, accelhighg x, accelhighg y, accelhighg z, gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, presusre, verticalvel,filtered vvel, altitudeagl, filtered alt, imutemp, barotemp,state, checksum2");
+    Serial.println("index, checksum,uptime mp,uptime nav,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, accelhighg x, accelhighg y, accelhighg z, gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, presusre, verticalvel,filtered vvel, maxalt, altitudeagl, filtered alt, imutemp, barotemp,state,battstate,pyros fired checksum2");
     
     fs::File readfile = LittleFS.open("/log.csv", "r");
     uint32_t entrynum = 0;
@@ -261,7 +265,7 @@ int MPCORE::dumpdata(){
         "%f,%f," //verticalvel,filtered vvel,
         "%f,%f,%f," // max alt, altitudeagl, filtered alt
         "%f,%f," // temps, imu baro
-        "%d,%f,202\n", //state, battstate
+        "%d,%f,%d, 202\n", //state, battstate, pyros
         entrynum,
         readentry.r.MPstate.r.uptime, 
         readentry.r.navsysstate.r.uptime,
@@ -415,7 +419,7 @@ int MPCORE::changestate(){
     {
         
         float accelmag = accelvec.norm();
-        accelmag > 20 && NAV._sysstate.r.filtered.alt > 10 && NAV._sysstate.r.filtered.vvel > 5 ? detectiontime = detectiontime : detectiontime = millis();
+        accelmag > 20 && NAV._sysstate.r.filtered.alt > 5 && NAV._sysstate.r.filtered.vvel > 5 ? detectiontime = detectiontime : detectiontime = millis();
         if (millis() - detectiontime >= 400)
         {
             _sysstate.r.state = 2;
@@ -519,6 +523,21 @@ int MPCORE::changestate(){
 
     return 0;
 }
+// 0 = ground idle 1 = deprecated 2 = powered ascent 3 = unpowered ascent 4 = ballisitic decsent 5 = under chute 6 = landed
+int MPCORE::checkforpyros(){
+
+    if (NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt && _sysstate.r.state >= 4)
+    {
+        _sysstate.r.pyrosfired || 00000001;
+    }
+
+    if (NAV._sysstate.r.filtered.alt < MAINALT && _sysstate.r.state >= 4)
+    {
+        _sysstate.r.pyrosfired || 00000010;
+    }
+    return 0;
+}
+
 
 int MPCORE::parsecommand(char input){
     if (int(input) == 0)

@@ -66,6 +66,11 @@ using Eigen::AngleAxisd;
 
 // i2c1 is being used
 
+#define P1duration 300
+#define P2duration 300
+
+#define MAINALT 400
+
 struct Vector3float
 {
     float x;
@@ -148,6 +153,7 @@ union mpstate{
         uint32_t uptime;
         uint32_t MET;
         uint32_t state;
+        uint8_t pyrosfired;
         float batterystate;
     } r;
     uint8_t data8[sizeof(r)/sizeof(uint8_t)];

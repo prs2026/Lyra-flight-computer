@@ -59,6 +59,7 @@ void setup1() { // nav core setup
 void loop() { // main core loop
     int eventsfired = 0;
     MP.changestate();
+    MP.checkforpyros();
 
     if (millis() - MP.prevtime.logdata >= MP.intervals[MP._sysstate.r.state].logdata)
     {
@@ -162,7 +163,7 @@ void loop() { // main core loop
 
 
 void loop1() { // nav core loop
-    MP._sysstate.r.state = 0 ? NAV.useaccel = true : NAV.useaccel = false;
+    MP._sysstate.r.state = 0 ? NAV.useaccel = 1 : NAV.useaccel = 0;
     
     NAV.prevtime.getdata = micros();
     NAV.getsensordata();

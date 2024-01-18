@@ -154,6 +154,15 @@ void setup(void) {
   dataFile.print("testing");
   dataFile.close();
 
+  File dataFile = SD.open("/log.csv", FILE_WRITE);
+  if (!dataFile)
+  {
+    Serial.println("SD file init fail");
+  }
+  dataFile.print("checksum, accelx, accely, accel z, gyro x, gyro y, gyro z, altitude, vvel, lyra uptime, errorflag MP, errorflag NAV, state, uptime reciver, dataage,checksum2
+  ");
+  dataFile.close();
+
   radio.init();
 
   myTransfer.begin(Serial2);

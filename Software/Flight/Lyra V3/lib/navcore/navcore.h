@@ -11,6 +11,10 @@ ADXL adxl;
 
 class NAVCORE{
 
+    Quatstruct quatadj = {1,0,0,0};
+    Quaterniond vectoradj = {0.707,0,0.707,0};
+
+
     const float ALTVAR = 0.5;
     const float VVELVAR = 0.8;
     const float VACCELVAR = 0.6;
@@ -21,7 +25,6 @@ class NAVCORE{
     const float VACCELNOISE = 0.2;
     const float ORIENTNOISE = 0.4;
 
-    const Quatstruct quatadj = {1,0,0,0};
 
     
     navpacket prevsysstate;
@@ -30,9 +33,10 @@ class NAVCORE{
 
     public:
     
+    
         navpacket _sysstate;
 
-        bool useaccel = true;
+        int useaccel = 1;
 
         void KFinit();
 
@@ -106,6 +110,10 @@ void NAVCORE::KFinit(){
 NAVCORE::NAVCORE(){
     _sysstate.r.orientationquat = {1,0,0,0};
     _sysstate.r.errorflag = 1;
+    Vector3d axis;
+    axis << 1,0,0;
+    Quaterniond tempquat(AngleAxisd(0.5*PI,axis));
+    vectoradj = tempquat;
 };
 /*
 1 = no errors
@@ -176,7 +184,7 @@ void NAVCORE::KFpredict(){
 
     double timestep = (micros() - kfpredicttime)/1e6;
 
-    Quaterniond adjquat = quatstructtoeigen(quatadj);
+    Quaterniond adjquat = quatstructtoeigen(quatadj).normalized();
 
 
     extrapolatedsysstate.r.filtered.alt = _sysstate.r.filtered.alt + (timestep*_sysstate.r.filtered.vvel); // extrapolate with velocity dynamics
@@ -209,17 +217,23 @@ void NAVCORE::KFupdate(){
     kgain.vvel = _sysstate.r.uncertainty.vvel/(_sysstate.r.uncertainty.vvel+VVELNOISE);
     //Serial.printf(">kalman gain: %f\n",kgain.alt);
     
-    _sysstate.r.filtered.alt = prevsysstate.r.filtered.alt + kgain.alt*(_sysstate.r.barodata.altitudeagl - prevsysstate.r.filtered.alt); // state update
-    _sysstate.r.filtered.vvel = prevsysstate.r.filtered.vvel + kgain.vvel*(_sysstate.r.barodata.verticalvel - prevsysstate.r.filtered.vvel);
+    if (_sysstate.r.filtered.vvel < 240)
+    {
+        _sysstate.r.filtered.alt = prevsysstate.r.filtered.alt + kgain.alt*(_sysstate.r.barodata.altitudeagl - prevsysstate.r.filtered.alt); // state update
+        _sysstate.r.filtered.vvel = prevsysstate.r.filtered.vvel + kgain.vvel*(_sysstate.r.barodata.verticalvel - prevsysstate.r.filtered.vvel);
+    
+        _sysstate.r.uncertainty.alt = (1-kgain.alt)*prevsysstate.r.uncertainty.alt; // variences update
+        _sysstate.r.uncertainty.vvel = (1-kgain.vvel)*prevsysstate.r.uncertainty.vvel;
 
+    }
 
-    _sysstate.r.uncertainty.alt = (1-kgain.alt)*prevsysstate.r.uncertainty.alt; // variences update
-    _sysstate.r.uncertainty.vvel = (1-kgain.vvel)*prevsysstate.r.uncertainty.vvel;
 
     _sysstate.r.filtered.alt > _sysstate.r.filtered.maxalt ? _sysstate.r.filtered.maxalt = _sysstate.r.filtered.alt : _sysstate.r.filtered.alt = _sysstate.r.filtered.alt;
 
-    useaccel? _sysstate.r.orientationquat = adjustwithaccel(0.1): _sysstate.r.orientationquat = _sysstate.r.orientationquat;
-
+    if (useaccel = 1)
+    {
+        _sysstate.r.orientationquat = adjustwithaccel(0.1);
+    }
 
     prevsysstate = _sysstate;
     kfupdatetime = micros();
@@ -266,7 +280,7 @@ Quatstruct NAVCORE::adjustwithaccel(float alpha){
     Quaterniond accelrotquat(AngleAxisd((1-alpha)*phi,naxis));
 
     orientationquat = accelrotquat * orientationquat;
-    Serial.println(">adjustingwithaccel: 1");
+    //Serial.println(">adjustingwithaccel: 1");
 
     return eigentoquatstruct(orientationquat.normalized());
 }
@@ -284,10 +298,14 @@ Vector3float NAVCORE::getworldaccel(navpacket _state){
 
     accelquat2 = orientationquat3 * (accelquat2 * orientationquat3.inverse());
 
+    accelquat2 = vectoradj * (accelquat2 * vectoradj.inverse());
+
     accelvec.x() = accelquat2.x();
     accelvec.y() = accelquat2.y();
     accelvec.z() = accelquat2.z();   
+    
 
+    
     Vector3d grav;
     grav << 0,0,9.801;
     Vector3d _accelworld = accelvec-grav;
