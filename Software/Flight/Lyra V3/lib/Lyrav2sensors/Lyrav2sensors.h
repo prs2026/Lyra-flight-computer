@@ -19,7 +19,7 @@ Adafruit_ADXL375 adxl375((int32_t)12345,&Wire1);
 
 Stream &radioserial = (Stream &)Serial1;
                     //  m0         m1     aux
-E220 ebyte(&radioserial,11,26,11);
+E220 ebyte(&radioserial,BRKOUT2,BRKOUT7,BRKOUT5);
 
 /*----------------------------------------------------------------------------------------*/
 class IMU{
@@ -98,9 +98,9 @@ void IMU::read(int oversampling){
         accel.z() += accelunit.getAccelY_mss();
         //Serial.printf("new accelmss z : %f \n",accel.z());
 
-        gyro.x() += gyrounit.getGyroY_rads();
-        gyro.y() += gyrounit.getGyroZ_rads();
-        gyro.z() += gyrounit.getGyroX_rads();
+        gyro.x() += -gyrounit.getGyroX_rads();
+        gyro.y() += -gyrounit.getGyroZ_rads();
+        gyro.z() += gyrounit.getGyroY_rads();
 
         delayMicroseconds(5);
         gyro.x() < -73786 || gyro.x() > 73786 ? gyro.x() = data.gyro.x : gyro.x() = gyro.x();
@@ -452,8 +452,8 @@ class RADIO{
 int RADIO::init(){
 
         Serial1.end();
-        Serial1.setRX(11);
-        Serial1.setTX(11);
+        Serial1.setRX(BRKOUT4);
+        Serial1.setTX(BRKOUT3);
         Serial1.begin(9600);
 
 

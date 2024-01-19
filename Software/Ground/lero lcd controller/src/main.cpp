@@ -1,11 +1,18 @@
 #include <Arduino.h>
 #include <MACROS.h>
 #include "KS0108_GLCD.h"    // include KS0108 GLCD library
+#include <lcdlib.h>
+#include "SerialTransfer.h"
 
 
-// KS0108 GLCD library initialization according to the following connection:
-// KS0108_GLCD(DI, RW, E, DB0, DB1, DB2, DB3, DB4, DB5, DB6, DB7, CS1, CS2, RES);
-KS0108_GLCD display = KS0108_GLCD(LCDDI, LCDRW, LCDE, LCDDB0, LCDDB1, LCDDB2, LCDDB3, LCDDB4, LCDDB5, LCDDB6, LCDDB7, LCDCS1, LCDCS2, LCDRST);
+SerialTransfer myTransfer;
+
+LCDDISPLAY display;
+
+
+
+
+packets newpacket;
 
 
 void setup(void) {
@@ -14,38 +21,75 @@ void setup(void) {
 
   digitalWrite(LED_BUILTIN,HIGH);
   Serial.begin(9600);
-  while (!Serial);
-  delay(500);
-  Serial.println("init");
 
-  if ( display.begin(KS0108_CS_ACTIVE_HIGH) == false ) {
-    Serial.println( F("display initialization failed!") );    // lack of RAM space
-  }
-  Serial.println("display inited");
-  display.display();
-  //delay(2000); // Pause for 2 seconds
+  display.init();
 
-  // Clear the buffer
-  display.clearDisplay();
+  display.drawtitlescreen();
 
-  // Draw a single pixel in white
-  display.drawCircle(64,32,10,1);
-
-  // Show the display buffer on the screen. You MUST call display() after
-  // drawing commands to make them visible on screen!
-  display.display();
+  Serial.println("init");\
   
-  delay(2000);
+
+  Serial1.begin(9600);
+  myTransfer.begin(Serial1);
 
   digitalWrite(LED_BUILTIN,LOW);
-  delay(500);
+  delay(100);
   digitalWrite(LED_BUILTIN,HIGH);
 
   Serial.println("out of setup");
+  display.drawtelemetryscreen(newpacket);
 }
 
 void loop() {
-  display.display();
-  delay(1000);
+  //display.display();
+  if (Serial1.available() && Serial1.read() == 'A')
+  {
+    delay(100);
+    char buf [10];
+    uint32_t numbuf[17];
+    int counter = 0;
+    while (Serial1.available())
+    {
+      byte m = Serial1.readBytesUntil(',', buf, 10); //receive/store every data item separtaed by comma
+      buf[m] = '\0';  //nul charcater
+      numbuf[counter] = atoi(buf);  //retrieve original decimal number
+      Serial.println(numbuf[counter]);
+      counter++;
+    }
+    
+    newpacket.orientationeuler.x = numbuf[1];
+    newpacket.orientationeuler.y = numbuf[2];
+    newpacket.orientationeuler.z = numbuf[3];
 
+    newpacket.accel.x = numbuf[4];
+    newpacket.accel.y = numbuf[5];
+    newpacket.accel.z = numbuf[6];
+    
+    newpacket.gyro.x = numbuf[7];
+    newpacket.gyro.y = numbuf[8];
+    newpacket.gyro.z = numbuf[9];
+    
+    newpacket.altitude = numbuf[10];
+    newpacket.verticalvel = numbuf[11];
+    newpacket.uptime = numbuf[12];
+
+
+    newpacket.errorflagmp = numbuf[13];
+    newpacket.errorflagnav = numbuf[14];
+
+    newpacket.state = numbuf[15];
+    newpacket.dataage = numbuf[16];
+    int j = 0;
+    for (int i = 0; i < 17; i++)
+    {
+      Serial.print(j); Serial.print(" ");
+      Serial.println(numbuf[j]);
+      j++;
+    }
+    
+
+
+    Serial.println(buf);
+  }
+  display.drawtelemetryscreen(newpacket);
 }

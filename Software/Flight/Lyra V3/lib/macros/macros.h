@@ -55,14 +55,21 @@ using Eigen::AngleAxisd;
 #define GREEN 2
 #define BLUE 3
 
-#define BRKOUT1 25 // 
-#define BRKOUT2 27 // 
-#define BRKOUT3 28 // 
-#define BRKOUT4 29 //
+#define BRKOUT1 25 //      SPI1 CSn  UART1 RX   I2C0 SCL
+#define BRKOUT2 27 // ADC1 SPI1 TX   UART1 RTS  I2C1 SCL
+#define BRKOUT3 28 // ADC2 SPI1 RX   UART0 TX   I2C0 SDA
+#define BRKOUT4 29 // ADC3 SPI1 CSN  UART0 RX   I2C0 SCL
 
-#define BRKOUT5 16 //  
-#define BRKOUT6 17 // 
-#define BRKOUT7 18 // 
+#define BRKOUT5 16 //      SPI0 RX   UART0 TX   I2C0 SDA
+#define BRKOUT6 17 //      SPI0 CSN  UART0 RX   I2C0 SCL
+#define BRKOUT7 18 //      SPI0 SCK  UART0 CTS  I2C1 SDA
+
+// i2c1 is being used
+
+#define P1duration 300
+#define P2duration 300
+
+#define MAINALT 400
 
 struct Vector3float
 {
@@ -117,7 +124,9 @@ struct position{
     Vector3float accel;
     float alt;
     float vvel;
+    float maxalt;
 };
+
 
 union navpacket
 {
@@ -144,6 +153,7 @@ union mpstate{
         uint32_t uptime;
         uint32_t MET;
         uint32_t state;
+        uint8_t pyrosfired;
         float batterystate;
     } r;
     uint8_t data8[sizeof(r)/sizeof(uint8_t)];
