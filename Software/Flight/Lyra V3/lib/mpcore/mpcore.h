@@ -439,7 +439,7 @@ int MPCORE::changestate(){
     {
         
         
-        accelvec.z() < 2 ? detectiontime = detectiontime : detectiontime = millis();
+        accelvec.z() < 8 ? detectiontime = detectiontime : detectiontime = millis();
         if (millis() - detectiontime >= 200)
         {
             _sysstate.r.state = 3;
@@ -496,7 +496,7 @@ int MPCORE::changestate(){
     else if (_sysstate.r.state == 6) // reset
     {   
 
-        if (abs(NAV._sysstate.r.barodata.verticalvel) < 0.3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
+        if (abs(NAV._sysstate.r.filtered.vvel) < 3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
         {
                 detectiontime = detectiontime;
         }
@@ -504,9 +504,9 @@ int MPCORE::changestate(){
             detectiontime = millis();
         }
 
-        if (millis() - detectiontime >= 30000)
+        if (millis() - detectiontime >= 20000)
         {
-            _sysstate.r.state = 1;
+            _sysstate.r.state = 0;
             detectiontime = millis();
             landedtime = 0;
             Serial.println("reseting");
@@ -521,7 +521,7 @@ int MPCORE::changestate(){
     else{
         landingdetectiontime = millis();
     }
-    if (millis() - landingdetectiontime >= 5000)
+    if (millis() - landingdetectiontime >= 30000)
         {
             _sysstate.r.state = 6;
             detectiontime = millis();
