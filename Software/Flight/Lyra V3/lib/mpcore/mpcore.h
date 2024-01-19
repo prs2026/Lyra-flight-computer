@@ -373,6 +373,8 @@ int MPCORE::dumpdata(){
         );
         entrynum++;
     }
+
+    Serial.println("done");
     return 0;
 }
 
@@ -472,24 +474,29 @@ int MPCORE::changestate(){
 
     Vector3d accelvec = vectorfloatto3(NAV._sysstate.r.imudata.accel);
     Vector3d gyrovec  = vectorfloatto3(NAV._sysstate.r.imudata.gyro);
-    if (_sysstate.r.state == 1) // detect liftoff
+    float accelmag = accelvec.norm();
+    if (_sysstate.r.state == 0) // detect liftoff
     {
-        
-        float accelmag = accelvec.norm();
-        accelmag > 20 ? detectiontime = detectiontime : detectiontime = millis();
-        if (millis() - detectiontime >= 50)
+
+        accelmag > 20 && 
+        NAV._sysstate.r.barodata.altitudeagl > 3 && 
+        NAV._sysstate.r.filtered.vvel > 8 
+
+        ? detectiontime = detectiontime : detectiontime = millis();
+
+        if (millis() - detectiontime >= 100)
         {
             _sysstate.r.state = 2;
             detectiontime = millis();
-            logtextentry("liftoff detected");
-            ebyte.setPower(Power_27,true);
+            liftofftime = millis();
         }
         
     }
+
     else if (_sysstate.r.state == 2) // detect burnout
     {
         
-        float accelmag = accelvec.norm();
+        
         accelvec.z() < 2 ? detectiontime = detectiontime : detectiontime = millis();
         if (millis() - detectiontime >= 200)
         {
@@ -514,7 +521,7 @@ int MPCORE::changestate(){
     else if (_sysstate.r.state == 4) // detect chute opening
     {
         
-        float accelmag = accelvec.norm();
+
         accelmag > 7 ? detectiontime = detectiontime : detectiontime = millis();
         if (millis() - detectiontime >= 300)
         {
@@ -526,8 +533,6 @@ int MPCORE::changestate(){
 
     else if (_sysstate.r.state == 5) // detect landing
     {   
-
-        
 
         if (abs(NAV._sysstate.r.barodata.verticalvel) < 0.3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
         {
@@ -547,14 +552,14 @@ int MPCORE::changestate(){
     }
     
 
-    if (_sysstate.r.state > 1 && abs(NAV._sysstate.r.barodata.verticalvel) < 0.3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
+    if (_sysstate.r.state > 1 && abs(NAV._sysstate.r.barodata.verticalvel) < 0.3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5 )
     {
         landingdetectiontime = landingdetectiontime;
     }
     else{
         landingdetectiontime = millis();
     }
-    if (millis() - landingdetectiontime >= 1000)
+    if (millis() - landingdetectiontime >= 5000)
         {
             _sysstate.r.state = 6;
             detectiontime = millis();
