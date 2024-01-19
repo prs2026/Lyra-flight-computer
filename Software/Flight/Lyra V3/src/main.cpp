@@ -42,13 +42,15 @@ void setup() { // main core setup
     Serial.print("NAV boot complete, error code :");
     Serial.println(NAV._sysstate.r.errorflag);
 
-    MP.beep(10000,200);
+    MP.beep(3000,200);
+    delay(200);
+    MP.beep(4000,200);
     Serial.println("mpcore out of setup");
 }
 
 void setup1() { // nav core setup
     // NAV.handshake();
-    delay(6000);
+    delay(4000);
     NAV.initi2c();
     NAV.sensorinit();
     NAV.getpadoffset();
@@ -101,7 +103,7 @@ void loop() { // main core loop
 
     if (millis()- MP.prevtime.beep >= MP.intervals[MP._sysstate.r.state].beep)
     {
-        MP.beep(MP._sysstate.r.state,false);
+        MP.beep(MP.freqs[MP._sysstate.r.state]);
         MP.prevtime.beep = millis();
         eventsfired += 10;
     }
@@ -163,7 +165,7 @@ void loop() { // main core loop
 
 
 void loop1() { // nav core loop
-    MP._sysstate.r.state = 0 ? NAV.useaccel = 1 : NAV.useaccel = 0;
+    MP._sysstate.r.state == 0 ? NAV.useaccel = 1 : NAV.useaccel = 0;
     
     NAV.prevtime.getdata = micros();
     NAV.getsensordata();

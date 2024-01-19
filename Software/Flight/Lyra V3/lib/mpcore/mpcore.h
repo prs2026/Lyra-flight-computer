@@ -48,6 +48,8 @@ class MPCORE{
 
         int ledcolor;
 
+        int freqs[7] = {3000,5000,5000,5000,5000,5000,8000};
+
 
         struct timings{
             uint32_t logdata;
@@ -58,13 +60,13 @@ class MPCORE{
             uint32_t loop;
         };
         timings intervals[7] = {
-            {2000,1000,50,1000,10}, // ground idle
-            {10,200,100, 200,10}, // launch detect // DEPRECATED
-            {10,500,100, 200,10}, // powered ascent
-            {10,500,100,200,10}, // unpowered ascent
-            {10,500,100,200,10}, // ballistic descent
-            {10,800,100,200,10}, //ready to land
-            {1000,1500,100,200,10} // landed
+            {2000,1000,50,1000,10000}, // ground idle
+            {10,200,100, 200,800}, // launch detect // DEPRECATED
+            {10,500,100, 200,800}, // powered ascent
+            {10,500,100,200,800}, // unpowered ascent
+            {10,500,100,200,800}, // ballistic descent
+            {10,800,100,200,800}, //ready to land
+            {1000,1500,100,200,500} // landed
         };
         timings prevtime;
         bool ledstate = false;
@@ -419,12 +421,13 @@ int MPCORE::changestate(){
     {
         
         float accelmag = accelvec.norm();
-        accelmag > 20 && NAV._sysstate.r.filtered.alt > 5 && NAV._sysstate.r.filtered.vvel > 5 ? detectiontime = detectiontime : detectiontime = millis();
+        NAV._sysstate.r.filtered.alt > 5 && NAV._sysstate.r.filtered.vvel > 5 ? detectiontime = detectiontime : detectiontime = millis();
         if (millis() - detectiontime >= 400)
         {
             _sysstate.r.state = 2;
             detectiontime = millis();
             ebyte.setPower(Power_27,true);
+            Serial.println("liftoff");
         }
         
     }
@@ -437,6 +440,7 @@ int MPCORE::changestate(){
         {
             _sysstate.r.state = 3;
             detectiontime = millis();
+            Serial.println("burnout");
         }
     }
 
@@ -448,6 +452,7 @@ int MPCORE::changestate(){
         {
             _sysstate.r.state = 4;
             detectiontime = millis();
+            Serial.println("appogee");
         }
     }
 
@@ -460,6 +465,7 @@ int MPCORE::changestate(){
         {
             _sysstate.r.state = 5;
             detectiontime = millis();
+            Serial.println("chutes out");
         }
     }
 
@@ -474,11 +480,12 @@ int MPCORE::changestate(){
             detectiontime = millis();
         }
 
-        if (millis() - detectiontime >= 500)
+        if (millis() - detectiontime >= 3000)
         {
             _sysstate.r.state = 6;
             detectiontime = millis();
             landedtime = millis();
+            Serial.println("landed");
         }
     }
 
@@ -498,11 +505,12 @@ int MPCORE::changestate(){
             _sysstate.r.state = 1;
             detectiontime = millis();
             landedtime = 0;
+            Serial.println("reseting");
         }
     }
     
 
-    if (_sysstate.r.state > 1 && abs(NAV._sysstate.r.barodata.verticalvel) < 0.3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
+    if (_sysstate.r.state > 1 && _sysstate.r.state != 6 && abs(NAV._sysstate.r.barodata.verticalvel) < 0.3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
     {
         landingdetectiontime = landingdetectiontime;
     }
@@ -514,6 +522,7 @@ int MPCORE::changestate(){
             _sysstate.r.state = 6;
             detectiontime = millis();
             landedtime = millis();
+            Serial.println("randoland");
     }
     
 
@@ -551,6 +560,7 @@ int MPCORE::parsecommand(char input){
     if (input == 'l' && _sysstate.r.state < 2){
         Serial.println("put into launch mode");
         _sysstate.r.state = 2;
+        detectiontime = millis();
         return 0;
     }
 

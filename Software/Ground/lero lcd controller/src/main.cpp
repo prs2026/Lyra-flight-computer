@@ -9,7 +9,10 @@ SerialTransfer myTransfer;
 
 LCDDISPLAY display;
 
-telepacket newpacket;
+
+
+
+packets newpacket;
 
 
 void setup(void) {
@@ -19,7 +22,9 @@ void setup(void) {
   digitalWrite(LED_BUILTIN,HIGH);
   Serial.begin(9600);
 
+  display.init();
 
+  display.drawtitlescreen();
 
   Serial.println("init");\
   
@@ -27,30 +32,64 @@ void setup(void) {
   Serial1.begin(9600);
   myTransfer.begin(Serial1);
 
-  display.init();
-
-  display.drawtitlescreen();
-
-  delay(2000);
-
   digitalWrite(LED_BUILTIN,LOW);
-  delay(500);
+  delay(100);
   digitalWrite(LED_BUILTIN,HIGH);
 
   Serial.println("out of setup");
-  display.drawtelemetryscreen();
+  display.drawtelemetryscreen(newpacket);
 }
 
 void loop() {
   //display.display();
-  if (myTransfer.available())
+  if (Serial1.available() && Serial1.read() == 'A')
   {
-    myTransfer.rxObj(newpacket.r);
-    Serial.println(newpacket.r.altitude);
-  }
-  
-  Serial1.write(123);
-  delay(500);
-  
+    delay(100);
+    char buf [10];
+    uint32_t numbuf[17];
+    int counter = 0;
+    while (Serial1.available())
+    {
+      byte m = Serial1.readBytesUntil(',', buf, 10); //receive/store every data item separtaed by comma
+      buf[m] = '\0';  //nul charcater
+      numbuf[counter] = atoi(buf);  //retrieve original decimal number
+      Serial.println(numbuf[counter]);
+      counter++;
+    }
+    
+    newpacket.orientationeuler.x = numbuf[1];
+    newpacket.orientationeuler.y = numbuf[2];
+    newpacket.orientationeuler.z = numbuf[3];
 
+    newpacket.accel.x = numbuf[4];
+    newpacket.accel.y = numbuf[5];
+    newpacket.accel.z = numbuf[6];
+    
+    newpacket.gyro.x = numbuf[7];
+    newpacket.gyro.y = numbuf[8];
+    newpacket.gyro.z = numbuf[9];
+    
+    newpacket.altitude = numbuf[10];
+    newpacket.verticalvel = numbuf[11];
+    newpacket.uptime = numbuf[12];
+
+
+    newpacket.errorflagmp = numbuf[13];
+    newpacket.errorflagnav = numbuf[14];
+
+    newpacket.state = numbuf[15];
+    newpacket.dataage = numbuf[16];
+    int j = 0;
+    for (int i = 0; i < 17; i++)
+    {
+      Serial.print(j); Serial.print(" ");
+      Serial.println(numbuf[j]);
+      j++;
+    }
+    
+
+
+    Serial.println(buf);
+  }
+  display.drawtelemetryscreen(newpacket);
 }

@@ -80,7 +80,7 @@ void recivepacket(){
   "%d," // state
   "%d," // uptime reciver
   "%d," // datage
-  ",CD\n"
+  "CD\n"
   ,(float(currentpacket.r.orientationeuler.x)/100)*(180/PI),(float(currentpacket.r.orientationeuler.y)/100)*(180/PI),(float(currentpacket.r.orientationeuler.z)/100)*(180/PI)
   ,float(currentpacket.r.accel.x)/100,float(currentpacket.r.accel.y)/100,float(currentpacket.r.accel.z)/100
   ,float(currentpacket.r.gyro.x)/100,float(currentpacket.r.gyro.y)/100,float(currentpacket.r.gyro.z)/100
@@ -108,7 +108,34 @@ void recivepacket(){
     // uint8_t checksum2;
 }
 
-
+void senddataover(telepacket sendpacket){
+  Serial2.printf("A,"
+  "%d,%d,%d," // orientation euler
+  "%d,%d,%d," // accel
+  "%d,%d,%d," // gyro
+  "%d," //alt
+  "%d," // vvel
+  "%d," // uptime lyra
+  "%d," // errorflag MP
+  "%d," // errorflag NAV
+  "%d," // state
+  "%d," // uptime reciver
+  "%d," // datage
+  "D\n"
+  ,sendpacket.r.orientationeuler.x,sendpacket.r.orientationeuler.y,sendpacket.r.orientationeuler.z
+  ,sendpacket.r.accel.x,sendpacket.r.accel.y,sendpacket.r.accel.z
+  ,sendpacket.r.gyro.x,sendpacket.r.gyro.y,sendpacket.r.gyro.z
+  ,sendpacket.r.altitude
+  ,sendpacket.r.verticalvel
+  ,sendpacket.r.uptime
+  ,sendpacket.r.errorflagmp
+  ,sendpacket.r.errorflagnav
+  ,sendpacket.r.state
+  ,millis()
+  ,millis() - packettime
+  );
+  //Serial.print("senddata");
+}
 
 void setup(void) {
 
@@ -154,20 +181,20 @@ void setup(void) {
   dataFile.print("testing");
   dataFile.close();
 
-  File dataFile = SD.open("/log.csv", FILE_WRITE);
-  if (!dataFile)
+  File logfile = SD.open("/log.csv", FILE_WRITE);
+  if (!logfile)
   {
     Serial.println("SD file init fail");
   }
-  dataFile.print("checksum, accelx, accely, accel z, gyro x, gyro y, gyro z, altitude, vvel, lyra uptime, errorflag MP, errorflag NAV, state, uptime reciver, dataage,checksum2
-  ");
-  dataFile.close();
+  logfile.print("checksum, accelx, accely, accel z, gyro x, gyro y, gyro z, altitude, vvel, lyra uptime, errorflag MP, errorflag NAV, state, uptime reciver, dataage,checksum2");
+  logfile.close();
 
   radio.init();
 
   myTransfer.begin(Serial2);
 
   testpacket.r.altitude = 101;
+  testpacket.r.verticalvel = 202;
 
   digitalWrite(LED_BUILTIN,LOW);
   delay(500);
@@ -187,12 +214,9 @@ void loop() {
     recivepacket();
     talkie.ispacketinteresting(prevpacket,currentpacket);
     prevpacket = currentpacket;
-    Serial.println(currentpacket.r.altitude);
-    myTransfer.sendDatum(&currentpacket.r);
-    
-    
+    senddataover(currentpacket);
   }
-  myTransfer.sendDatum(&testpacket.r);
-  //delay(1000);
+  senddataover(testpacket);
+  delay(1000);
   talkie.run();
 }

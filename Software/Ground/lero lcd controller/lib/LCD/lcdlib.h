@@ -18,7 +18,7 @@ public:
 
     int init();
     int drawtitlescreen();
-    int drawtelemetryscreen();
+    int drawtelemetryscreen(packets inpacket);
 
 };
 
@@ -53,18 +53,19 @@ int LCDDISPLAY::drawtitlescreen(){
     
     lcddr.drawRect(10,10,110,40,1);
     lcddr.display();
-
+    
 }
 
-int LCDDISPLAY::drawtelemetryscreen(){
+int LCDDISPLAY::drawtelemetryscreen(packets inpacket){
     lcddr.clearDisplay();
 
     lcddr.setCursor(30,5);
     lcddr.print("Ground Idle");
 
     lcddr.setCursor(0,20);
-    lcddr.print(" Altitude ");
-    lcddr.println(" Speed");
+    lcddr.print(" Altitude "); lcddr.println(inpacket.altitude);
+    lcddr.print(" Speed "); lcddr.println(inpacket.verticalvel);
+    lcddr.print(" Data Age "); lcddr.println(inpacket.verticalvel);
 
     
     // lcddr.drawRect(10,10,110,40,1);

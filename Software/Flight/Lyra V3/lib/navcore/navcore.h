@@ -15,8 +15,8 @@ class NAVCORE{
     Quaterniond vectoradj = {0.707,0,0.707,0};
 
 
-    const float ALTVAR = 0.5;
-    const float VVELVAR = 0.8;
+    const float ALTVAR = 0.01;
+    const float VVELVAR = 0.12;
     const float VACCELVAR = 0.6;
     const float ORIENTVAR = 0.4;
 
@@ -188,7 +188,7 @@ void NAVCORE::KFpredict(){
 
 
     extrapolatedsysstate.r.filtered.alt = _sysstate.r.filtered.alt + (timestep*_sysstate.r.filtered.vvel); // extrapolate with velocity dynamics
-    extrapolatedsysstate.r.filtered.vvel = _sysstate.r.filtered.vvel + (timestep*_sysstate.r.accelworld.y); 
+    extrapolatedsysstate.r.filtered.vvel = _sysstate.r.filtered.vvel + (timestep*_sysstate.r.accelworld.z); 
 
 
     extrapolatedsysstate.r.uncertainty.alt = _sysstate.r.uncertainty.alt + ((timestep*timestep)*_sysstate.r.uncertainty.vvel) + ALTVAR; // extrapolate variences with velocity dynamics
@@ -217,7 +217,7 @@ void NAVCORE::KFupdate(){
     kgain.vvel = _sysstate.r.uncertainty.vvel/(_sysstate.r.uncertainty.vvel+VVELNOISE);
     //Serial.printf(">kalman gain: %f\n",kgain.alt);
     
-    if (_sysstate.r.filtered.vvel < 240)
+    if (_sysstate.r.filtered.vvel < 240 || useaccel == 1)
     {
         _sysstate.r.filtered.alt = prevsysstate.r.filtered.alt + kgain.alt*(_sysstate.r.barodata.altitudeagl - prevsysstate.r.filtered.alt); // state update
         _sysstate.r.filtered.vvel = prevsysstate.r.filtered.vvel + kgain.vvel*(_sysstate.r.barodata.verticalvel - prevsysstate.r.filtered.vvel);
@@ -230,7 +230,7 @@ void NAVCORE::KFupdate(){
 
     _sysstate.r.filtered.alt > _sysstate.r.filtered.maxalt ? _sysstate.r.filtered.maxalt = _sysstate.r.filtered.alt : _sysstate.r.filtered.alt = _sysstate.r.filtered.alt;
 
-    if (useaccel = 1)
+    if (useaccel == 1)
     {
         _sysstate.r.orientationquat = adjustwithaccel(0.1);
     }
