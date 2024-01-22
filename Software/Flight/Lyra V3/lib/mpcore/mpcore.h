@@ -321,19 +321,13 @@ int MPCORE::dumpdata(){
         entrynum++;
     }
 
-    Serial.println("done");
+    //Serial.println("done");
     return 0;
 }
 
 int MPCORE::flashinit(){
-        Serial.println("flash init start");
-        // LittleFSConfig cfg;
-        // cfg.setAutoFormat(false);
-        // LittleFS.setConfig(cfg);
+        //Serial.println("flash init start");
 
-        //rp2040.fifo.idleOtherCore();
-        //delay(200);
-        Serial.println("other core idle, trying to begin littlefs");
         int error = LittleFS.begin();
 
         if (error = 0)
@@ -343,17 +337,7 @@ int MPCORE::flashinit(){
             rp2040.resumeOtherCore();
             return 1;
         }
-        //Serial.println("littlefs started!");
 
-        // error = LittleFS.format();
-
-        // if (error != 0)
-        // {
-        //     Serial.printf("filesystem format fail %d\n", error);
-        //     errorflag *= 11;
-        //     rp2040.resumeOtherCore();
-        //     return 1;
-        // }
 
         FSInfo64 *info;
         error = LittleFS.info64(*info);
@@ -409,7 +393,7 @@ int MPCORE::flashinit(){
 
         
         testfile.close();
-        Serial.println("flash init complete");
+        //Serial.println("flash init complete");
         rp2040.resumeOtherCore();
         return 0;
 }
@@ -546,7 +530,7 @@ int MPCORE::checkforpyros(){
         _sysstate.r.pyrosfired =  _sysstate.r.pyrosfired || 00000001;
     }
 
-    if (NAV._sysstate.r.filtered.alt < MAINALT && _sysstate.r.state >= 4)
+    if (NAV._sysstate.r.filtered.alt < 400 && _sysstate.r.state >= 4)
     {
         _sysstate.r.pyrosfired = _sysstate.r.pyrosfired || 00000010;
     }

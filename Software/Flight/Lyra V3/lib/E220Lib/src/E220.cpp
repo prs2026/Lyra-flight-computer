@@ -1145,7 +1145,7 @@ bool E220::sendFixedData(unsigned int address, int channel, uint8_t *data, int s
     return false;
   }
   if(!getFixedTransmission()){
-    Serial.println("Not in fixed transmission mode");
+    //Serial.println("Not in fixed transmission mode");
     return false;
   }
   if(auxAvailable) {
