@@ -3,7 +3,7 @@
 #include "KS0108_GLCD.h"    // include KS0108 GLCD library
 #include <lcdlib.h>
 #include "SerialTransfer.h"
-
+#include <stdlib.h>
 
 SerialTransfer myTransfer;
 
@@ -12,7 +12,7 @@ LCDDISPLAY display;
 
 
 
-packets newpacket;
+datapacket newpacket;
 
 
 void setup(void) {
@@ -42,54 +42,64 @@ void setup(void) {
 
 void loop() {
   //display.display();
-  if (Serial1.available() && Serial1.read() == 'A')
+  // if (Serial1.available() && Serial1.peek() == 'A')
+  // {
+  //   delay(100);
+  //   Serial.println("new packet");
+  //   char buf [30];
+  //   int32_t numbuf[20];
+  //   int counter = 0;
+  //   uint32_t packetstarttime = millis();
+  //   while (Serial1.available() && millis()-packetstarttime < 250)
+  //   {
+  //     byte m = Serial1.readBytesUntil(',', buf, 30); //receive/store every data item separtaed by comma
+  //     buf[m] = '\0';  //nul charcater
+  //     Serial.print(buf);
+  //     Serial.print(" ");
+  //     numbuf[counter] = atoi(buf);  //retrieve original decimal number
+  //     //Serial.println(numbuf[counter]);
+  //     counter++;
+  //     delay(1);
+  //   }
+
+  //   Serial.println("");
+  if (Serial1.available())
   {
-    delay(100);
-    char buf [10];
-    uint32_t numbuf[17];
-    int counter = 0;
-    while (Serial1.available())
+    //Serial.println("trasmission");
+    int32_t result[6] = {};
+    uint32_t starttime = millis();
+    int32_t j = 0;
+    while (Serial1.available() && millis()-starttime < 400)
     {
-      byte m = Serial1.readBytesUntil(',', buf, 10); //receive/store every data item separtaed by comma
-      buf[m] = '\0';  //nul charcater
-      numbuf[counter] = atoi(buf);  //retrieve original decimal number
-      Serial.println(numbuf[counter]);
-      counter++;
+      char buf[15] = "";
+      Serial1.readBytesUntil(',',buf,15);
+      Serial.print(buf);
+      Serial.print(" ");
+      delay(10);
+      if (buf != "A" || buf != "D")
+      {
+        int32_t num = int32_t(strtol(buf,0,10));
+        Serial.print(num);
+        Serial.print(" ");
+        result[j] = num;
+        j++;
+      }
+      
+    }
+    // Serial.println("");
+
+    newpacket.altitude = result[1];
+    newpacket.verticalvel = result[2];
+    newpacket.dataage = result[4];
+    newpacket.state = result[3];
+
+    if (newpacket.altitude > newpacket.maxalt)
+    {
+      newpacket.maxalt = newpacket.altitude;
     }
     
-    newpacket.orientationeuler.x = numbuf[1];
-    newpacket.orientationeuler.y = numbuf[2];
-    newpacket.orientationeuler.z = numbuf[3];
-
-    newpacket.accel.x = numbuf[4];
-    newpacket.accel.y = numbuf[5];
-    newpacket.accel.z = numbuf[6];
-    
-    newpacket.gyro.x = numbuf[7];
-    newpacket.gyro.y = numbuf[8];
-    newpacket.gyro.z = numbuf[9];
-    
-    newpacket.altitude = numbuf[10];
-    newpacket.verticalvel = numbuf[11];
-    newpacket.uptime = numbuf[12];
-
-
-    newpacket.errorflagmp = numbuf[13];
-    newpacket.errorflagnav = numbuf[14];
-
-    newpacket.state = numbuf[15];
-    newpacket.dataage = numbuf[16];
-    int j = 0;
-    for (int i = 0; i < 17; i++)
-    {
-      Serial.print(j); Serial.print(" ");
-      Serial.println(numbuf[j]);
-      j++;
-    }
-    
-
-
-    Serial.println(buf);
   }
+
+  
   display.drawtelemetryscreen(newpacket);
 }

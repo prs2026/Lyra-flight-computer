@@ -61,4 +61,20 @@ union telepacket{
 
 };
 
+struct __attribute__((packed)) datapacket  
+{
+        uint8_t checksum;
+        Vector3int orientationeuler;
+        Vector3int accel;
+        Vector3int gyro;
+        int16_t altitude;
+        int16_t verticalvel;
+        uint32_t uptime;
+        int8_t errorflagmp;
+        int8_t errorflagnav;
+        uint8_t state;
+        uint32_t dataage;
+        uint8_t checksum2;
+};
+
 #endif // MACROS

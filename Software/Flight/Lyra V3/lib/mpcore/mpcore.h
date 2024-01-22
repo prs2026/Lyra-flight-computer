@@ -97,6 +97,7 @@ class MPCORE{
 MPCORE::MPCORE(){
     _sysstate.r.state = 0;
     _sysstate.r.errorflag = 1;
+    _sysstate.r.pyrosfired = 0;
 };
 
 void MPCORE::setuppins(){
@@ -314,7 +315,8 @@ int MPCORE::dumpdata(){
         readentry.r.navsysstate.r.barodata.temp,
 
         readentry.r.MPstate.r.state,
-        readentry.r.MPstate.r.batterystate
+        readentry.r.MPstate.r.batterystate,
+        readentry.r.MPstate.r.pyrosfired
         );
         entrynum++;
     }
@@ -541,12 +543,12 @@ int MPCORE::checkforpyros(){
 
     if (NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt && _sysstate.r.state >= 4)
     {
-        _sysstate.r.pyrosfired || 00000001;
+        _sysstate.r.pyrosfired =  _sysstate.r.pyrosfired || 00000001;
     }
 
     if (NAV._sysstate.r.filtered.alt < MAINALT && _sysstate.r.state >= 4)
     {
-        _sysstate.r.pyrosfired || 00000010;
+        _sysstate.r.pyrosfired = _sysstate.r.pyrosfired || 00000010;
     }
     return 0;
 }
@@ -647,7 +649,7 @@ int MPCORE::sendtelemetry(){
     uint8_t databufs[32];
 
     packettosend = statetopacket(_sysstate,NAV._sysstate);
-    //telemetryradio.sendpacket(packettosend);
+    telemetryradio.sendpacket(packettosend);
 
     
     return 0;

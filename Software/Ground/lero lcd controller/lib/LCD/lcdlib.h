@@ -18,10 +18,10 @@ public:
 
     int init();
     int drawtitlescreen();
-    int drawtelemetryscreen(packets inpacket);
+    int drawtelemetryscreen(datapacket inpacket);
 
 };
-
+ 
 int LCDDISPLAY::init(){
     if ( lcddr.begin(KS0108_CS_ACTIVE_HIGH) == false ) {
         Serial.println( F("lcddr initialization failed!") );    // lack of RAM space
@@ -56,17 +56,47 @@ int LCDDISPLAY::drawtitlescreen(){
     
 }
 
-int LCDDISPLAY::drawtelemetryscreen(packets inpacket){
+int LCDDISPLAY::drawtelemetryscreen(datapacket inpacket){
     lcddr.clearDisplay();
 
     lcddr.setCursor(30,5);
-    lcddr.print("Ground Idle");
+    switch (inpacket.state)
+    {
+    case 0:
+        lcddr.print("Ground Idle");
+        break;
+
+    case 2:
+        lcddr.print("Powered Ascent");
+        break;
+
+    case 3:
+        lcddr.print("Unpowered Ascent");
+        break;
+
+    case 4:
+        lcddr.print("Ballistic Descent");
+        break;
+
+    case 5:
+        lcddr.print("Under Chute");
+        break;
+
+    case 6:
+        lcddr.print("Landed");
+        break;
+    
+    default:
+        break;
+    }
+    
 
     lcddr.setCursor(0,20);
-    lcddr.print(" Altitude "); lcddr.println(inpacket.altitude);
-    lcddr.print(" Speed "); lcddr.println(inpacket.verticalvel);
-    lcddr.print(" Data Age "); lcddr.println(inpacket.verticalvel);
-
+    lcddr.print(" Altitude: "); lcddr.print(float(inpacket.altitude)/100); lcddr.println("m");
+    lcddr.print(" Velocity: "); lcddr.print(float(inpacket.verticalvel)/100); lcddr.println("m/s");
+    lcddr.print(" Data Age: "); lcddr.print(float(inpacket.dataage)/1000); lcddr.println("s");
+    lcddr.println();
+    
     
     // lcddr.drawRect(10,10,110,40,1);
     lcddr.display();
