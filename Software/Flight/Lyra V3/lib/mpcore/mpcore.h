@@ -320,6 +320,8 @@ int MPCORE::dumpdata(){
         );
         entrynum++;
     }
+
+    Serial.println("done");
     return 0;
 }
 
@@ -419,10 +421,11 @@ int MPCORE::changestate(){
 
     Vector3d accelvec = vectorfloatto3(NAV._sysstate.r.imudata.accel);
     Vector3d gyrovec  = vectorfloatto3(NAV._sysstate.r.imudata.gyro);
+    float accelmag = accelvec.norm();
     if (_sysstate.r.state == 0) // detect liftoff
     {
         
-        float accelmag = accelvec.norm();
+        
         NAV._sysstate.r.filtered.alt > 5 && NAV._sysstate.r.filtered.vvel > 5 ? detectiontime = detectiontime : detectiontime = millis();
         if (millis() - detectiontime >= 400)
         {
@@ -433,11 +436,12 @@ int MPCORE::changestate(){
         }
         
     }
+
     else if (_sysstate.r.state == 2) // detect burnout
     {
         
-        float accelmag = accelvec.norm();
-        accelvec.z() < 2 ? detectiontime = detectiontime : detectiontime = millis();
+        
+        accelvec.z() < 8 ? detectiontime = detectiontime : detectiontime = millis();
         if (millis() - detectiontime >= 200)
         {
             _sysstate.r.state = 3;
@@ -461,7 +465,7 @@ int MPCORE::changestate(){
     else if (_sysstate.r.state == 4) // detect chute opening
     {
         
-        float accelmag = accelvec.norm();
+
         accelmag > 7 ? detectiontime = detectiontime : detectiontime = millis();
         if (millis() - detectiontime >= 300)
         {
@@ -494,7 +498,7 @@ int MPCORE::changestate(){
     else if (_sysstate.r.state == 6) // reset
     {   
 
-        if (abs(NAV._sysstate.r.barodata.verticalvel) < 0.3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
+        if (abs(NAV._sysstate.r.filtered.vvel) < 3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
         {
                 detectiontime = detectiontime;
         }
@@ -502,9 +506,9 @@ int MPCORE::changestate(){
             detectiontime = millis();
         }
 
-        if (millis() - detectiontime >= 30000)
+        if (millis() - detectiontime >= 20000)
         {
-            _sysstate.r.state = 1;
+            _sysstate.r.state = 0;
             detectiontime = millis();
             landedtime = 0;
             Serial.println("reseting");
@@ -519,7 +523,7 @@ int MPCORE::changestate(){
     else{
         landingdetectiontime = millis();
     }
-    if (millis() - landingdetectiontime >= 1000)
+    if (millis() - landingdetectiontime >= 30000)
         {
             _sysstate.r.state = 6;
             detectiontime = millis();
