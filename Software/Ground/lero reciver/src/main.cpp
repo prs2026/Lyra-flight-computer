@@ -21,13 +21,14 @@ SerialTransfer myTransfer;
 telepacket currentpacket;
 telepacket prevpacket;
 
-telepacket testpacket;
+datapacket testpacket;
 
 
 TALKIE talkie;
 RADIO radio;
 
 uint32_t packettime = 0;
+uint32_t senddatatime;
 
 void recivepacket(){
   if (!Serial1.available())
@@ -109,31 +110,36 @@ void recivepacket(){
 }
 
 void senddataover(telepacket sendpacket){
-  Serial2.printf("A,"
-  "%d,%d,%d," // orientation euler
-  "%d,%d,%d," // accel
-  "%d,%d,%d," // gyro
-  "%d," //alt
-  "%d," // vvel
-  "%d," // uptime lyra
-  "%d," // errorflag MP
-  "%d," // errorflag NAV
-  "%d," // state
-  "%d," // uptime reciver
-  "%d," // datage
-  "D\n"
-  ,sendpacket.r.orientationeuler.x,sendpacket.r.orientationeuler.y,sendpacket.r.orientationeuler.z
-  ,sendpacket.r.accel.x,sendpacket.r.accel.y,sendpacket.r.accel.z
-  ,sendpacket.r.gyro.x,sendpacket.r.gyro.y,sendpacket.r.gyro.z
-  ,sendpacket.r.altitude
-  ,sendpacket.r.verticalvel
-  ,sendpacket.r.uptime
-  ,sendpacket.r.errorflagmp
-  ,sendpacket.r.errorflagnav
-  ,sendpacket.r.state
-  ,millis()
-  ,millis() - packettime
-  );
+  //myTransfer.sendDatum(sendpacket);
+  
+
+  Serial2.printf("A,%d,%d,%d,%d,D,",sendpacket.r.altitude,sendpacket.r.verticalvel,sendpacket.r.state,millis()-packettime);
+  // Serial2.printf("A,"
+  // "%d,%d,%d," // orientation euler
+  // "%d,%d,%d," // accel
+  // "%d,%d,%d," // gyro
+  // "%d," //alt
+  // "%d," // vvel
+  // "%d," // uptime lyra
+  // "%d," // errorflag MP
+  // "%d," // errorflag NAV
+  // "%d," // state
+  // "%d," // uptime reciver
+  // "%d," // datage
+  // "D,\n"
+  // ,sendpacket.r.orientationeuler.x,sendpacket.r.orientationeuler.y,sendpacket.r.orientationeuler.z
+  // ,sendpacket.r.accel.x,sendpacket.r.accel.y,sendpacket.r.accel.z
+  // ,sendpacket.r.gyro.x,sendpacket.r.gyro.y,sendpacket.r.gyro.z
+  // ,sendpacket.r.altitude
+  // ,sendpacket.r.verticalvel
+  // ,sendpacket.r.uptime
+  // ,sendpacket.r.errorflagmp
+  // ,sendpacket.r.errorflagnav
+  // ,sendpacket.r.state
+  // ,millis()
+  // ,millis() - packettime
+  // );
+  
   //Serial.print("senddata");
 }
 
@@ -156,7 +162,7 @@ void setup(void) {
   Serial2.setRX(9);
   Serial.println("serial pins set");
   Serial2.begin(9600);
-  Serial.println("serial init");
+  Serial.println("9600 init");
 
   SPI.setTX(MOSISD);
   SPI.setRX(MISOSD);
@@ -193,9 +199,6 @@ void setup(void) {
 
   myTransfer.begin(Serial2);
 
-  testpacket.r.altitude = 101;
-  testpacket.r.verticalvel = 202;
-
   digitalWrite(LED_BUILTIN,LOW);
   delay(500);
   digitalWrite(LED_BUILTIN,HIGH);
@@ -214,9 +217,13 @@ void loop() {
     recivepacket();
     talkie.ispacketinteresting(prevpacket,currentpacket);
     prevpacket = currentpacket;
-    senddataover(currentpacket);
+    //senddataover(currentpacket);
   }
-  senddataover(testpacket);
-  delay(1000);
+  if (millis()-senddatatime > 250)
+  {
+    senddataover(currentpacket);
+    senddatatime = millis();
+  }
+  
   talkie.run();
 }
