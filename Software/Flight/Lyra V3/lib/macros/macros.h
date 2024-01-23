@@ -17,6 +17,7 @@
 
 #include <string.h>
 #include "LittleFS.h"
+#include <RPi_Pico_TimerInterrupt.h>
 
 //#include <ArduinoEigenDense.h>
 //#include <ArduinoEigenDense.h>
@@ -26,7 +27,7 @@ using Eigen::Matrix3d;
 using Eigen::Quaterniond;
 using Eigen::AngleAxisd;
 
-
+RPI_PICO_Timer ITimer0(0);
 
 #define LEDRED 11
 #define LEDGREEN 10
@@ -154,6 +155,7 @@ union mpstate{
         uint32_t MET;
         uint32_t state;
         uint8_t pyrosfired;
+        uint8_t pyroscont;
         float batterystate;
     } r;
     uint8_t data8[sizeof(r)/sizeof(uint8_t)];
