@@ -421,6 +421,8 @@ int SERIALPORT::senddata(mpstate state,navpacket navstate){
             Serial.printf(">varience vvel : %f \n",navstate.r.uncertainty.vvel);
             Serial.printf(">battery vol : %f \n",state.r.batterystate);
             Serial.printf(">baro temp : %f \n",navstate.r.barodata.temp);
+            Serial.printf(">pyro cont : %f \n",state.r.pyroscont);
+            Serial.printf(">pyros fired : %f \n",state.r.pyrosfired);
             return 0;
         }
         else

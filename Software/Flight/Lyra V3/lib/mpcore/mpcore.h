@@ -10,6 +10,11 @@ NAVCORE NAV;
 SERIALPORT port;
 RADIO telemetryradio;
 
+PYROCHANNEL P1(1);
+PYROCHANNEL P2(2);
+PYROCHANNEL P3(3);
+PYROCHANNEL P4(4);
+
 class MPCORE{
     
 
@@ -534,6 +539,18 @@ int MPCORE::checkforpyros(){
     {
         _sysstate.r.pyrosfired = _sysstate.r.pyrosfired || 00000010;
     }
+
+    P1.checkfire();
+    P2.checkfire();
+    P3.checkfire();
+    P4.checkfire();
+
+    uint8_t pyrocont = 0;
+    pyrocont = pyrocont || P1.getcont();
+    pyrocont = pyrocont || P2.getcont();
+    pyrocont = pyrocont || P3.getcont();
+    pyrocont = pyrocont || P4.getcont();
+    _sysstate.r.pyroscont = pyrocont;
     return 0;
 }
 
@@ -588,10 +605,33 @@ int MPCORE::parsecommand(char input){
         NAV.getpadoffset();
         break;
     
-    case 'k':
-        Serial.println("testing radio");
-        ebyte.setRadioMode(MODE_NORMAL);
-        Serial1.print(0x32);
+    case 'P':
+        if (Serial.read() != 'A')
+        {
+            return 0;
+        }
+        
+        switch (Serial.read())
+        {
+        case '1':
+            P1.fire();
+            break;
+        
+        case '2':
+            P2.fire();
+            break;
+        
+        case '3':
+            P3.fire();
+            break;
+        
+        case '4':
+            P4.fire();
+            break;
+        
+        default:
+            break;
+        }
         break;
     
     case 'e':
