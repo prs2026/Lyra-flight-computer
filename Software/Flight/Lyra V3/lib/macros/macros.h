@@ -103,6 +103,11 @@ struct ADXLdata{
     float absaccel;
 };
 
+struct gaussian{
+    double mean;
+    double varience;
+};
+
 struct BAROdata{
     float pressure;
     float altitude;
