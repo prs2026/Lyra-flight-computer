@@ -14,37 +14,6 @@ try:
 except:
      print("serial fail")
 
-databuf = {
-    "startingchecksum" : 0xAB,
-    "accelx" : 0,
-    "accely" : 0,
-    "accelz" : 0,
-
-    "gyrox" : 0,
-    "gyroy" : 0,
-    "gyroz" : 0,
-
-    "alt" : 0,
-    "vvel" : 0,
-
-    "orientationx" : 0,
-    "orientationy" : 0,
-    "orientationz" : 0,
-
-    "uptime" : 0,
-    "errorflagmp" : 0,
-    "errorflagnav" : 0,
-    "dataage" : 0,
-    "selfuptime" : 0,
-
-    "state" : 8,
-
-    "endingchecksum" : 0xCD
-}
-
-
-
-
 
 print("open ports: ")
 
@@ -69,13 +38,11 @@ serialport.write(b'D')
 
 readdata = str(serialport.read_until('done'))
 print(readdata)
-readdata.replace('\n'," \t ")
-print(readdata)
+readdata = readdata.replace('\\n','\n')
 
-parseddata = readdata.split("\t")
-for i in parseddata:
-    i = i.split(",")
-
-print(parseddata)
 
 serialport.close()
+
+file = open('logfile.csv','w+')
+
+file.write(readdata)
