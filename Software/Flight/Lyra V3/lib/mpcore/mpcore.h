@@ -562,7 +562,7 @@ int MPCORE::parsecommand(char input){
     }
     Serial.println(int(input));
     
-    
+    char channel;
 
     if (input == 'l' && _sysstate.r.state < 2){
         Serial.println("put into launch mode");
@@ -610,10 +610,13 @@ int MPCORE::parsecommand(char input){
         {
             return 0;
         }
-        
-        switch (Serial.read())
+        channel = Serial.read();
+        Serial.print("firing pyro ");
+        Serial.println(channel);
+        switch (channel)
         {
         case '1':
+
             P1.fire();
             break;
         

@@ -191,7 +191,7 @@ int ADXL::init()
     }
 
     adxl375.setDataRate(ADXL3XX_DATARATE_400_HZ);
-    adxl375.printSensorDetails();
+    //adxl375.printSensorDetails();
     adxl375.setTrimOffsets(0,0,0);
     Serial.println("adxl init sucess");
     
@@ -421,8 +421,8 @@ int SERIALPORT::senddata(mpstate state,navpacket navstate){
             Serial.printf(">varience vvel : %f \n",navstate.r.uncertainty.vvel);
             Serial.printf(">battery vol : %f \n",state.r.batterystate);
             Serial.printf(">baro temp : %f \n",navstate.r.barodata.temp);
-            Serial.printf(">pyro cont : %f \n",state.r.pyroscont);
-            Serial.printf(">pyros fired : %f \n",state.r.pyrosfired);
+            Serial.printf(">pyro cont : %d \n",state.r.pyroscont);
+            Serial.printf(">pyros fired : %d \n",state.r.pyrosfired);
             return 0;
         }
         else
@@ -460,17 +460,17 @@ int RADIO::init(){
 
 
 
-        uint32_t inittime = millis();    
-        while (millis()-inittime < 1000)
+        if (ebyte.init())
         {
-            if (ebyte.init())
-            {
-                Serial.println("radio init sucess");
-                break;
-            }
-            Serial.println("radio init attempt fail");
-            
+            Serial.println("radio init sucess");
         }
+        else
+        {
+            Serial.println("radio init attempt fail");
+            return 1;
+        }
+        
+        
 
         ebyte.setAddress(0x1234,true);
         ebyte.setPower(Power_21,true);

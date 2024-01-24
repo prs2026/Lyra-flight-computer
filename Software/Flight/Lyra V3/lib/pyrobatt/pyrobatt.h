@@ -33,6 +33,8 @@ PYROCHANNEL::PYROCHANNEL(int _identifier){
     identity = _identifier-1;
     EN_PIN = enpins[identity];
     CONT_PIN = contpins[identity];
+    pinMode(EN_PIN,OUTPUT);
+    pinMode(CONT_PIN,INPUT);
 }
 
 
