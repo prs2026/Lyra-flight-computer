@@ -1,4 +1,4 @@
-import serial,threading,time,sys
+import serial,sys,time
 
 import serial.tools.list_ports as port_list
 
@@ -35,14 +35,17 @@ except:
 
 print("reading data")
 serialport.write(b'D')
+time.sleep(1)
+readdata = ""
+while serialport.in_waiting > 0:
+    readdata = readdata + str(serialport.read_until('done'))
+    readdata = readdata.replace('\\n','\n')
 
-readdata = str(serialport.read_until('done'))
 print(readdata)
-readdata = readdata.replace('\\n','\n')
-
-
 serialport.close()
 
-file = open('logfile.csv','w+')
+
+
+file = open('logfile '+str(time.strftime('%m,%d,%Y, %H,%M,%S'))+'.csv','w+')
 
 file.write(readdata)
