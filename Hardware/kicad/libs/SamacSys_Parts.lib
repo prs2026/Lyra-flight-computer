@@ -1,0 +1,86 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#SamacSys ECAD Model NE555DR
+#/6648/2/2.37/8/4/Integrated Circuit
+DEF NE555DR IC 0 30 Y Y 1 F N
+F0 "IC" 1050 600 50 H V L CNN
+F1 "NE555DR" 1050 500 50 H V L CNN
+F2 "SOIC127P600X175-8N" 1050 400 50 H I L CNN
+F3 "http://www.ti.com/lit/ds/symlink/ne555.pdf" 1050 300 50 H I L CNN
+F4 "Single Precision Timer" 1050 200 50 H I L CNN "Description"
+F5 "1.75" 1050 100 50 H I L CNN "Height"
+F6 "Texas Instruments" 1050 0 50 H I L CNN "Manufacturer_Name"
+F7 "NE555DR" 1050 -100 50 H I L CNN "Manufacturer_Part_Number"
+F8 "595-NE555DR" 1050 -200 50 H I L CNN "Mouser Part Number"
+F9 "https://www.mouser.com/Search/Refine.aspx?Keyword=595-NE555DR" 1050 -300 50 H I L CNN "Mouser Price/Stock"
+F10 "1218414" 1050 -400 50 H I L CNN "RS Part Number"
+F11 "http//uk.rs-online.com/web/p/products/1218414" 1050 -500 50 H I L CNN "RS Price/Stock"
+DRAW
+X GND 1 600 -1000 200 U 50 50 0 0 B
+X TRIG 2 0 -400 200 R 50 50 0 0 B
+X OUT 3 1200 -200 200 L 50 50 0 0 B
+X ~RESET 4 0 0 200 R 50 50 0 0 B
+X CONT 5 500 600 200 D 50 50 0 0 B
+X THRES 6 0 -300 200 R 50 50 0 0 B
+X DISCH 7 0 -100 200 R 50 50 0 0 B
+X VCC 8 700 600 200 D 50 50 0 0 B
+P 5 0 1 6 200 400 1000 400 1000 -800 200 -800 200 400 N
+ENDDRAW
+ENDDEF
+#
+#SamacSys ECAD Model TESEO-LIV4FTR
+#/17059836/541099/2.50/18/2/Integrated Circuit
+DEF TESEO-LIV4FTR IC 0 30 Y Y 1 F N
+F0 "IC" 1550 300 50 H V L CNN
+F1 "TESEO-LIV4FTR" 1550 200 50 H V L CNN
+F2 "TESEOLIV4FTR" 1550 100 50 H I L CNN
+F3 "https://www.st.com/resource/en/datasheet/teseo-liv4f.pdf" 1550 0 50 H I L CNN
+F4 "Tiny GNSS multi-bands module LCC-18 -40 C  85 C " 1550 -100 50 H I L CNN "Description"
+F5 "2.3" 1550 -200 50 H I L CNN "Height"
+F6 "511-TESEO-LIV4FTR" 1550 -300 50 H I L CNN "Mouser Part Number"
+F7 "https://www.mouser.co.uk/ProductDetail/STMicroelectronics/TESEO-LIV4FTR?qs=By6Nw2ByBD3%252BjjBvGBu5LQ%3D%3D" 1550 -400 50 H I L CNN "Mouser Price/Stock"
+F8 "STMicroelectronics" 1550 -500 50 H I L CNN "Manufacturer_Name"
+F9 "TESEO-LIV4FTR" 1550 -600 50 H I L CNN "Manufacturer_Part_Number"
+DRAW
+X GND 1 0 0 200 R 50 50 0 0 P
+X UART-TX 2 0 -100 200 R 50 50 0 0 P
+X UART-RX 3 0 -200 200 R 50 50 0 0 P
+X PPS 4 0 -300 200 R 50 50 0 0 P
+X WAKEUP 5 0 -400 200 R 50 50 0 0 P
+X VBAT 6 0 -500 200 R 50 50 0 0 P
+X RESERVED_1 7 0 -600 200 R 50 50 0 0 P
+X VCC 8 0 -700 200 R 50 50 0 0 P
+X NRESET 9 0 -800 200 R 50 50 0 0 P
+X GND_RF_1 10 1700 -800 200 L 50 50 0 0 P
+X RF_IN 11 1700 -700 200 L 50 50 0 0 P
+X GND_RF_2 12 1700 -600 200 L 50 50 0 0 P
+X RESERVED_2 13 1700 -500 200 L 50 50 0 0 P
+X VCC_RF 14 1700 -400 200 L 50 50 0 0 P
+X RESERVED_3 15 1700 -300 200 L 50 50 0 0 P
+X I2C_SDA 16 1700 -200 200 L 50 50 0 0 P
+X I2C_SCL 17 1700 -100 200 L 50 50 0 0 P
+X PRG 18 1700 0 200 L 50 50 0 0 P
+P 5 0 1 6 200 100 1500 100 1500 -900 200 -900 200 100 N
+ENDDRAW
+ENDDEF
+#
+#SamacSys ECAD Model GP.1575.12.4.A.02
+#/554938/541099/2.50/1/4/Antenna
+DEF GP.1575.12.4.A.02 ANT 0 30 Y Y 1 F N
+F0 "ANT" 750 300 50 H V L CNN
+F1 "GP.1575.12.4.A.02" 750 200 50 H V L CNN
+F2 "GP1575124A02" 750 100 50 H I L CNN
+F3 "https://cdn.taoglas.com/datasheets/GP.1575.12.4.A.02.pdf" 750 0 50 H I L CNN
+F4 "Antennas GPS Pasv Thruhole 12mm Patch" 750 -100 50 H I L CNN "Description"
+F5 "4.8" 750 -200 50 H I L CNN "Height"
+F6 "960-GP1575124A02" 750 -300 50 H I L CNN "Mouser Part Number"
+F7 "https://www.mouser.co.uk/ProductDetail/Taoglas/GP1575124A02/?qs=WUa1z%2FNV9%252B2fVMNedoCP5w%3D%3D" 750 -400 50 H I L CNN "Mouser Price/Stock"
+F8 "Taoglas" 750 -500 50 H I L CNN "Manufacturer_Name"
+F9 "GP.1575.12.4.A.02" 750 -600 50 H I L CNN "Manufacturer_Part_Number"
+DRAW
+X FEED 1 0 0 200 R 50 50 0 0 P
+P 5 0 1 6 200 100 700 100 700 -100 200 -100 200 100 N
+ENDDRAW
+ENDDEF
+#
+#End Library

@@ -415,7 +415,7 @@
       "pin_to_pin": "ignore",
       "power_pin_not_driven": "warning",
       "similar_labels": "warning",
-      "simulation_model_issue": "warning",
+      "simulation_model_issue": "ignore",
       "unannotated": "error",
       "unit_value_mismatch": "error",
       "unresolved_variable": "error",

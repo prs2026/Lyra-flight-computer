@@ -3,6 +3,7 @@
 
 #include <navcore.h>
 #include <pyrobatt.h>
+#include <RPi_Pico_TimerInterrupt.h>
 
 //fs::File logtofile;
 
@@ -14,6 +15,25 @@ PYROCHANNEL P1(1);
 PYROCHANNEL P2(2);
 PYROCHANNEL P3(3);
 PYROCHANNEL P4(4);
+
+RPI_PICO_Timer PyroTimer0(0);
+
+bool checkfirepyros(struct repeating_timer *t)
+{ 
+  (void) t;
+
+    P1.checkfire();
+    P2.checkfire();
+    P3.checkfire();
+    P4.checkfire();
+    //Serial.println("checking pyros");
+
+  return true;
+}
+
+
+
+
 
 class MPCORE{
     
@@ -96,6 +116,7 @@ class MPCORE{
         int parsecommand(char input);
         int sendtelemetry();
         int checkforpyros();
+        
 
 };
 
@@ -174,6 +195,14 @@ int MPCORE::initperipherials(){
     port.init();
     int error = telemetryradio.init();
     // adc.setuppins();
+
+    if (PyroTimer0.attachInterruptInterval(100 * 1000, checkfirepyros))
+    {
+      Serial.print(F("Starting ITimer0 OK, millis() = ")); Serial.println(millis());
+    }
+    else
+        Serial.println(F("Can't set ITimer0. Select another freq. or timer"));
+
     
     return 0;
 }
@@ -519,14 +548,12 @@ int MPCORE::changestate(){
             landedtime = millis();
             Serial.println("randoland");
     }
-    
-
-    
-
-    
 
     return 0;
 }
+
+
+
 // 0 = ground idle 1 = deprecated 2 = powered ascent 3 = unpowered ascent 4 = ballisitic decsent 5 = under chute 6 = landed
 int MPCORE::checkforpyros(){
 

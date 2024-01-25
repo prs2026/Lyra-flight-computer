@@ -132,7 +132,7 @@ int NAVCORE::initi2c(){
     Wire1.setSDA(SDA);
     Wire1.setClock(10000);
     Wire1.begin();
-    scani2c(true) ? _sysstate.r.errorflag*= 5 : _sysstate.r.errorflag *= 1;
+    scani2c(false) ? _sysstate.r.errorflag*= 5 : _sysstate.r.errorflag *= 1;
     return 0;
 }
 

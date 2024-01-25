@@ -91,7 +91,7 @@ void loop() { // main core loop
         //eventsfired += 20;
     }
     
-
+        MP.checkforpyros();
 
     if (millis()- MP.prevtime.led >= MP.intervals[MP._sysstate.r.state].led)
     {
@@ -117,7 +117,7 @@ void loop() { // main core loop
         MP.parsecommand(buf);
 
     }
-
+    MP.checkforpyros();
     
     if ((millis() - MP.prevtime.sendtelemetry >= MP.intervals[MP._sysstate.r.state].sendtelemetry) && MP._sysstate.r.errorflag %19 != 0)
     {
@@ -135,15 +135,7 @@ void loop() { // main core loop
         MP.parsecommand(buf);
         
     }
-    
-    // MP._sysstate.r.uptime = millis();
-    // if (MP.sendserialon && MP.sendtoteleplot)
-    // {
-    //     Serial.printf(">looptime: %f \n", 1/(float(micros() - MP.prevtime.loop)/1e6));
-    //     Serial.printf(">eventstranspired: %d \n", eventsfired);
-    //     Serial.print(">shouldlog: 0 \n");
-    // }
-    
+
     MP.prevtime.loop = micros();
     MP._sysstate.r.state >= 1 ? MP.missionelasped = millis() - MP.liftofftime : MP.missionelasped = 0, MP.landedtime = millis();
 

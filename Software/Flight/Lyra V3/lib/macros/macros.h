@@ -17,7 +17,6 @@
 
 #include <string.h>
 #include "LittleFS.h"
-#include <RPi_Pico_TimerInterrupt.h>
 
 //#include <ArduinoEigenDense.h>
 //#include <ArduinoEigenDense.h>
@@ -26,8 +25,6 @@ using Eigen::Vector3d;
 using Eigen::Matrix3d;
 using Eigen::Quaterniond;
 using Eigen::AngleAxisd;
-
-RPI_PICO_Timer ITimer0(0);
 
 #define LEDRED 11
 #define LEDGREEN 10

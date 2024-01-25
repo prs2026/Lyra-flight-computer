@@ -9,7 +9,7 @@ const int contpins[4] = {P1_CONT,P2_CONT,P3_CONT,P4_CONT};
 
 
 class PYROCHANNEL{
-int state = 0;
+volatile int state = 0;
 uint32_t firedtime;
 uint32_t timeout = 1000;
 int identity;
@@ -41,7 +41,7 @@ PYROCHANNEL::PYROCHANNEL(int _identifier){
 void PYROCHANNEL::fire(){
     if (state == 0)
     {
-        Serial.printf("firing pyro %d\n",identity);
+        Serial.printf("firing pyro %d\n",identity+1);
         firedtime = millis();
         // todo: schedule an inturrupt to turn it off?
         digitalWrite(EN_PIN,HIGH);
@@ -54,7 +54,7 @@ void PYROCHANNEL::fire(){
 void PYROCHANNEL::checkfire(){
     if (state >= 1 && millis()-firedtime > timeout)
     {
-        Serial.printf("disabling pyro %d\n",identity);
+        //Serial.printf("disabling pyro %d\n",identity);
         digitalWrite(EN_PIN,LOW);
         state = 0;
     }

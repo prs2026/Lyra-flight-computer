@@ -1,0 +1,21 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP NE555DR
+D Single Precision Timer
+K
+F http://www.ti.com/lit/ds/symlink/ne555.pdf
+$ENDCMP
+#
+$CMP TESEO-LIV4FTR
+D Tiny GNSS multi-bands module LCC-18 -40 C  85 C 
+K
+F https://www.st.com/resource/en/datasheet/teseo-liv4f.pdf
+$ENDCMP
+#
+$CMP GP.1575.12.4.A.02
+D Antennas GPS Pasv Thruhole 12mm Patch
+K
+F https://cdn.taoglas.com/datasheets/GP.1575.12.4.A.02.pdf
+$ENDCMP
+#
+#End Doc Library
