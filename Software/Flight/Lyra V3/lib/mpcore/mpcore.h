@@ -37,10 +37,9 @@ bool checkfirepyros(struct repeating_timer *t)
 
 class MPCORE{
     
-
     public:
         
-
+        int radiook = 1;
         mpstate _sysstate;
         int detectiontime = 0;
         uint32_t landedtime = 0;
@@ -85,7 +84,7 @@ class MPCORE{
             uint32_t loop;
         };
         timings intervals[7] = {
-            {2000,1000,50,1000,10000}, // ground idle
+            {2000,1000,50,500,10000}, // ground idle
             {10,200,100, 200,800}, // launch detect // DEPRECATED
             {10,500,100, 200,800}, // powered ascent
             {10,500,100,200,800}, // unpowered ascent
@@ -144,16 +143,22 @@ void MPCORE::setuppins(){
 
 void MPCORE::beep(){
     tone(BUZZERPIN,2000,200);
+    delay(200);
+    noTone(BUZZERPIN);
     return;
 }
 
 void MPCORE::beep(int freq){
     tone(BUZZERPIN,freq,200);
+    delay(200);
+    noTone(BUZZERPIN);
     return;
 }
 
 void MPCORE::beep(int freq, unsigned int duration){
     tone(BUZZERPIN,freq,duration);
+    delay(duration);
+    noTone(BUZZERPIN);
 return;
 }
 
@@ -196,9 +201,15 @@ int MPCORE::initperipherials(){
     int error = telemetryradio.init();
     // adc.setuppins();
 
+    if (error)
+    {
+        radiook = 0;
+    }
+    
+
     if (PyroTimer0.attachInterruptInterval(100 * 1000, checkfirepyros))
     {
-      Serial.print(F("Starting ITimer0 OK, millis() = ")); Serial.println(millis());
+      //Serial.print(F("Starting ITimer0 OK, millis() = ")); Serial.println(millis());
     }
     else
         Serial.println(F("Can't set ITimer0. Select another freq. or timer"));
@@ -389,7 +400,7 @@ int MPCORE::flashinit(){
         uint32_t used = info->usedBytes;
         uint32_t avail = total - used;
 
-        Serial.printf("FS info: total %d, used %d, avail %d\n",total,used,avail);
+        //Serial.printf("FS info: total %d, used %d, avail %d\n",total,used,avail);
 
         LittleFS.remove("/f.txt");
 
@@ -701,11 +712,12 @@ int MPCORE::parsecommand(char input){
 int MPCORE::sendtelemetry(){
     telepacket packettosend;
     uint8_t databufs[32];
+    if (radiook = 1)
+    {
+        packettosend = statetopacket(_sysstate,NAV._sysstate);
+        telemetryradio.sendpacket(packettosend);
+    }
 
-    packettosend = statetopacket(_sysstate,NAV._sysstate);
-    telemetryradio.sendpacket(packettosend);
-
-    
     return 0;
     
 }

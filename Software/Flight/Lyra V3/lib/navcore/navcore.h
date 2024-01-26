@@ -38,6 +38,8 @@ class NAVCORE{
 
         int useaccel = 1;
 
+        int ready = 0;
+
         void KFinit();
 
         NAVCORE();

@@ -10,6 +10,7 @@ bool dataismoved = false;
 void setup() { // main core setup
     MP.setuppins();
     MP.beep();
+    delay(10);
     MP.setled(BLUE);
     MP.initperipherials();
 
@@ -17,7 +18,11 @@ void setup() { // main core setup
     MP.flashinit();
     MP.logdata();
     
-
+    while (!NAV.ready)
+    {
+        delay(100);
+    }
+    
 
     if (NAV._sysstate.r.errorflag * MP._sysstate.r.errorflag != 1)
     {
@@ -29,7 +34,7 @@ void setup() { // main core setup
     }
     else{
         MP.ledcolor = GREEN;
-        Serial.println("cores good");
+        //Serial.println("cores good");
     }
     
 
@@ -43,19 +48,18 @@ void setup() { // main core setup
     Serial.println(NAV._sysstate.r.errorflag);
 
     MP.beep(3000,200);
-    delay(200);
     MP.beep(4000,200);
     Serial.println("mpcore out of setup");
 }
 
 void setup1() { // nav core setup
     // NAV.handshake();
-    delay(4000);
     NAV.initi2c();
     NAV.sensorinit();
     NAV.getpadoffset();
     NAV.KFinit();
     NAV.getsensordata();
+    NAV.ready = 1;
 }
 
 void loop() { // main core loop

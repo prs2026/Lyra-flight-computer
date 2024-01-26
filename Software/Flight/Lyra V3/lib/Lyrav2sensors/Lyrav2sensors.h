@@ -183,7 +183,7 @@ ADXL::ADXL()
 
 int ADXL::init()
 {
-    Serial.println("starting adxl init");
+    //Serial.println("starting adxl init");
     if (!adxl375.begin(0x53))
     {
         Serial.println("adxl init fail");
@@ -298,7 +298,7 @@ int BARO::init(){
     bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
     bmp.setOutputDataRate(BMP3_ODR_100_HZ);
     getpadoffset();
-    Serial.println("BMP init success");
+    //Serial.println("BMP init success");
     //MP.logtextentry("BMP init fail");
     return 0;
 }
@@ -375,6 +375,7 @@ int SERIALPORT::init(){
 
             if (Serial)
             {
+                delay(100);
                 Serial.println("\n\nMP Serial init");
                 //MP.logtextentry("MP serial init");
                 return 0;
@@ -466,7 +467,7 @@ int RADIO::init(){
         }
         else
         {
-            Serial.println("radio init attempt fail");
+            Serial.println("radio init fail");
             return 1;
         }
         
