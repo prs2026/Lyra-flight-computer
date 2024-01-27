@@ -47,6 +47,7 @@ class MPCORE{
         uint32_t landingdetectiontime = 0;
         uint32_t liftofftime = 0;
         uint32_t missionelasped = 0;
+        uint32_t burnouttime = 0;
         uint32_t P1firedtime = 0;
         uint32_t P2firedtime = 0;
         
@@ -469,8 +470,16 @@ int MPCORE::changestate(){
     else if (_sysstate.r.state == 2) // detect burnout
     {
         
+        if (NAV.upsidedown == 0)
+        {
+            accelvec.z() < 8 ? detectiontime = detectiontime : detectiontime = millis();
+        }
+        else
+        {
+            accelvec.z() > -8 ? detectiontime = detectiontime : detectiontime = millis();
+        }
         
-        accelvec.z() < 8 ? detectiontime = detectiontime : detectiontime = millis();
+        
         if (millis() - detectiontime >= 200)
         {
             _sysstate.r.state = 3;

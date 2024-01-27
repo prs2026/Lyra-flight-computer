@@ -14,6 +14,8 @@ class NAVCORE{
     Quatstruct quatadj = {1,0,0,0};
     Quaterniond vectoradj = {0.707,0,0.707,0};
 
+    Quaterniond upsidedownadj = {0,1,0,0};
+
 
     const float ALTVAR = 0.01;
     const float VVELVAR = 0.12;
@@ -31,6 +33,10 @@ class NAVCORE{
     uint32_t kfupdatetime;
     uint32_t kfpredicttime;
 
+    uint32_t invertedtime;
+
+    double accumz = 0;
+
     public:
     
     
@@ -39,6 +45,8 @@ class NAVCORE{
         int useaccel = 1;
 
         int ready = 0;
+
+        int upsidedown = 0;
 
         void KFinit();
 
@@ -87,6 +95,7 @@ class NAVCORE{
 
         Quatstruct adjustwithaccel(float alpha);
 
+        void upsidedowncheck();
         
         Vector3float getworldaccel(navpacket _state);
 
@@ -138,6 +147,20 @@ int NAVCORE::initi2c(){
     return 0;
 }
 
+void NAVCORE::upsidedowncheck(){
+    if (accumz > 0)
+    {
+        upsidedown = 0;
+    }
+    else
+    {
+        upsidedown = 1;
+    }
+    accumz = 0;
+    
+    return;
+}
+
 uint32_t NAVCORE::sensorinit(){
     int imustatus;
     int barostatus;
@@ -175,6 +198,26 @@ void NAVCORE::getsensordata(){
     adxl.read();
     #endif // VERBOSETIMES
     
+    if (useaccel == 1)
+    {
+        accumz += imu.data.accel.z;
+        if (millis() - invertedtime > 1000 )
+        {
+            upsidedowncheck();
+            invertedtime = millis();
+        }
+    }
+    
+    if (upsidedown == 1)
+    {
+        imu.data.accel = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(imu.data.accel)) * upsidedownadj.inverse()) ));
+        imu.data.gyro = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(imu.data.gyro)) * upsidedownadj.inverse()) ));
+        adxl.data.accel = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(adxl.data.accel)) * upsidedownadj.inverse()) ));
+    }
+    
+    
+    
+
     _sysstate.r.adxldata = adxl.data;
     _sysstate.r.imudata = imu.data;
     _sysstate.r.barodata = baro.data;

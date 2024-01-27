@@ -59,6 +59,25 @@ inline logpacket preplogentry(mpstate MPstate, navpacket NAVstate){
     return result;
 }
 
+inline Quaterniond vectortoquat(Vector3d vec){
+    Quaterniond result;
+    result.w() = 0;
+    result.x() = vec.x();
+    result.y() = vec.y();
+    result.z() = vec.z();
+    
+    return result;
+}
+
+inline Vector3d quattovector(Quaterniond quat){
+    Vector3d result;
+    result.x() = quat.x();
+    result.y() = quat.y();
+    result.z() = quat.z();
+    
+    return result;
+}
+
 inline telepacket statetopacket(mpstate state,navpacket navstate){
     telepacket packet;
     packet.r.checksum = 0x12;
@@ -130,6 +149,7 @@ inline uint8_t scani2c(bool printout){
     
     return 0;
 }
+
 
 
 
