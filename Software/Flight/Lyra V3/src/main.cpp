@@ -132,7 +132,7 @@ void loop() { // main core loop
     }
     MP.checkforpyros();
     
-    if ((millis() - MP.prevtime.sendtelemetry >= MP.intervals[MP._sysstate.r.state].sendtelemetry) && MP._sysstate.r.errorflag %19 != 0)
+    if ((millis() - MP.prevtime.sendtelemetry >= MP.intervals[MP._sysstate.r.state].sendtelemetry))
     {
         uint32_t prevtelemmicros = micros();
         MP.sendtelemetry();

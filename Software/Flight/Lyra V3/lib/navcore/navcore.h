@@ -201,7 +201,7 @@ void NAVCORE::getsensordata(){
     if (useaccel == 1)
     {
         accumz += imu.data.accel.z;
-        if (millis() - invertedtime > 1000 )
+        if (millis() - invertedtime > 5000 )
         {
             upsidedowncheck();
             invertedtime = millis();

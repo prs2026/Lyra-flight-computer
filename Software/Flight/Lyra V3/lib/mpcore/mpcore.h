@@ -73,7 +73,7 @@ class MPCORE{
 
         int ledcolor;
 
-        int freqs[7] = {3000,5000,5000,5000,5000,5000,8000};
+        int freqs[6] = {3000,5000,5000,5000,5000,8000};
 
 
         struct timings{
@@ -84,9 +84,8 @@ class MPCORE{
             uint32_t beep;
             uint32_t loop;
         };
-        timings intervals[7] = {
+        timings intervals[6] = {
             {2000,1000,50,500,10000}, // ground idle
-            {10,200,100, 200,800}, // launch detect // DEPRECATED
             {10,500,100, 200,800}, // powered ascent
             {10,500,100,200,800}, // unpowered ascent
             {10,500,100,200,800}, // ballistic descent
@@ -459,7 +458,7 @@ int MPCORE::changestate(){
         NAV._sysstate.r.filtered.alt > 5 && NAV._sysstate.r.filtered.vvel > 5 ? detectiontime = detectiontime : detectiontime = millis();
         if (millis() - detectiontime >= 400)
         {
-            _sysstate.r.state = 2;
+            _sysstate.r.state = 1;
             detectiontime = millis();
             ebyte.setPower(Power_27,true);
             Serial.println("liftoff");
@@ -467,53 +466,45 @@ int MPCORE::changestate(){
         
     }
 
-    else if (_sysstate.r.state == 2) // detect burnout
+    else if (_sysstate.r.state == 1) // detect burnout
     {
-        
-        if (NAV.upsidedown == 0)
-        {
-            accelvec.z() < 8 ? detectiontime = detectiontime : detectiontime = millis();
-        }
-        else
-        {
-            accelvec.z() > -8 ? detectiontime = detectiontime : detectiontime = millis();
-        }
-        
+
+        accelvec.z() < 8 ? detectiontime = detectiontime : detectiontime = millis();
         
         if (millis() - detectiontime >= 200)
         {
-            _sysstate.r.state = 3;
+            _sysstate.r.state = 2;
             detectiontime = millis();
             Serial.println("burnout");
         }
     }
 
-    else if (_sysstate.r.state == 3) // detect appogee
+    else if (_sysstate.r.state == 2) // detect appogee
     {
         NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt*0.95 ?  detectiontime = detectiontime : detectiontime = millis();
 
         if (millis() - detectiontime >= 100)
         {
-            _sysstate.r.state = 4;
+            _sysstate.r.state = 3;
             detectiontime = millis();
             Serial.println("appogee");
         }
     }
 
-    else if (_sysstate.r.state == 4) // detect chute opening
+    else if (_sysstate.r.state == 3) // detect chute opening
     {
         
 
         accelmag > 7 ? detectiontime = detectiontime : detectiontime = millis();
         if (millis() - detectiontime >= 300)
         {
-            _sysstate.r.state = 5;
+            _sysstate.r.state = 4;
             detectiontime = millis();
             Serial.println("chutes out");
         }
     }
 
-    else if (_sysstate.r.state == 5) // detect landing
+    else if (_sysstate.r.state == 4) // detect landing
     {   
 
         if (abs(NAV._sysstate.r.barodata.verticalvel) < 0.3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
@@ -526,14 +517,14 @@ int MPCORE::changestate(){
 
         if (millis() - detectiontime >= 3000)
         {
-            _sysstate.r.state = 6;
+            _sysstate.r.state = 5;
             detectiontime = millis();
             landedtime = millis();
             Serial.println("landed");
         }
     }
 
-    else if (_sysstate.r.state == 6) // reset
+    else if (_sysstate.r.state == 5) // reset
     {   
 
         if (abs(NAV._sysstate.r.filtered.vvel) < 3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
@@ -554,7 +545,7 @@ int MPCORE::changestate(){
     }
     
 
-    if (_sysstate.r.state > 1 && _sysstate.r.state != 6 && abs(NAV._sysstate.r.barodata.verticalvel) < 0.3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
+    if (_sysstate.r.state > 1 && _sysstate.r.state != 5 && abs(NAV._sysstate.r.barodata.verticalvel) < 0.3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
     {
         landingdetectiontime = landingdetectiontime;
     }
@@ -563,7 +554,7 @@ int MPCORE::changestate(){
     }
     if (millis() - landingdetectiontime >= 30000)
         {
-            _sysstate.r.state = 6;
+            _sysstate.r.state = 5;
             detectiontime = millis();
             landedtime = millis();
             Serial.println("randoland");
@@ -574,17 +565,17 @@ int MPCORE::changestate(){
 
 
 
-// 0 = ground idle 1 = deprecated 2 = powered ascent 3 = unpowered ascent 4 = ballisitic decsent 5 = under chute 6 = landed
+// 0 = ground idle  1 = powered ascent 2 = unpowered ascent 3 = ballisitic decsent 4 = under chute 5 = landed
 int MPCORE::checkforpyros(){
 
-    if (NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt && _sysstate.r.state >= 4)
+    if (NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt && _sysstate.r.state >= 3)
     {
-        _sysstate.r.pyrosfired =  _sysstate.r.pyrosfired || 00000001;
+        _sysstate.r.pyrosfired =  _sysstate.r.pyrosfired || 1;
     }
 
-    if (NAV._sysstate.r.filtered.alt < 400 && _sysstate.r.state >= 4)
+    if (NAV._sysstate.r.filtered.alt < 400 && _sysstate.r.state >= 3)
     {
-        _sysstate.r.pyrosfired = _sysstate.r.pyrosfired || 00000010;
+        _sysstate.r.pyrosfired = _sysstate.r.pyrosfired || 2;
     }
 
     P1.checkfire();
@@ -611,9 +602,9 @@ int MPCORE::parsecommand(char input){
     
     char channel;
 
-    if (input == 'l' && _sysstate.r.state < 2){
+    if (input == 'l' && _sysstate.r.state < 1){
         Serial.println("put into launch mode");
-        _sysstate.r.state = 2;
+        _sysstate.r.state = 1;
         detectiontime = millis();
         return 0;
     }
@@ -706,9 +697,7 @@ int MPCORE::parsecommand(char input){
             
             erasedata();
         }
-        
         break;
-
     
     default:
         break;
@@ -728,7 +717,6 @@ int MPCORE::sendtelemetry(){
     }
 
     return 0;
-    
 }
 
 
