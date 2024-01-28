@@ -46,6 +46,15 @@ void setup() { // main core setup
     
     Serial.print("NAV boot complete, error code :");
     Serial.println(NAV._sysstate.r.errorflag);
+    
+    if (MP.radiook == 0)
+    {
+        MP.beep(8000,500);
+        delay(100);
+        MP.beep(8000,500);
+        delay(100);
+    }
+    
 
     MP.beep(3000,200);
     MP.beep(4000,200);

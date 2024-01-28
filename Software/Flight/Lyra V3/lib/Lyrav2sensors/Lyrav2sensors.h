@@ -15,7 +15,11 @@ Bmi088Gyro gyrounit(Wire1,0x68);
 Adafruit_BMP3XX bmp;
 
 Adafruit_ADXL375 adxl375((int32_t)12345,&Wire1);
-
+// m0 = brkout2
+// m1 = brkout7
+// aux brkout 5
+//tx = brkout 3
+//rx = brkout 4
 
 Stream &radioserial = (Stream &)Serial1;
                     //  m0         m1     aux
@@ -43,13 +47,13 @@ public:
 
 IMU::IMU(){
         
-        bcal << -0.02915,
-                0.10045,
-                -0.04105;
+        bcal << 0.01215,
+                0.0558,
+                -0.00645;
 
-        acal << 1.003008163,	0.00512152468,	-0.002092967527,
-                -0.00148623638,	1.002671656,	-0.002092967527,
-                -0.00148623638,	0.00512152468,	1.006097903;
+        acal << 1.0043134,	0.002845008234,	-0.0003288584787,
+                0.0006194775994,	1.002656361,	-0.0003288584787,
+                0.0006194775994,	0.002845008234,	1.006883084;
 };
 
 int IMU::init(){
@@ -168,17 +172,22 @@ public:
 
 ADXL::ADXL()
 {
-    offsets << -7.71395,
-            6.74735,
-            -3.4178;
+    offsets << -11.82755,
+                8.92885,
+                5.7293;
 
-    bcal << -0.09085,
-            0.2385,
-            -0.1113;
+    // offsets << 0,0,0;
 
-    acal << 0.9649217623,	0.01216011584,	-0.005674720725,
-            -0.004632060897,	1.002671656,	-0.002092967527,
-            -0.004632060897,	0.01216011584,	-0.005674720725;
+    // bcal << 0,0,0;
+    // acal << 0,0,0;
+
+    bcal << 0.0057,
+            -2.7648,
+            -0.07585;
+
+    acal << 0,	0,	0,
+            0,	0,	0,
+            0,	0,	0;
     return;
 }
 
@@ -397,7 +406,7 @@ int SERIALPORT::senddata(mpstate state,navpacket navstate){
             Serial.printf(">accel x: %f \n",navstate.r.imudata.accel.x );
             Serial.printf(">accel y: %f \n",navstate.r.imudata.accel.y);
             Serial.printf(">accel z: %f \n",navstate.r.imudata.accel.z);
-            Serial.printf(">accelabs: %f \n",navstate.r.adxldata.absaccel);
+            Serial.printf(">accelabs: %f \n",navstate.r.imudata.absaccel);
             Serial.printf(">highaccel x: %f \n",navstate.r.adxldata.accel.x );
             Serial.printf(">highaccel y: %f \n",navstate.r.adxldata.accel.y);
             Serial.printf(">highaccel z: %f \n",navstate.r.adxldata.accel.z);
