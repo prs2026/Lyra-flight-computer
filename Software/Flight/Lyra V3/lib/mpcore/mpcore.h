@@ -571,11 +571,14 @@ int MPCORE::checkforpyros(){
     if (NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt && _sysstate.r.state >= 3)
     {
         _sysstate.r.pyrosfired =  _sysstate.r.pyrosfired || 1;
+        P1.fire();
+
     }
 
     if (NAV._sysstate.r.filtered.alt < 400 && _sysstate.r.state >= 3)
     {
         _sysstate.r.pyrosfired = _sysstate.r.pyrosfired || 2;
+        P3.fire();
     }
 
     P1.checkfire();
