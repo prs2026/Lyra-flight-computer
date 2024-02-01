@@ -115,6 +115,8 @@ class MPCORE{
         int parsecommand(char input);
         int sendtelemetry();
         int checkforpyros();
+
+        float readbattvoltage();
         
 
 };
@@ -130,13 +132,14 @@ void MPCORE::setuppins(){
     pinMode(LEDGREEN,OUTPUT);
     pinMode(LEDBLUE,OUTPUT);
     pinMode(BUZZERPIN,OUTPUT);
+    pinMode(BATT_SENSE,INPUT);
 
 
     digitalWrite(LEDRED, LOW);
     digitalWrite(LEDGREEN, HIGH);
     digitalWrite(LEDBLUE, HIGH);
 
-    // adc.setuppins();
+    
     return;
 }
 
@@ -195,11 +198,18 @@ void MPCORE::setled(int color){
     }
 }
 
+float MPCORE::readbattvoltage(){
+    long raw = analogRead(BATT_SENSE);
+    long adjusted  = map(raw,0,1230,0,1023);
+    double calculated = double(adjusted)/100;
+    return calculated;
+}
+
 
 int MPCORE::initperipherials(){
     port.init();
     int error = telemetryradio.init();
-    // adc.setuppins();
+    _sysstate.r.batterystate = readbattvoltage();
 
     if (error)
     {
@@ -570,14 +580,15 @@ int MPCORE::checkforpyros(){
 
     if (NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt && _sysstate.r.state >= 3)
     {
-        _sysstate.r.pyrosfired =  _sysstate.r.pyrosfired || 1;
+        _sysstate.r.pyrosfired =  _sysstate.r.pyrosfired | 1;
         P1.fire();
 
     }
 
     if (NAV._sysstate.r.filtered.alt < 400 && _sysstate.r.state >= 3)
     {
-        _sysstate.r.pyrosfired = _sysstate.r.pyrosfired || 2;
+        
+        _sysstate.r.pyrosfired = _sysstate.r.pyrosfired | 2;
         P3.fire();
     }
 
@@ -587,10 +598,10 @@ int MPCORE::checkforpyros(){
     P4.checkfire();
 
     uint8_t pyrocont = 0;
-    pyrocont = pyrocont || P1.getcont();
-    pyrocont = pyrocont || P2.getcont();
-    pyrocont = pyrocont || P3.getcont();
-    pyrocont = pyrocont || P4.getcont();
+    pyrocont = pyrocont | P1.getcont();
+    pyrocont = pyrocont | P2.getcont()*2;
+    pyrocont = pyrocont | P3.getcont()*4;
+    pyrocont = pyrocont | P4.getcont()*8;
     _sysstate.r.pyroscont = pyrocont;
     return 0;
 }

@@ -109,7 +109,7 @@
 
   (footprint "SamacSys_Parts.3dshapes:GP1575124A02" (layer "F.Cu")
     (tstamp 1b914823-f66f-4aa0-9637-416d68a7e7e7)
-    (at 161.925 79.629)
+    (at 161.8234 74.1426)
     (descr "GP.1575.12.4.A.02-1")
     (tags "Antenna")
     (property "Description" "Antennas GPS Pasv Thruhole 12mm Patch")
@@ -432,7 +432,7 @@
 
   (footprint "SamacSys_Parts.3dshapes:TESEOLIV4FTR" (layer "B.Cu")
     (tstamp 121268ed-84fa-4e48-83a7-cd19dd9e2f0b)
-    (at 166.116 87.094 180)
+    (at 162.4076 81.8642 180)
     (descr "TESEO-LIV4FTR-1")
     (tags "Integrated Circuit")
     (property "Description" "Tiny GNSS multi-bands module LCC-18 -40 C  85 C ")

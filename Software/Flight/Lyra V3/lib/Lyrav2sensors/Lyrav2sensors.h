@@ -16,14 +16,14 @@ Adafruit_BMP3XX bmp;
 
 Adafruit_ADXL375 adxl375((int32_t)12345,&Wire1);
 // m0 = brkout2
-// m1 = brkout7
+// m1 = brkout6
 // aux brkout 5
 //tx = brkout 3
 //rx = brkout 4
 
 Stream &radioserial = (Stream &)Serial1;
                     //  m0         m1     aux
-E220 ebyte(&radioserial,BRKOUT2,BRKOUT7,BRKOUT5);
+E220 ebyte(&radioserial,BRKOUT2,BRKOUT6,BRKOUT5);
 
 /*----------------------------------------------------------------------------------------*/
 class IMU{
