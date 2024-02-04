@@ -58,6 +58,7 @@ int LCDDISPLAY::drawtitlescreen(){
 
 int LCDDISPLAY::drawtelemetryscreen(datapacket inpacket){
     lcddr.clearDisplay();
+    lcddr.drawRoundRect(3,2,123,60,5,1);
 
     lcddr.setCursor(30,5);
     switch (inpacket.state)
@@ -92,13 +93,18 @@ int LCDDISPLAY::drawtelemetryscreen(datapacket inpacket){
     
 
     lcddr.setCursor(0,20);
-    lcddr.print(" Altitude: "); lcddr.print(float(inpacket.altitude)/100); lcddr.println("m");
+    lcddr.print(" Altitude: "); lcddr.print(float(inpacket.altitude)/10); lcddr.println("m");
     lcddr.print(" Velocity: "); lcddr.print(float(inpacket.verticalvel)/100); lcddr.println("m/s");
     lcddr.print(" Data Age: "); lcddr.print(float(inpacket.dataage)/1000); lcddr.println("s");
     lcddr.println();
+    if (inpacket.status)
+    {
+        lcddr.print("Event!");
+    }
     
+    lcddr.println();
     
-    // lcddr.drawRect(10,10,110,40,1);
+
     lcddr.display();
 }
 

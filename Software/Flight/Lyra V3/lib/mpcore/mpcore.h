@@ -26,6 +26,7 @@ bool checkfirepyros(struct repeating_timer *t)
     P2.checkfire();
     P3.checkfire();
     P4.checkfire();
+
     //Serial.println("checking pyros");
 
   return true;
@@ -50,6 +51,7 @@ class MPCORE{
         uint32_t burnouttime = 0;
         uint32_t P1firedtime = 0;
         uint32_t P2firedtime = 0;
+        
         
 
 
@@ -124,7 +126,7 @@ class MPCORE{
 MPCORE::MPCORE(){
     _sysstate.r.state = 0;
     _sysstate.r.errorflag = 1;
-    _sysstate.r.pyrosfired = 0;
+    _sysstate.r.pyrosfired = 0b1000;
 };
 
 void MPCORE::setuppins(){
@@ -231,9 +233,9 @@ int MPCORE::initperipherials(){
 
 
 int MPCORE::logdata(){
+    NAV.event ? _sysstate.r.status = _sysstate.r.status | 0b1 : _sysstate.r.status = _sysstate.r.status;
     uint32_t openingtime = micros();
-    // adc.readbatt();
-    // _sysstate.r.batterystate = adc.battvoltage;
+    _sysstate.r.batterystate = readbattvoltage();
 
     logpacket datatolog = preplogentry(_sysstate,NAV._sysstate);
     //Serial.print(datatolog.r.checksum2);
@@ -275,7 +277,7 @@ int MPCORE::erasedata(){
 
 int MPCORE::dumpdata(){
     Serial.println("dumping data to serial");
-    Serial.println("index, checksum,uptime mp,uptime nav,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, accelhighg x, accelhighg y, accelhighg z, gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, presusre, verticalvel,filtered vvel, maxalt, altitudeagl, filtered alt, imutemp, barotemp,state,battstate,pyros fired checksum2");
+    Serial.println("index, checksum,uptime mp,uptime nav,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, accelhighg x, accelhighg y, accelhighg z, gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, presusre, verticalvel,filtered vvel, maxalt, altitudeagl, filtered alt, imutemp, barotemp,state,battstate,pyros fired,pyros cont,pyros state, checksum2");
     
     fs::File readfile = LittleFS.open("/log.csv", "r");
     uint32_t entrynum = 0;
@@ -371,7 +373,9 @@ int MPCORE::dumpdata(){
 
         readentry.r.MPstate.r.state,
         readentry.r.MPstate.r.batterystate,
-        readentry.r.MPstate.r.pyrosfired
+        readentry.r.MPstate.r.pyrosfired,
+        readentry.r.MPstate.r.pyroscont,
+        readentry.r.MPstate.r.pyrostate
         );
         entrynum++;
     }
@@ -491,9 +495,9 @@ int MPCORE::changestate(){
 
     else if (_sysstate.r.state == 2) // detect appogee
     {
-        NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt*0.95 ?  detectiontime = detectiontime : detectiontime = millis();
+        NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt - 4 ?  detectiontime = detectiontime : detectiontime = millis();
 
-        if (millis() - detectiontime >= 100)
+        if (millis() - detectiontime >= 800)
         {
             _sysstate.r.state = 3;
             detectiontime = millis();
@@ -506,7 +510,7 @@ int MPCORE::changestate(){
         
 
         accelmag > 7 ? detectiontime = detectiontime : detectiontime = millis();
-        if (millis() - detectiontime >= 300)
+        if (millis() - detectiontime >= 500)
         {
             _sysstate.r.state = 4;
             detectiontime = millis();
@@ -578,19 +582,31 @@ int MPCORE::changestate(){
 // 0 = ground idle  1 = powered ascent 2 = unpowered ascent 3 = ballisitic decsent 4 = under chute 5 = landed
 int MPCORE::checkforpyros(){
 
-    if (NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt && _sysstate.r.state >= 3)
+    if (NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt && _sysstate.r.state >= 3 && !_sysstate.r.pyrosfired & 1)
     {
-        _sysstate.r.pyrosfired =  _sysstate.r.pyrosfired | 1;
+        _sysstate.r.pyrosfired =  _sysstate.r.pyrosfired | 0b1;
         P1.fire();
 
-    }
+    }  
 
-    if (NAV._sysstate.r.filtered.alt < 400 && _sysstate.r.state >= 3)
+    if (NAV._sysstate.r.filtered.alt < 200 && _sysstate.r.state >= 3)
     {
         
-        _sysstate.r.pyrosfired = _sysstate.r.pyrosfired | 2;
+        _sysstate.r.pyrosfired = _sysstate.r.pyrosfired | 0b10;
         P3.fire();
     }
+
+    if (_sysstate.r.state == 2 && NAV._sysstate.r.orientationeuler.x < 100 && NAV._sysstate.r.orientationeuler.x > 80  && NAV._sysstate.r.orientationeuler.y < -170 && NAV._sysstate.r.orientationeuler.y > -180 && NAV._sysstate.r.filtered.vvel > 20 && NAV._sysstate.r.filtered.alt > 50 && millis() - burnouttime > 100)
+    {
+        _sysstate.r.pyrosfired = _sysstate.r.pyrosfired | 0b100;
+        P4.fire();
+    }
+    else
+    {
+        _sysstate.r.pyrosfired = _sysstate.r.pyrosfired & 0b11;
+    }
+    
+    
 
     P1.checkfire();
     P2.checkfire();
@@ -603,6 +619,13 @@ int MPCORE::checkforpyros(){
     pyrocont = pyrocont | P3.getcont()*4;
     pyrocont = pyrocont | P4.getcont()*8;
     _sysstate.r.pyroscont = pyrocont;
+
+    uint8_t pyrostate = 0;
+    pyrostate = pyrostate | P1.state();
+    pyrostate = pyrostate | P2.state()*2;
+    pyrostate = pyrostate | P3.state()*4;
+    pyrostate = pyrostate | P4.state()*8;
+    _sysstate.r.pyrostate = pyrostate;
     return 0;
 }
 
@@ -620,6 +643,8 @@ int MPCORE::parsecommand(char input){
         Serial.println("put into launch mode");
         _sysstate.r.state = 1;
         detectiontime = millis();
+        landingdetectiontime = millis();
+
         return 0;
     }
 

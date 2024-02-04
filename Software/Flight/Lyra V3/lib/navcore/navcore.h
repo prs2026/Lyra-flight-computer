@@ -48,6 +48,8 @@ class NAVCORE{
 
         int upsidedown = 0;
 
+        int event = 0;
+
         void KFinit();
 
         NAVCORE();
@@ -208,13 +210,17 @@ void NAVCORE::getsensordata(){
         }
     }
     
-    // if (upsidedown == 1)
-    // {
-    //     imu.data.accel = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(imu.data.accel)) * upsidedownadj.inverse()) ));
-    //     imu.data.gyro = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(imu.data.gyro)) * upsidedownadj.inverse()) ));
-    //     adxl.data.accel = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(adxl.data.accel)) * upsidedownadj.inverse()) ));
-    // }
+    if (upsidedown == 1)
+    {
+        imu.data.accel = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(imu.data.accel)) * upsidedownadj.inverse()) ));
+        imu.data.gyro = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(imu.data.gyro)) * upsidedownadj.inverse()) ));
+        adxl.data.accel = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(adxl.data.accel)) * upsidedownadj.inverse()) ));
+    }
     
+    if (imu.data.absaccel > 20 || adxl.data.absaccel > 40)
+    {
+        event = 1;
+    }
     
     
 

@@ -80,18 +80,20 @@ void recivepacket(){
   "%d," // errorflag NAV
   "%d," // state
   "%d," // uptime reciver
+  "%d," // status
   "%d," // datage
   "CD\n"
   ,(float(currentpacket.r.orientationeuler.x)/100)*(180/PI),(float(currentpacket.r.orientationeuler.y)/100)*(180/PI),(float(currentpacket.r.orientationeuler.z)/100)*(180/PI)
   ,float(currentpacket.r.accel.x)/100,float(currentpacket.r.accel.y)/100,float(currentpacket.r.accel.z)/100
   ,float(currentpacket.r.gyro.x)/100,float(currentpacket.r.gyro.y)/100,float(currentpacket.r.gyro.z)/100
-  ,float(currentpacket.r.altitude)/100
+  ,float(currentpacket.r.altitude)/10
   ,float(currentpacket.r.verticalvel)/100
   ,currentpacket.r.uptime
   ,currentpacket.r.errorflagmp
   ,currentpacket.r.errorflagnav
   ,currentpacket.r.state
   ,millis()
+  ,currentpacket.r.status
   ,millis() - packettime
   );
   logfile.close();
@@ -110,51 +112,22 @@ void recivepacket(){
 }
 
 void senddataover(telepacket sendpacket){
-  //myTransfer.sendDatum(sendpacket);
-  
 
-  Serial2.printf("A,%d,%d,%d,%d,D,",sendpacket.r.altitude,sendpacket.r.verticalvel,sendpacket.r.state,millis()-packettime);
-  // Serial2.printf("A,"
-  // "%d,%d,%d," // orientation euler
-  // "%d,%d,%d," // accel
-  // "%d,%d,%d," // gyro
-  // "%d," //alt
-  // "%d," // vvel
-  // "%d," // uptime lyra
-  // "%d," // errorflag MP
-  // "%d," // errorflag NAV
-  // "%d," // state
-  // "%d," // uptime reciver
-  // "%d," // datage
-  // "D,\n"
-  // ,sendpacket.r.orientationeuler.x,sendpacket.r.orientationeuler.y,sendpacket.r.orientationeuler.z
-  // ,sendpacket.r.accel.x,sendpacket.r.accel.y,sendpacket.r.accel.z
-  // ,sendpacket.r.gyro.x,sendpacket.r.gyro.y,sendpacket.r.gyro.z
-  // ,sendpacket.r.altitude
-  // ,sendpacket.r.verticalvel
-  // ,sendpacket.r.uptime
-  // ,sendpacket.r.errorflagmp
-  // ,sendpacket.r.errorflagnav
-  // ,sendpacket.r.state
-  // ,millis()
-  // ,millis() - packettime
-  // );
-  
-  //Serial.print("senddata");
+  Serial2.printf("A,%d,%d,%d,%d,%d,D,",sendpacket.r.altitude,sendpacket.r.verticalvel,sendpacket.r.state,millis()-packettime, sendpacket.r.status);
+
 }
 
 void setup(void) {
 
-  pinMode(LRC,OUTPUT);
   pinMode(CS_SD,OUTPUT);
   digitalWrite(CS_SD,HIGH);
   pinMode(LED_BUILTIN,OUTPUT);
-  digitalWrite(LRC,HIGH);
+
 
   digitalWrite(LED_BUILTIN,HIGH);
   Serial.begin(115200);
   uint32_t starttime = millis();
-  while (!Serial && millis()-starttime < 5000);
+  while (!Serial && millis()-starttime < 1000);
   delay(500);
   Serial.println("init");
 
@@ -177,8 +150,6 @@ void setup(void) {
     Serial.println("SD init fail");
   }
 
-  talkie.init();
-
   File dataFile = SD.open("/datalog.txt", FILE_WRITE);
   if (!dataFile)
   {
@@ -197,16 +168,19 @@ void setup(void) {
 
   radio.init();
 
-  myTransfer.begin(Serial2);
 
   digitalWrite(LED_BUILTIN,LOW);
   delay(500);
   digitalWrite(LED_BUILTIN,HIGH);
 
   Serial.println("out of setup");
-  
-  
-  
+
+    pinMode(LRC,OUTPUT);
+  digitalWrite(LRC,HIGH);
+
+    talkie.init();
+
+  talkie.saytest();
 }
 
 void loop() {

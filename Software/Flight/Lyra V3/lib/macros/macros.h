@@ -158,6 +158,8 @@ union mpstate{
         uint32_t state;
         uint8_t pyrosfired;
         uint8_t pyroscont;
+        uint8_t pyrostate;
+        uint16_t status;
         float batterystate;
     } r;
     uint8_t data8[sizeof(r)/sizeof(uint8_t)];
@@ -187,6 +189,7 @@ union telepacket{
         uint8_t errorflagmp;
         uint8_t errorflagnav;
         uint8_t state;
+        uint8_t status;
         uint8_t checksum2;
     } r;
     uint8_t data[sizeof(r)];

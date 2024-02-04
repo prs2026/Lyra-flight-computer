@@ -4,11 +4,11 @@
 #include <KS0108_GLCD.h>
 
 
-#define BUTTON1
-#define BUTTON2
-#define BUTTON3
-#define BUTTON4
-#define BUTTON5
+#define BUTTON1 9
+#define BUTTON2 8
+#define BUTTON3 7
+#define BUTTON4 6
+#define BUTTON5 5
 
 #define LCDDI 2 // also cs
 #define LCDRW 3 // also mosi
@@ -101,6 +101,7 @@ struct __attribute__((packed)) datapacket
         uint32_t dataage;
         uint8_t checksum2;
         int16_t maxalt;
+        uint8_t status;
 };
 
 #endif // MACROS

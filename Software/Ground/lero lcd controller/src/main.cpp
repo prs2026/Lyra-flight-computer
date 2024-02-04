@@ -10,14 +10,41 @@ SerialTransfer myTransfer;
 LCDDISPLAY display;
 
 
-
+uint32_t buttonchecktime = 0;
 
 datapacket newpacket;
+
+void checkbuttons(){
+  int buttonstatus[5] = {};
+
+  buttonstatus[0] = digitalRead(BUTTON1);
+  buttonstatus[1] = digitalRead(BUTTON2);
+  buttonstatus[2] = digitalRead(BUTTON3);
+  buttonstatus[3] = digitalRead(BUTTON4);
+  buttonstatus[4] = digitalRead(BUTTON5);
+  int j = 0;
+  Serial.println("\nbuttons: ");
+  for (int i = 0; i < 5; i++)
+  {
+    Serial.print(buttonstatus[j]);
+    Serial.print(" ");
+  }
+  Serial.println();
+  
+
+}
+
+
 
 
 void setup(void) {
 
   pinMode(LED_BUILTIN,OUTPUT);
+  pinMode(BUTTON1,INPUT);
+  pinMode(BUTTON2,INPUT);
+  pinMode(BUTTON3,INPUT);
+  pinMode(BUTTON4,INPUT);
+  pinMode(BUTTON5,INPUT);
 
   digitalWrite(LED_BUILTIN,HIGH);
   Serial.begin(9600);
@@ -66,21 +93,21 @@ void loop() {
   if (Serial1.available())
   {
     //Serial.println("trasmission");
-    int32_t result[6] = {};
+    int32_t result[8] = {};
     uint32_t starttime = millis();
     int32_t j = 0;
     while (Serial1.available() && millis()-starttime < 400)
     {
       char buf[15] = "";
       Serial1.readBytesUntil(',',buf,15);
-      Serial.print(buf);
-      Serial.print(" ");
+      //Serial.print(buf);
+      //Serial.print(" ");
       delay(10);
       if (buf != "A" || buf != "D")
       {
         int32_t num = int32_t(strtol(buf,0,10));
-        Serial.print(num);
-        Serial.print(" ");
+        //Serial.print(num);
+        //Serial.print(" ");
         result[j] = num;
         j++;
       }
@@ -92,6 +119,7 @@ void loop() {
     newpacket.verticalvel = result[2];
     newpacket.dataage = result[4];
     newpacket.state = result[3];
+    newpacket.status = result[5];
 
     if (newpacket.altitude > newpacket.maxalt)
     {
@@ -100,6 +128,11 @@ void loop() {
     
   }
 
+  if (millis() - buttonchecktime > 250)
+  {
+    checkbuttons();
+    buttonchecktime = millis();
+  }
   
   display.drawtelemetryscreen(newpacket);
 }

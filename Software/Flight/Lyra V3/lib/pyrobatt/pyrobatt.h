@@ -9,16 +9,17 @@ const int contpins[4] = {P1_CONT,P2_CONT,P3_CONT,P4_CONT};
 
 
 class PYROCHANNEL{
-volatile int state = 0;
-uint32_t firedtime;
+volatile int _state = 0;
 uint32_t timeout = 1000;
 int identity;
 
 int EN_PIN;
 int CONT_PIN;
+int fired = 0;
 
 public:
     int continuity;
+    uint32_t firedtime;
 
     PYROCHANNEL(int _identifier);
     
@@ -26,6 +27,7 @@ public:
     void checkfire();
 
     int getcont();
+     int state();
 };
 
 
@@ -38,26 +40,31 @@ PYROCHANNEL::PYROCHANNEL(int _identifier){
     pinMode(CONT_PIN,INPUT);
 }
 
+ int PYROCHANNEL::state(){
+    return _state;
+}
+
 
 void PYROCHANNEL::fire(){
-    if (state == 0)
+    if (_state == 0 && fired == 0)
     {
         Serial.printf("firing pyro %d\n",identity+1);
         firedtime = millis();
         // todo: schedule an inturrupt to turn it off?
         digitalWrite(EN_PIN,HIGH);
-        state = 1;
+        _state = 1;
+        fired = 1;
     }
     return;
 }
 
 
 void PYROCHANNEL::checkfire(){
-    if (state >= 1 && millis()-firedtime > timeout)
+    if (_state >= 1 && millis()-firedtime > timeout)
     {
         //Serial.printf("disabling pyro %d\n",identity);
         digitalWrite(EN_PIN,LOW);
-        state = 0;
+        _state = 0;
     }
     return;
 }

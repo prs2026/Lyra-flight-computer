@@ -55,11 +55,13 @@ union telepacket{
         uint8_t errorflagmp;
         uint8_t errorflagnav;
         uint8_t state;
+        uint8_t status;
         uint8_t checksum2;
     } r;
     uint8_t data[sizeof(r)];
 
 };
+
 
 struct __attribute__((packed)) datapacket  
 {

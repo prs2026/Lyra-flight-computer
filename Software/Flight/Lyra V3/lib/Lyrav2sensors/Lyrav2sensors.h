@@ -5,7 +5,7 @@
 
 
 
-const float SEALEVELPRESSURE = 	1018.626;
+const float SEALEVELPRESSURE = 	1019.64;
 
 /* accelunit object */
 Bmi088Accel accelunit(Wire1,0x18);
@@ -434,6 +434,7 @@ int SERIALPORT::senddata(mpstate state,navpacket navstate){
             Serial.printf(">baro temp : %f \n",navstate.r.barodata.temp);
             Serial.printf(">pyro cont : %d \n",state.r.pyroscont);
             Serial.printf(">pyros fired : %d \n",state.r.pyrosfired);
+            Serial.printf(">pyro state: %d \n",state.r.pyrostate);
             return 0;
         }
         else
