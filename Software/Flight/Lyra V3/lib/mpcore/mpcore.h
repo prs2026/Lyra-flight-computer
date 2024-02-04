@@ -325,7 +325,7 @@ int MPCORE::dumpdata(){
         "%f,%f," //verticalvel,filtered vvel,
         "%f,%f,%f," // max alt, altitudeagl, filtered alt
         "%f,%f," // temps, imu baro
-        "%d,%f,%d, 202\n", //state, battstate, pyros
+        "%d,%f,%d,%d,%d, 202\n", //state, battstate, pyros, pyrocont, pyrostate
         entrynum,
         readentry.r.MPstate.r.uptime, 
         readentry.r.navsysstate.r.uptime,
@@ -596,7 +596,7 @@ int MPCORE::checkforpyros(){
         P3.fire();
     }
 
-    if (_sysstate.r.state == 2 && NAV._sysstate.r.orientationeuler.x < 100 && NAV._sysstate.r.orientationeuler.x > 80  && NAV._sysstate.r.orientationeuler.y < -170 && NAV._sysstate.r.orientationeuler.y > -180 && NAV._sysstate.r.filtered.vvel > 20 && NAV._sysstate.r.filtered.alt > 50 && millis() - burnouttime > 100)
+    if (_sysstate.r.state == 2 && NAV._sysstate.r.orientationeuler.x < 80 && NAV._sysstate.r.orientationeuler.y < 100  && NAV._sysstate.r.orientationeuler.y < -170 && NAV._sysstate.r.orientationeuler.y < -190 && NAV._sysstate.r.filtered.vvel > 20 && NAV._sysstate.r.filtered.alt > 50 && millis() - burnouttime > 100)
     {
         _sysstate.r.pyrosfired = _sysstate.r.pyrosfired | 0b100;
         P4.fire();
