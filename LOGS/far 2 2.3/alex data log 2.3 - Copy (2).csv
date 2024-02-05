@@ -1,3 +1,6 @@
+b'echo: D dec: 68 
+68\r
+dumping data to serial\r
 index, checksum,uptime mp,uptime nav,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, accelhighg x, accelhighg y, accelhighg z, gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, presusre, verticalvel,filtered vvel, maxalt, altitudeagl, filtered alt, imutemp, barotemp,state,battstate,pyros fired,pyros cont,pyros state, checksum2\r
 0, 101,0,4593,1,1,2.109869,9.588804,0.387157,-0.055621,-0.041999,0.024566,1.730806,9.212777,-4.211873,0.276063,2.712291,0.626746,177.982955,179.361683,-167.240911,0.993649,-0.016873,0.007491,0.110998,2078.750000,79143.148438,0.608077,1.641120,0.000000,-0.366699,-0.353722,28.625000,33.020866,0,2.910000,0, 202
 1, 101,4808,6396,1,1,2.136503,9.616979,0.371208,-0.003414,-0.019239,0.057414,2.211333,10.173829,-6.614501,0.530793,-0.215406,-0.037807,177.953503,179.311590,-167.428823,0.993824,-0.017093,0.007926,0.109358,2078.913574,79140.984375,0.806199,0.539855,0.000000,-0.203125,-0.270755,28.500000,32.826363,0,2.910000,0, 202
