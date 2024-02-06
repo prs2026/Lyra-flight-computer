@@ -497,7 +497,7 @@ int MPCORE::changestate(){
     {
         NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt - 4 ?  detectiontime = detectiontime : detectiontime = millis();
 
-        if (millis() - detectiontime >= 800)
+        if (millis() - detectiontime >= 300)
         {
             _sysstate.r.state = 3;
             detectiontime = millis();
@@ -596,7 +596,7 @@ int MPCORE::checkforpyros(){
         P3.fire();
     }
 
-    if (_sysstate.r.state == 2 && NAV._sysstate.r.orientationeuler.x < 80 && NAV._sysstate.r.orientationeuler.y < 100  && NAV._sysstate.r.orientationeuler.y < -170 && NAV._sysstate.r.orientationeuler.y < -190 && NAV._sysstate.r.filtered.vvel > 20 && NAV._sysstate.r.filtered.alt > 50 && millis() - burnouttime > 100)
+    if (_sysstate.r.state == 2 && NAV._sysstate.r.orientationeuler.x < 80 && NAV._sysstate.r.orientationeuler.x < 100  && NAV._sysstate.r.orientationeuler.y < -170 && NAV._sysstate.r.orientationeuler.y < -190 && NAV._sysstate.r.filtered.vvel > 20 && NAV._sysstate.r.filtered.alt > 50 && millis() - burnouttime > 100)
     {
         _sysstate.r.pyrosfired = _sysstate.r.pyrosfired | 0b100;
         P4.fire();
