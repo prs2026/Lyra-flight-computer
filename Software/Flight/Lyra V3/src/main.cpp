@@ -86,7 +86,7 @@ void loop() { // main core loop
 
     if (millis() - MP.prevtime.logdata >= MP.intervals[MP._sysstate.r.state].logdata)
     {
-        //uint32_t prevlogmicros = micros();
+        uint32_t prevlogmicros = micros();
         MP.logdata();
         if (MP.sendserialon && MP.sendtoteleplot)
         {
@@ -94,14 +94,15 @@ void loop() { // main core loop
         }
         MP.prevtime.logdata = millis();
         eventsfired += 2;
-        //Serial.printf("logging  took: %d \n",micros() - prevlogmicros);
+        MP.sendserialon ? Serial.printf(">loggingtime: %d \n",micros() - prevlogmicros) : 1==1;
     }
 
     if (MP.sendserialon & millis() - MP.prevtime.serial >= MP.intervals[MP._sysstate.r.state].serial)
     {
+        uint32_t prevserialmicros = micros();
         port.senddata(MP._sysstate,NAV._sysstate);
         MP.prevtime.serial = millis();
-        //eventsfired += 20;
+        MP.sendserialon ? Serial.printf(">porttime: %d \n",micros() - prevserialmicros) : 1==1;
     }
     
         MP.checkforpyros();
@@ -143,7 +144,7 @@ void loop() { // main core loop
         MP.sendtelemetry();
         MP.prevtime.sendtelemetry = millis();
         eventsfired += 4;
-        //Serial.printf("telemetry sending took: %d \n",micros() - prevtelemmicros);
+        MP.sendserialon ? Serial.printf(">telemetrytime: %d \n",micros() - prevtelemmicros): 1==1;
     }
 
     if (Serial1.available())
@@ -157,19 +158,6 @@ void loop() { // main core loop
     MP.prevtime.loop = micros();
     MP._sysstate.r.state >= 1 ? MP.missionelasped = millis() - MP.liftofftime : MP.missionelasped = 0, MP.landedtime = millis();
 
-    // if (Serial1.available())
-    // {
-    //     Serial.println("newradiomessage");
-    //     while (Serial1.available() > 0)
-    //     {
-    //         uint8_t readbuf = Serial1.read();
-    //         Serial.printf("0x%x, ",readbuf);
-    //         printBin(readbuf);
-    //         Serial.printf(", %d\n",readbuf);
-    //     }
-        
-        
-    // }
     MP._sysstate.r.uptime = millis();
 }
 

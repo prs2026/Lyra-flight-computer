@@ -85,7 +85,7 @@ int IMU::init(){
         return 0;
 }
 
-void IMU::read(int oversampling){
+void IMU::read(int oversampling = 2){
     IMUdata _data;
     Vector3d accel;
     Vector3d gyro;
@@ -107,7 +107,7 @@ void IMU::read(int oversampling){
         gyro.y() += -gyrounit.getGyroZ_rads();
         gyro.z() += gyrounit.getGyroY_rads();
 
-        delayMicroseconds(5);
+        delayMicroseconds(1);
         gyro.x() < -73786 || gyro.x() > 73786 ? gyro.x() = data.gyro.x : gyro.x() = gyro.x();
         gyro.y() < -73786 || gyro.y() > 73786 ? gyro.y() = data.gyro.x : gyro.y() = gyro.y();
         gyro.z() < -73786 || gyro.z() > 73786 ? gyro.z() = data.gyro.x : gyro.z() = gyro.z();

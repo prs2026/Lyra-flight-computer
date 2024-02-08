@@ -3,7 +3,7 @@
 
 #include <Lyrav2sensors.h>
 
-//#define VERBOSETIMES
+#define VERBOSETIMES
 
 IMU imu;
 BARO baro;
