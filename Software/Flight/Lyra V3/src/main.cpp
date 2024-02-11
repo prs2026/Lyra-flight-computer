@@ -16,7 +16,6 @@ void setup() { // main core setup
 
     
     MP.flashinit();
-    MP.logdata();
     
     while (!NAV.ready)
     {
@@ -93,7 +92,7 @@ void loop() { // main core loop
         }
         else
         {
-            MP.logdata();
+            MP.logdata(MP._sysstate,NAV._sysstate);
         }
         if (MP.sendserialon && MP.sendtoteleplot)
         {

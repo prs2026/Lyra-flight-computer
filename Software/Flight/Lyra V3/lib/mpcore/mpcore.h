@@ -40,6 +40,12 @@ bool checkfirepyros(struct repeating_timer *t)
 
 class MPCORE{
     
+    int buf[FLASH_PAGE_SIZE/sizeof(int)];  // One page buffer of ints
+    int *p, addr;
+    unsigned int page; // prevent comparison of unsigned and signed int
+    int first_empty_page = -1;
+
+
     public:
         
         int radiook = 1;
@@ -106,8 +112,10 @@ class MPCORE{
         void beep(int freq, unsigned int duration);
 
         void setled(int color);
-
-        int logdata();
+        
+        int flashtest();
+        int logdata(mpstate state,navpacket navstate);
+        logpacket readdata(uint64_t page);
         int logtobuf();
 
         int movebuftofile();
@@ -211,6 +219,51 @@ float MPCORE::readbattvoltage(){
     return calculated;
 }
 
+int MPCORE::flashtest(){
+    Serial.println("FLASH_PAGE_SIZE = " + String(FLASH_PAGE_SIZE, DEC));
+    Serial.println("FLASH_SECTOR_SIZE = " + String(FLASH_SECTOR_SIZE,DEC));
+    Serial.println("FLASH_BLOCK_SIZE = " + String(FLASH_BLOCK_SIZE, DEC));
+    Serial.println("PICO_FLASH_SIZE_BYTES = " + String(PICO_FLASH_SIZE_BYTES, DEC));
+    Serial.println("XIP_BASE = 0x" + String(XIP_BASE, HEX));
+    
+    // Read the flash using memory-mapped addresses
+    // For that we must skip over the XIP_BASE worth of RAM
+    // int addr = FLASH_TARGET_OFFSET + XIP_BASE;
+    page = 0;
+    while (page < FLASH_FILESYSTEM_SIZE/FLASH_PAGE_SIZE)
+    {
+        addr = XIP_BASE + FLASH_TARGET_OFFSET + (page * FLASH_PAGE_SIZE);
+        p = (int *)addr;
+        Serial.print("First four bytes of page " + String(page, DEC) );
+        Serial.print("( at 0x" + (String(int(p), HEX)) + ") = ");
+        Serial.println(*p);
+        if( *p == -1 && first_empty_page < 0){
+            first_empty_page = page;
+            Serial.printf(" empty page at %d", +first_empty_page);
+        }
+    }
+
+    
+    // *buf = 123456;
+
+    // if (first_empty_page < 0){
+    //     Serial.println("Full sector, erasing...");
+    //     uint32_t ints = save_and_disable_interrupts();
+    //     flash_range_erase(FLASH_TARGET_OFFSET, FLASH_SECTOR_SIZE);
+    //     first_empty_page = 0;
+    //     restore_interrupts (ints);
+    // }
+    // Serial.println("Writing to page #" + String(first_empty_page, DEC));
+    // rp2040.idleOtherCore();
+    // uint32_t ints = save_and_disable_interrupts();
+    // flash_range_program(FLASH_TARGET_OFFSET + (first_empty_page*FLASH_PAGE_SIZE), (uint8_t *)buf, FLASH_PAGE_SIZE);
+    // restore_interrupts (ints);
+    // rp2040.resumeOtherCore();
+    // Serial.println("out of test");
+    return 0;
+}
+
+
 
 int MPCORE::initperipherials(){
     port.init();
@@ -230,7 +283,8 @@ int MPCORE::initperipherials(){
     else
         Serial.println(F("Can't set ITimer0. Select another freq. or timer"));
 
-    
+    flashtest();
+
     return 0;
 }
 
@@ -249,7 +303,7 @@ int MPCORE::logtobuf(){
 
 int MPCORE::movebuftofile(){
     Serial.print("BUF!");
-    fs::File logfile = LittleFS.open("/log.csv", "a+");
+    //fs::File logfile = LittleFS.open("/log.csv", "a+");
     for (int i = 0; i < LOGBUFSIZE; i++)
     {
         if (logbuf.isEmpty())
@@ -260,76 +314,71 @@ int MPCORE::movebuftofile(){
         
         logpacket datatolog = logbuf.pop();
         datatolog.r.MPstate.r.missiontime = datatolog.r.MPstate.r.uptime - liftofftime;
-        logfile.write(datatolog.data,sizeof(datatolog.data));
+        // logfile.write(datatolog.data,sizeof(datatolog.data));
     }
     
-    logfile.close();
+    //logfile.close();
 
     
     return 0;
 }
 
-int MPCORE::logdata(){
-    
-    if (sendserialon)
+int MPCORE::logdata(mpstate state, navpacket navstate){
+
+    NAV.event ? state.r.status = state.r.status | 0b1 : state.r.status = state.r.status;
+    uint32_t openingtime = micros();
+    state.r.batterystate = readbattvoltage();
+
+    logpacket datatolog = preplogentry(state,navstate);
+
+    datatolog.r.MPstate.r.missiontime = millis() - liftofftime;
+    int8_t logbuf[FLASH_PAGE_SIZE];
+    int j = 0;
+    for (int i = 0; i < sizeof(datatolog.data); i++)
     {
-        NAV.event ? _sysstate.r.status = _sysstate.r.status | 0b1 : _sysstate.r.status = _sysstate.r.status;
-        uint32_t openingtime = micros();
-        _sysstate.r.batterystate = readbattvoltage();
-
-        logpacket datatolog = preplogentry(_sysstate,NAV._sysstate);
-
-        datatolog.r.MPstate.r.missiontime = millis() - liftofftime;
-
-        fs::File logfile = LittleFS.open("/log.csv", "w+");
-        Serial.printf(">fileopenmicros: %d \n",micros()-openingtime);
-        openingtime = micros();
-        if (!logfile){
-            return 1;
-            _sysstate.r.errorflag % 11 == 0 ? _sysstate.r.errorflag = _sysstate.r.errorflag : _sysstate.r.errorflag *= 11;
-        };
-        Serial.printf(">filecheckemicros: %d \n",micros()-openingtime);
-        openingtime = micros();
-        logfile.write(datatolog.data,sizeof(datatolog.data));
-        Serial.printf(">filewritemicros: %d \n",micros()-openingtime);
-        
-        openingtime = micros();
-        logfile.close();
-        Serial.printf(">fileclosemicrosk: %d \n",micros()-openingtime);
-    }
-    else
-    {
-        NAV.event ? _sysstate.r.status = _sysstate.r.status | 0b1 : _sysstate.r.status = _sysstate.r.status;
-        uint32_t openingtime = micros();
-        _sysstate.r.batterystate = readbattvoltage();
-
-        logpacket datatolog = preplogentry(_sysstate,NAV._sysstate);
-        datatolog.r.MPstate.r.missiontime = millis() - liftofftime;
-
-        fs::File logfile = LittleFS.open("/log.csv", "a+");
-        if (!logfile){
-            return 1;
-            _sysstate.r.errorflag % 11 == 0 ? _sysstate.r.errorflag = _sysstate.r.errorflag : _sysstate.r.errorflag *= 11;
-        };
-        logfile.write(datatolog.data,sizeof(datatolog.data));
-        logfile.close();
+        logbuf[j] = datatolog.data[j];
     }
     
+    
 
+    Serial.println("Writing to page #" + String(first_empty_page, DEC));
+    rp2040.idleOtherCore();
+    uint32_t ints = save_and_disable_interrupts();
+    flash_range_program(FLASH_TARGET_OFFSET + (first_empty_page*FLASH_PAGE_SIZE), (uint8_t *)logbuf, FLASH_PAGE_SIZE);
+    restore_interrupts (ints);
+    rp2040.resumeOtherCore();
+    
+    first_empty_page++;
     
     return 0;
+}
+
+logpacket MPCORE::readdata(uint64_t pageadr){
+    addr = XIP_BASE + FLASH_TARGET_OFFSET + (pageadr * FLASH_PAGE_SIZE);
+    p = (int *)addr;
+    Serial.printf("First four bytes of page %d",pageadr);
+    Serial.printf("( at 0x %d ) = ",int(*p));
+    Serial.println(*p);
+    int j = 0;
+    logpacket readpacket;
+    for (int i = 0; i < sizeof(readpacket.data); i++)
+    {
+        readpacket.data[j] = *(uint8_t *)addr+j;
+        j++;
+    }
+    port.senddata(readpacket.r.MPstate,readpacket.r.navsysstate);
+    return readpacket;
 }
 
 int MPCORE::erasedata(){
-    int error = LittleFS.remove("/log.csv");
-    if (error != 1)
-    {
-        Serial.println("file erase fail");
-        return 1;
-    }
-    Serial.println("file erase success");
+    Serial.println("erasing...");
+    rp2040.idleOtherCore();
+    uint32_t ints = save_and_disable_interrupts();
+    flash_range_erase(FLASH_TARGET_OFFSET, FLASH_FILESYSTEM_SIZE-FLASH_SECTOR_SIZE-5);
+    first_empty_page = 0;
+    restore_interrupts (ints);
+    rp2040.resumeOtherCore();
     return 0;
-    
 }
 
 int MPCORE::previewdata(){
@@ -774,6 +823,12 @@ int MPCORE::parsecommand(char input){
     case 'D':
 
         dumpdata();
+        break;
+    
+    case 't':
+
+        logdata(_sysstate,NAV._sysstate);
+        readdata(first_empty_page);
         break;
     
     case 'd':

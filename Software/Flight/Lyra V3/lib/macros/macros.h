@@ -69,9 +69,12 @@ using Eigen::AngleAxisd;
 #define P1duration 300
 #define P2duration 300
 
-#define LOGBUFSIZE (6*7)
+#define LOGBUFSIZE (10*6)
 
 #define MAINALT 400
+
+#define FLASH_FILESYSTEM_SIZE 13631488 // 13MB
+#define FLASH_TARGET_OFFSET (PICO_FLASH_SIZE_BYTES - (FLASH_FILESYSTEM_SIZE-FLASH_SECTOR_SIZE))
 
 struct Vector3float
 {
