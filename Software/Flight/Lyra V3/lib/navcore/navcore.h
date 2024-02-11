@@ -50,6 +50,8 @@ class NAVCORE{
 
         int event = 0;
 
+        int sendtoserial = 0;
+
         void KFinit();
 
         NAVCORE();
@@ -186,18 +188,29 @@ uint32_t NAVCORE::sensorinit(){
 
 void NAVCORE::getsensordata(){
     #if defined(VERBOSETIMES)
+    if (sendtoserial)
+    {
+            
     uint32_t timestep = micros();
     imu.read();
-    Serial.printf(">imureadtime: %f \n", float(micros()-timestep)/1000);
+    Serial.printf(">imureadtime: %f \n", float(micros()-timestep));
     timestep = micros();
     baro.readsensor();
-    Serial.printf(">baroreadtime: %f \n", float(micros()-timestep)/1000);
+    Serial.printf(">baroreadtime: %f \n", float(micros()-timestep));
+    }
+    else
+    {
+        imu.read();
+        baro.readsensor();
+        adxl.read();
+    }
+
    #endif // VERBOSETIMES
     
     #if !defined(VERBOSETIMES)
     imu.read();
-    baro.readsensor();
-    adxl.read();
+            baro.readsensor();
+            adxl.read();
     #endif // VERBOSETIMES
     
     if (useaccel == 1)

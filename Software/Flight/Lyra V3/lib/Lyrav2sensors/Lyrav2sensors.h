@@ -41,7 +41,7 @@ public:
     IMU();
     IMUdata data;
     int init();
-    void read(int oversampling = 32);
+    void read(int oversampling = 5);
 
 };
 
@@ -85,7 +85,7 @@ int IMU::init(){
         return 0;
 }
 
-void IMU::read(int oversampling = 2){
+void IMU::read(int oversampling){
     IMUdata _data;
     Vector3d accel;
     Vector3d gyro;
@@ -401,6 +401,7 @@ int SERIALPORT::senddata(mpstate state,navpacket navstate){
 
             Serial.printf(">MP uptime: %d \n",state.r.uptime);
             Serial.printf(">NAV uptime: %d \n",navstate.r.uptime);
+            Serial.printf(">MISSIONTIME: %d \n",state.r.missiontime);
             Serial.printf(">MP errorflag %d \n" , state.r.errorflag);
             Serial.printf(">NAV errorflag %d \n", navstate.r.errorflag);
             Serial.printf(">accel x: %f \n",navstate.r.imudata.accel.x );

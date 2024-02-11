@@ -18,6 +18,8 @@ PYROCHANNEL P4(4);
 
 RPI_PICO_Timer PyroTimer0(0);
 
+CircularBuffer<logpacket,LOGBUFSIZE> logbuf = {};
+
 bool checkfirepyros(struct repeating_timer *t)
 { 
   (void) t;
@@ -49,10 +51,7 @@ class MPCORE{
         uint32_t liftofftime = 0;
         uint32_t missionelasped = 0;
         uint32_t burnouttime = 0;
-        uint32_t P1firedtime = 0;
-        uint32_t P2firedtime = 0;
-        
-        
+
 
 
 
@@ -87,11 +86,11 @@ class MPCORE{
             uint32_t loop;
         };
         timings intervals[6] = {
-            {2000,1000,50,500,10000}, // ground idle
-            {10,500,100, 200,800}, // powered ascent
-            {10,500,100,200,800}, // unpowered ascent
-            {10,500,100,200,800}, // ballistic descent
-            {10,800,100,200,800}, //ready to land
+            {100,1000,50,500,10000}, // ground idle
+            {100,500,100, 200,800}, // powered ascent
+            {100,500,100,200,800}, // unpowered ascent
+            {100,500,100,200,800}, // ballistic descent
+            {100,800,100,200,800}, //ready to land
             {1000,1500,100,200,500} // landed
         };
         timings prevtime;
@@ -109,9 +108,14 @@ class MPCORE{
         void setled(int color);
 
         int logdata();
+        int logtobuf();
+
+        int movebuftofile();
+
         int erasedata();
         int flashinit();
         int dumpdata();
+        int previewdata();
 
         int changestate();
         int parsecommand(char input);
@@ -231,35 +235,88 @@ int MPCORE::initperipherials(){
 }
 
 
+int MPCORE::logtobuf(){
 
-int MPCORE::logdata(){
     NAV.event ? _sysstate.r.status = _sysstate.r.status | 0b1 : _sysstate.r.status = _sysstate.r.status;
     uint32_t openingtime = micros();
     _sysstate.r.batterystate = readbattvoltage();
 
     logpacket datatolog = preplogentry(_sysstate,NAV._sysstate);
-    //Serial.print(datatolog.r.checksum2);
+    logbuf.unshift(datatolog);
 
+    return 0;
+}
+
+int MPCORE::movebuftofile(){
+    Serial.print("BUF!");
     fs::File logfile = LittleFS.open("/log.csv", "a+");
-    //Serial.printf("opening file took %d \n",micros()-openingtime);
-    openingtime = micros();
-    if (!logfile){
-        return 1;
-        _sysstate.r.errorflag % 11 == 0 ? _sysstate.r.errorflag = _sysstate.r.errorflag : _sysstate.r.errorflag *= 11;
-    };
-    //Serial.printf("checking file took %d \n",micros()-openingtime);
-    openingtime = micros();
-    int j = 0;
-    for (int i = 0; i < sizeof(logpacket); i++)
+    for (int i = 0; i < LOGBUFSIZE; i++)
     {
-        logfile.write(datatolog.data[j]);
-        j++;
+        if (logbuf.isEmpty())
+        {
+            Serial.print("BUF EMPTY!");
+            return 0;
+        }
+        
+        logpacket datatolog = logbuf.pop();
+        datatolog.r.MPstate.r.missiontime = datatolog.r.MPstate.r.uptime - liftofftime;
+        logfile.write(datatolog.data,sizeof(datatolog.data));
     }
+    
+    logfile.close();
 
     
-    openingtime = micros();
-    logfile.close();
-    //Serial.printf("closing file took %d \n\n",micros()-openingtime);
+    return 0;
+}
+
+int MPCORE::logdata(){
+    
+    if (sendserialon)
+    {
+        NAV.event ? _sysstate.r.status = _sysstate.r.status | 0b1 : _sysstate.r.status = _sysstate.r.status;
+        uint32_t openingtime = micros();
+        _sysstate.r.batterystate = readbattvoltage();
+
+        logpacket datatolog = preplogentry(_sysstate,NAV._sysstate);
+
+        datatolog.r.MPstate.r.missiontime = millis() - liftofftime;
+
+        fs::File logfile = LittleFS.open("/log.csv", "w+");
+        Serial.printf(">fileopenmicros: %d \n",micros()-openingtime);
+        openingtime = micros();
+        if (!logfile){
+            return 1;
+            _sysstate.r.errorflag % 11 == 0 ? _sysstate.r.errorflag = _sysstate.r.errorflag : _sysstate.r.errorflag *= 11;
+        };
+        Serial.printf(">filecheckemicros: %d \n",micros()-openingtime);
+        openingtime = micros();
+        logfile.write(datatolog.data,sizeof(datatolog.data));
+        Serial.printf(">filewritemicros: %d \n",micros()-openingtime);
+        
+        openingtime = micros();
+        logfile.close();
+        Serial.printf(">fileclosemicrosk: %d \n",micros()-openingtime);
+    }
+    else
+    {
+        NAV.event ? _sysstate.r.status = _sysstate.r.status | 0b1 : _sysstate.r.status = _sysstate.r.status;
+        uint32_t openingtime = micros();
+        _sysstate.r.batterystate = readbattvoltage();
+
+        logpacket datatolog = preplogentry(_sysstate,NAV._sysstate);
+        datatolog.r.MPstate.r.missiontime = millis() - liftofftime;
+
+        fs::File logfile = LittleFS.open("/log.csv", "a+");
+        if (!logfile){
+            return 1;
+            _sysstate.r.errorflag % 11 == 0 ? _sysstate.r.errorflag = _sysstate.r.errorflag : _sysstate.r.errorflag *= 11;
+        };
+        logfile.write(datatolog.data,sizeof(datatolog.data));
+        logfile.close();
+    }
+    
+
+    
     return 0;
 }
 
@@ -275,9 +332,51 @@ int MPCORE::erasedata(){
     
 }
 
+int MPCORE::previewdata(){
+
+    fs::File readfile = LittleFS.open("/log.csv", "r");
+    uint32_t entrynum = 0;
+
+    while (readfile.available() > 0)
+    {
+        logpacket readentry;
+        uint8_t buf[sizeof(logpacket)];
+        readfile.read(buf,sizeof(logpacket));
+        int j = 0;
+        for (int i = 0; i < sizeof(logpacket); i++)
+        {
+            readentry.data[j] = buf[j];
+            j++;
+        }
+        if (readentry.r.checksum1 != 0xAB || readentry.r.checksum2 != 0xCD)
+        {
+            uint32_t starttime = millis();
+            while (millis() - starttime < 5000 && readfile.available() > 0)
+            {   
+                int thisbyte = readfile.read();
+                if (thisbyte == 0xAB)
+                {
+                    //Serial.printf("found start of next entry at pos %d\n",readfile.position());
+                    readfile.seek(readfile.position() - 1);
+                    break;
+                }
+                //Serial.printf("waiting for start of next entry, exp 0xAB got %x \n", thisbyte);
+                
+            }
+            
+        }
+        Serial.printf(">index: %d \n",entrynum);
+        port.senddata(readentry.r.MPstate,readentry.r.navsysstate);
+        entrynum++;
+    }
+
+    //Serial.println("done");
+    return 0;
+}
+
 int MPCORE::dumpdata(){
     Serial.println("dumping data to serial");
-    Serial.println("index, checksum,uptime mp,uptime nav,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, accelhighg x, accelhighg y, accelhighg z, gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, presusre, verticalvel,filtered vvel, maxalt, altitudeagl, filtered alt, imutemp, barotemp,state,battstate,pyros fired,pyros cont,pyros state, checksum2");
+    Serial.println("index, checksum,uptime mp,uptime nav,missiontime,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, accelhighg x, accelhighg y, accelhighg z, gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, presusre, verticalvel,filtered vvel, maxalt, altitudeagl, filtered alt, imutemp, barotemp,state,battstate,pyros fired,pyros cont,pyros state, checksum2");
     
     fs::File readfile = LittleFS.open("/log.csv", "r");
     uint32_t entrynum = 0;
@@ -313,7 +412,7 @@ int MPCORE::dumpdata(){
 
         Serial.printf(
         "%d, 101,"// index checksum,
-        "%d,%d,"//uptimes
+        "%d,%d,%d,"//uptimes, mission time
         "%d,%d,"//errorflag
         "%f,%f,%f," // accel
         "%f,%f,%f," // accel world
@@ -329,6 +428,8 @@ int MPCORE::dumpdata(){
         entrynum,
         readentry.r.MPstate.r.uptime, 
         readentry.r.navsysstate.r.uptime,
+
+        readentry.r.MPstate.r.missiontime,
 
         readentry.r.MPstate.r.errorflag, 
         readentry.r.navsysstate.r.errorflag,
@@ -469,13 +570,15 @@ int MPCORE::changestate(){
     {
         
         
-        NAV._sysstate.r.filtered.alt > 5 && NAV._sysstate.r.filtered.vvel > 5 ? detectiontime = detectiontime : detectiontime = millis();
+        NAV._sysstate.r.filtered.alt > 8 && NAV._sysstate.r.filtered.vvel > 5 ? detectiontime = detectiontime : detectiontime = millis();
         if (millis() - detectiontime >= 400)
         {
             _sysstate.r.state = 1;
             detectiontime = millis();
             ebyte.setPower(Power_27,true);
             Serial.println("liftoff");
+            liftofftime = millis();
+            movebuftofile();
         }
         
     }
@@ -537,27 +640,6 @@ int MPCORE::changestate(){
             Serial.println("landed");
         }
     }
-
-    else if (_sysstate.r.state == 5) // reset
-    {   
-
-        if (abs(NAV._sysstate.r.filtered.vvel) < 3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
-        {
-                detectiontime = detectiontime;
-        }
-        else{
-            detectiontime = millis();
-        }
-
-        if (millis() - detectiontime >= 20000)
-        {
-            _sysstate.r.state = 0;
-            detectiontime = millis();
-            landedtime = 0;
-            Serial.println("reseting");
-        }
-    }
-    
 
     if (_sysstate.r.state > 1 && _sysstate.r.state != 5 && abs(NAV._sysstate.r.barodata.verticalvel) < 0.3 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
     {
@@ -638,13 +720,16 @@ int MPCORE::parsecommand(char input){
     Serial.println(int(input));
     
     char channel;
+    logpacket currentpacket;
+    int j = 0;
 
     if (input == 'l' && _sysstate.r.state < 1){
         Serial.println("put into launch mode");
         _sysstate.r.state = 1;
         detectiontime = millis();
+        liftofftime = millis();
         landingdetectiontime = millis();
-
+        movebuftofile();
         return 0;
     }
 
@@ -659,6 +744,7 @@ int MPCORE::parsecommand(char input){
     case 's':
         Serial.println("printing data to teleplot");
         sendserialon = !sendserialon;
+        NAV.sendtoserial = !NAV.sendtoserial;
         port.sendtoplot = true;
         break;
 
@@ -673,9 +759,26 @@ int MPCORE::parsecommand(char input){
         adxl.getnewoffsets();
         break;
 
+    case 'b':
+        Serial.println("dumping databuf");
+        j = 0;
+        for (int i = 0; i < LOGBUFSIZE; i++)
+        {
+            currentpacket = logbuf[j];
+            port.senddata(currentpacket.r.MPstate,currentpacket.r.navsysstate);
+            j++;
+        }
+        
+        break;
+
     case 'D':
 
         dumpdata();
+        break;
+    
+    case 'd':
+
+        previewdata();
         break;
     
     case 'o':
@@ -723,9 +826,10 @@ int MPCORE::parsecommand(char input){
             uint32_t messagetime = millis();
             while (millis()-erasestarttime < 10000)
             {
-                if (millis()- messagetime > 500)
+                if (millis() - messagetime > 500)
                 {
                     Serial.println("ERASING FLASH ------ ERASING FLASH ------ ERASING FLASH ------ TO ABORT ERASION DISCONNECT POWER OR TYPE A CHARACTER");
+                    messagetime = millis();
                 }
                 if (Serial.available())
                 {

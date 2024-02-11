@@ -87,7 +87,14 @@ void loop() { // main core loop
     if (millis() - MP.prevtime.logdata >= MP.intervals[MP._sysstate.r.state].logdata)
     {
         uint32_t prevlogmicros = micros();
-        MP.logdata();
+        if (MP._sysstate.r.state == 0)
+        {
+            MP.logtobuf();
+        }
+        else
+        {
+            MP.logdata();
+        }
         if (MP.sendserialon && MP.sendtoteleplot)
         {
             Serial.printf(">lograte: %f \n",1000/float((millis()-MP.prevtime.logdata)));

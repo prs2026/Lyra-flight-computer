@@ -3,6 +3,8 @@
 #include <Arduino.h>
 #include "pico/stdlib.h"
 #include "pico/multicore.h"
+#include <hardware/sync.h>
+#include <hardware/flash.h>
 #include <ArduinoEigenDense.h>
 
 
@@ -18,8 +20,8 @@
 #include <string.h>
 #include "LittleFS.h"
 
-//#include <ArduinoEigenDense.h>
-//#include <ArduinoEigenDense.h>
+#include <CircularBuffer.hpp>
+
 
 using Eigen::Vector3d;
 using Eigen::Matrix3d;
@@ -66,6 +68,8 @@ using Eigen::AngleAxisd;
 
 #define P1duration 300
 #define P2duration 300
+
+#define LOGBUFSIZE (6*7)
 
 #define MAINALT 400
 
@@ -160,6 +164,7 @@ union mpstate{
         uint8_t pyroscont;
         uint8_t pyrostate;
         uint16_t status;
+        int32_t missiontime;
         float batterystate;
     } r;
     uint8_t data8[sizeof(r)/sizeof(uint8_t)];
