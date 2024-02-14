@@ -18,7 +18,6 @@
 #include <Wire.h>
 
 #include <string.h>
-#include "LittleFS.h"
 
 #include <CircularBuffer.hpp>
 
@@ -69,7 +68,7 @@ using Eigen::AngleAxisd;
 #define P1duration 300
 #define P2duration 300
 
-#define LOGBUFSIZE (10*6)
+#define LOGBUFSIZE (20*6)
 
 #define MAINALT 400
 

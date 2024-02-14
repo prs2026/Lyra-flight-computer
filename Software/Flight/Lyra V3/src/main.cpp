@@ -86,7 +86,7 @@ void loop() { // main core loop
     if (millis() - MP.prevtime.logdata >= MP.intervals[MP._sysstate.r.state].logdata)
     {
         uint32_t prevlogmicros = micros();
-        if (MP._sysstate.r.state == 0)
+        if (MP._sysstate.r.state == 0 || MP._sysstate.r.state == 5)
         {
             MP.logtobuf();
         }

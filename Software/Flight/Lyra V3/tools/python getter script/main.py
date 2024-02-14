@@ -1,4 +1,4 @@
-import serial,sys,time
+import serial,sys,time,os
 
 import serial.tools.list_ports as port_list
 
@@ -40,12 +40,32 @@ readdata = ""
 while serialport.in_waiting > 0:
     readdata = readdata + str(serialport.read_until('done'))
     readdata = readdata.replace('\\n','\n')
-
+readdata = readdata.replace('\\r','')
+readdata = readdata.replace("b'echo: D dec: 68 \n",'')
+readdata = readdata.replace("68\n",'')
+readdata = readdata.replace("dumping data to serial\n",'')
 print(readdata)
 serialport.close()
 
+readtime = str(time.strftime('%m,%d,%Y,%H,%M,%S'))
+currentdir = os.getcwd()
 
+path = os.path.join(("\LOGS "+readtime),currentdir)
+print(path)
 
-file = open('logfile '+str(time.strftime('%m,%d,%Y, %H,%M,%S'))+'.csv','w+')
+os.mkdir(path)
+rawfilepath = os.path.join(path,"rawfile.csv")
+file = open(rawfilepath,'w+')
 
 file.write(readdata)
+
+file.close()
+
+splitdata = readdata.split("newfile")
+flightnum = 1
+for x in splitdata:
+    x = x.replace("newfile",'')
+    logfilepath = os.path.join(path,'/flight '+str(flightnum) + '.csv')
+    logfile = open(file = open(logfilepath,'w+')
+)
+

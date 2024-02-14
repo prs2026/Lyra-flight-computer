@@ -41,9 +41,8 @@ bool checkfirepyros(struct repeating_timer *t)
 class MPCORE{
     
     int buf[FLASH_PAGE_SIZE/sizeof(int)];  // One page buffer of ints
-    int *p, addr;
-    unsigned int page; // prevent comparison of unsigned and signed int
-    int first_empty_page = -1;
+    int addr;
+    int32_t first_empty_page = -1;
 
 
     public:
@@ -92,11 +91,11 @@ class MPCORE{
             uint32_t loop;
         };
         timings intervals[6] = {
-            {100,1000,50,500,10000}, // ground idle
-            {100,500,100, 200,800}, // powered ascent
-            {100,500,100,200,800}, // unpowered ascent
-            {100,500,100,200,800}, // ballistic descent
-            {100,800,100,200,800}, //ready to land
+            {50,1000,50,500,10000}, // ground idle
+            {50,500,100, 200,800}, // powered ascent
+            {50,500,100,200,800}, // unpowered ascent
+            {50,500,100,200,800}, // ballistic descent
+            {50,800,100,200,800}, //ready to land
             {1000,1500,100,200,500} // landed
         };
         timings prevtime;
@@ -115,7 +114,7 @@ class MPCORE{
         
         int flashtest();
         int logdata(mpstate state,navpacket navstate);
-        logpacket readdata(uint64_t page);
+        logpacket readdata(uint64_t page,bool serial);
         int logtobuf();
 
         int movebuftofile();
@@ -229,18 +228,21 @@ int MPCORE::flashtest(){
     // Read the flash using memory-mapped addresses
     // For that we must skip over the XIP_BASE worth of RAM
     // int addr = FLASH_TARGET_OFFSET + XIP_BASE;
-    page = 0;
+    int32_t page = 0;
+    int *p;
     while (page < FLASH_FILESYSTEM_SIZE/FLASH_PAGE_SIZE)
     {
         addr = XIP_BASE + FLASH_TARGET_OFFSET + (page * FLASH_PAGE_SIZE);
         p = (int *)addr;
-        Serial.print("First four bytes of page " + String(page, DEC) );
-        Serial.print("( at 0x" + (String(int(p), HEX)) + ") = ");
-        Serial.println(*p);
+        // Serial.print("First four bytes of page " + String(page, DEC) );
+        // Serial.print("( at 0x" + (String(int(p), HEX)) + ") = ");
+        // Serial.println(*p);
         if( *p == -1 && first_empty_page < 0){
             first_empty_page = page;
             Serial.printf(" empty page at %d", +first_empty_page);
+            return 0;
         }
+        page++;
     }
 
     
@@ -314,7 +316,7 @@ int MPCORE::movebuftofile(){
         
         logpacket datatolog = logbuf.pop();
         datatolog.r.MPstate.r.missiontime = datatolog.r.MPstate.r.uptime - liftofftime;
-        // logfile.write(datatolog.data,sizeof(datatolog.data));
+        logdata(datatolog.r.MPstate,datatolog.r.navsysstate);
     }
     
     //logfile.close();
@@ -328,18 +330,34 @@ int MPCORE::logdata(mpstate state, navpacket navstate){
     NAV.event ? state.r.status = state.r.status | 0b1 : state.r.status = state.r.status;
     uint32_t openingtime = micros();
     state.r.batterystate = readbattvoltage();
-
+ 
     logpacket datatolog = preplogentry(state,navstate);
 
-    datatolog.r.MPstate.r.missiontime = millis() - liftofftime;
-    int8_t logbuf[FLASH_PAGE_SIZE];
+    datatolog.r.MPstate.r.missiontime = datatolog.r.MPstate.r.uptime - liftofftime;
+    uint8_t logbuf[FLASH_PAGE_SIZE] = {};
     int j = 0;
+    // Serial.println("datapacket is: ");
+    // for (int i = 0; i < sizeof(logbuf); i++)
+    // {
+    //     Serial.printf("%x ",datatolog.data[j]);
+    //     j++;
+    // }
+    // Serial.println("");
+    // j = 0;
     for (int i = 0; i < sizeof(datatolog.data); i++)
     {
         logbuf[j] = datatolog.data[j];
+        j++;
     }
     
-    
+    // Serial.println("packet is: ");
+    // j = 0;
+    // for (int i = 0; i < sizeof(logbuf); i++)
+    // {
+    //     Serial.printf("%x ",logbuf[j]);
+    //     j++;
+    // }
+    // Serial.println("");
 
     Serial.println("Writing to page #" + String(first_empty_page, DEC));
     rp2040.idleOtherCore();
@@ -353,20 +371,29 @@ int MPCORE::logdata(mpstate state, navpacket navstate){
     return 0;
 }
 
-logpacket MPCORE::readdata(uint64_t pageadr){
+logpacket MPCORE::readdata(uint64_t pageadr,bool serial){
+    uint8_t *p;
     addr = XIP_BASE + FLASH_TARGET_OFFSET + (pageadr * FLASH_PAGE_SIZE);
-    p = (int *)addr;
-    Serial.printf("First four bytes of page %d",pageadr);
-    Serial.printf("( at 0x %d ) = ",int(*p));
-    Serial.println(*p);
+    p = (uint8_t *)addr;
+    // Serial.printf("Firstbytes of page %d",pageadr);
+    // Serial.printf("( at 0x %d ) = ",int(*p));
+    // Serial.println(*p);
     int j = 0;
     logpacket readpacket;
     for (int i = 0; i < sizeof(readpacket.data); i++)
     {
-        readpacket.data[j] = *(uint8_t *)addr+j;
+        readpacket.data[j] = *(uint8_t *)(addr+j);
         j++;
     }
-    port.senddata(readpacket.r.MPstate,readpacket.r.navsysstate);
+    // Serial.println("read packet is: ");
+    // j = 0;
+    // for (int i = 0; i < sizeof(readpacket.data); i++)
+    // {
+    //     Serial.printf("%x ",readpacket.data[j]);
+    //     j++;
+    // }
+    
+    serial ? port.senddata(readpacket.r.MPstate,readpacket.r.navsysstate) : 1 == 1;
     return readpacket;
 }
 
@@ -383,82 +410,33 @@ int MPCORE::erasedata(){
 
 int MPCORE::previewdata(){
 
-    fs::File readfile = LittleFS.open("/log.csv", "r");
     uint32_t entrynum = 0;
-
-    while (readfile.available() > 0)
+    uint32_t page = 0;
+    while (page < first_empty_page)
     {
-        logpacket readentry;
-        uint8_t buf[sizeof(logpacket)];
-        readfile.read(buf,sizeof(logpacket));
-        int j = 0;
-        for (int i = 0; i < sizeof(logpacket); i++)
-        {
-            readentry.data[j] = buf[j];
-            j++;
-        }
-        if (readentry.r.checksum1 != 0xAB || readentry.r.checksum2 != 0xCD)
-        {
-            uint32_t starttime = millis();
-            while (millis() - starttime < 5000 && readfile.available() > 0)
-            {   
-                int thisbyte = readfile.read();
-                if (thisbyte == 0xAB)
-                {
-                    //Serial.printf("found start of next entry at pos %d\n",readfile.position());
-                    readfile.seek(readfile.position() - 1);
-                    break;
-                }
-                //Serial.printf("waiting for start of next entry, exp 0xAB got %x \n", thisbyte);
-                
-            }
-            
-        }
-        Serial.printf(">index: %d \n",entrynum);
-        port.senddata(readentry.r.MPstate,readentry.r.navsysstate);
-        entrynum++;
+        readdata(page,true);
+        page++;
     }
 
-    //Serial.println("done");
+    Serial.println("done");
     return 0;
 }
 
 int MPCORE::dumpdata(){
     Serial.println("dumping data to serial");
+    Serial.println("newfile");
     Serial.println("index, checksum,uptime mp,uptime nav,missiontime,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, accelhighg x, accelhighg y, accelhighg z, gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, presusre, verticalvel,filtered vvel, maxalt, altitudeagl, filtered alt, imutemp, barotemp,state,battstate,pyros fired,pyros cont,pyros state, checksum2");
-    
-    fs::File readfile = LittleFS.open("/log.csv", "r");
     uint32_t entrynum = 0;
-
-    while (readfile.available() > 0)
+    logpacket preventry;
+    while (entrynum < first_empty_page)
     {
-        logpacket readentry;
-        uint8_t buf[sizeof(logpacket)];
-        readfile.read(buf,sizeof(logpacket));
-        int j = 0;
-        for (int i = 0; i < sizeof(logpacket); i++)
+        logpacket readentry = readdata(entrynum,false);
+        if (readentry.r.MPstate.r.missiontime < preventry.r.MPstate.r.missiontime)
         {
-            readentry.data[j] = buf[j];
-            j++;
+            Serial.println("newfile");
+            Serial.println("index, checksum,uptime mp,uptime nav,missiontime,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, accelhighg x, accelhighg y, accelhighg z, gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, presusre, verticalvel,filtered vvel, maxalt, altitudeagl, filtered alt, imutemp, barotemp,state,battstate,pyros fired,pyros cont,pyros state, checksum2");
         }
-        if (readentry.r.checksum1 != 0xAB || readentry.r.checksum2 != 0xCD)
-        {
-            uint32_t starttime = millis();
-            while (millis() - starttime < 5000 && readfile.available() > 0)
-            {   
-                int thisbyte = readfile.read();
-                if (thisbyte == 0xAB)
-                {
-                    //Serial.printf("found start of next entry at pos %d\n",readfile.position());
-                    readfile.seek(readfile.position() - 1);
-                    break;
-                }
-                //Serial.printf("waiting for start of next entry, exp 0xAB got %x \n", thisbyte);
-                
-            }
-            
-        }
-
+        
         Serial.printf(
         "%d, 101,"// index checksum,
         "%d,%d,%d,"//uptimes, mission time
@@ -526,84 +504,17 @@ int MPCORE::dumpdata(){
         readentry.r.MPstate.r.pyrosfired,
         readentry.r.MPstate.r.pyroscont,
         readentry.r.MPstate.r.pyrostate
-        );
-        entrynum++;
+    );
+    entrynum++;
+    preventry = readentry;
     }
-
-    //Serial.println("done");
+        
+    Serial.println("done");
     return 0;
 }
 
 int MPCORE::flashinit(){
-        //Serial.println("flash init start");
-
-        int error = LittleFS.begin();
-
-        if (error = 0)
-        {
-            Serial.printf("filesystem mount fail %d\n",error);
-            _sysstate.r.errorflag *= 11;
-            rp2040.resumeOtherCore();
-            return 1;
-        }
-
-
-        FSInfo64 *info;
-        error = LittleFS.info64(*info);
-
-        if (error != 1)
-        {
-            Serial.printf("filesystem info fail %d\n", error);
-            _sysstate.r.errorflag *= 11;
-            rp2040.resumeOtherCore();
-            return 1;
-        }
-        
-
-        uint32_t total = info->totalBytes;
-        uint32_t used = info->usedBytes;
-        uint32_t avail = total - used;
-
-        //Serial.printf("FS info: total %d, used %d, avail %d\n",total,used,avail);
-
-        LittleFS.remove("/f.txt");
-
-        fs::File testfile = LittleFS.open("/f.txt","w+");
-
-        if (!testfile)
-        {
-            Serial.println("file open failed");
-            _sysstate.r.errorflag *= 11;
-            rp2040.resumeOtherCore();
-            return 2;
-        }
-
-        //Serial.println("file opened");
-        int testnum = 1;
-
-        testfile.print(testnum);
-        //Serial.print("file written");
-        testfile.close();
-        testfile = LittleFS.open("/f.txt","r");
-
-        int readnum = testfile.read() - 48;
-
-        //Serial.println("file read");
-
-        if (readnum != testnum)
-        {
-            Serial.printf("read fail, expected %d, got %d\n",testnum,readnum);
-            _sysstate.r.errorflag *= 11;
-            rp2040.resumeOtherCore();
-            return 3;
-        }
-        
-        //Serial.printf("read success, expected %d, got %d\n",testnum,readnum);
-
-        
-        testfile.close();
-        //Serial.println("flash init complete");
-        rp2040.resumeOtherCore();
+      
         return 0;
 }
 
@@ -767,7 +678,7 @@ int MPCORE::parsecommand(char input){
         return 1;
     }
     Serial.println(int(input));
-    
+    int32_t page;
     char channel;
     logpacket currentpacket;
     int j = 0;
@@ -826,9 +737,13 @@ int MPCORE::parsecommand(char input){
         break;
     
     case 't':
-
+        Serial.println("testing");
         logdata(_sysstate,NAV._sysstate);
-        readdata(first_empty_page);
+        break;
+    case 'r':
+        page = Serial.parseInt();
+        Serial.println("testing");
+        readdata(page,true);
         break;
     
     case 'd':
