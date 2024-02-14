@@ -45,16 +45,18 @@ readdata = readdata.replace("b'echo: D dec: 68 \n",'')
 readdata = readdata.replace("68\n",'')
 readdata = readdata.replace("dumping data to serial\n",'')
 print(readdata)
-serialport.close()
 
 readtime = str(time.strftime('%m,%d,%Y,%H,%M,%S'))
-currentdir = os.getcwd()
+currentdir = os.path.realpath(__file__)
 
-path = os.path.join(("\LOGS "+readtime),currentdir)
+currentdir = os.path.abspath(os.path.join(currentdir, os.pardir))
+
+path = currentdir + ("\LOGS "+readtime)
+
 print(path)
 
 os.mkdir(path)
-rawfilepath = os.path.join(path,"rawfile.csv")
+rawfilepath = path + "/rawfile.csv"
 file = open(rawfilepath,'w+')
 
 file.write(readdata)
@@ -64,8 +66,10 @@ file.close()
 splitdata = readdata.split("newfile")
 flightnum = 1
 for x in splitdata:
-    x = x.replace("newfile",'')
-    logfilepath = os.path.join(path,'/flight '+str(flightnum) + '.csv')
-    logfile = open(file = open(logfilepath,'w+')
-)
-
+    x = x.replace("newfile\n",'')
+    x = x.replace("\nindex",'index')
+    logfilepath = path +('/flight '+str(flightnum) + '.csv')
+    logfile = open(logfilepath,'w+')
+    logfile.write(x)
+    logfile.close()
+    flightnum += 1
