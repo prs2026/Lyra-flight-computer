@@ -1,10 +1,11 @@
 #if !defined(LYRAV2SENSORSLIB)
 #define LYRAV2SENSORSLIB
 
+// include the general lib and macros, which are included by the general lib
 #include <generallib.h>
 
 
-
+// sea level pressure, adjust to where you are
 const float SEALEVELPRESSURE = 	1019.64;
 
 /* accelunit object */
@@ -12,28 +13,34 @@ Bmi088Accel accelunit(Wire1,0x18);
 /* gyrounit object */
 Bmi088Gyro gyrounit(Wire1,0x68);
 
+// adafruit bmp object
 Adafruit_BMP3XX bmp;
 
+// adafruit adxl object
 Adafruit_ADXL375 adxl375((int32_t)12345,&Wire1);
+
+// radio serial stream
+Stream &radioserial = (Stream &)Serial1;
 // m0 = brkout2
 // m1 = brkout6
 // aux brkout 5
 //tx = brkout 3
 //rx = brkout 4
-
-Stream &radioserial = (Stream &)Serial1;
                     //  m0         m1     aux
 E220 ebyte(&radioserial,BRKOUT2,BRKOUT6,BRKOUT5);
 
 /*----------------------------------------------------------------------------------------*/
+// imu class, holds all code for the bmi088 imu
 class IMU{
 
+// calibration matrices
 Vector3d bcal;
 Matrix3d acal;
 
+// previous data, used mostly for error checking
 IMUdata prevdata;
 
-
+// low pass filter alphas
 float gyroal = 0.3;
 float accelal = 0.3;
 
@@ -44,7 +51,7 @@ public:
     void read(int oversampling = 5);
 
 };
-
+// constructer, assigns values to bcal and acal
 IMU::IMU(){
         
         bcal << 0.01215,
@@ -56,6 +63,7 @@ IMU::IMU(){
                 0.0006194775994,	0.002845008234,	1.006883084;
 };
 
+//inits the imu, returns 1 if the accel unit failed, and 2 if the gyro failed
 int IMU::init(){
     int status;
     status = accelunit.begin();
@@ -85,6 +93,7 @@ int IMU::init(){
         return 0;
 }
 
+// reads the imu and applies calibration matrices
 void IMU::read(int oversampling){
     IMUdata _data;
     Vector3d accel;

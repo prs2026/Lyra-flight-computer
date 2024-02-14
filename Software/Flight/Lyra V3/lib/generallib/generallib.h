@@ -1,8 +1,10 @@
 #if !defined(GENERALLIB)
 #define GENERALLIB
-
+// include all macros and data types from macros.h
 #include "macros.h"
 
+// functions to convert between my struct data types and eigen data types
+// needed becuase eigen types cannot be stored in unions.
 
 inline Vector3float vector3tofloat(Eigen::Vector3d v){
     Vector3float result;
@@ -38,6 +40,7 @@ inline Quatstruct eigentoquatstruct(Quaterniond q){
     return result;
 }
 
+// takes in a quatstruct quaterion and spits out a vector3float of euler angles
 inline Vector3float quat2euler(Quatstruct inquatstruct){
     Quaterniond quat = quatstructtoeigen(inquatstruct);
     
@@ -48,7 +51,7 @@ inline Vector3float quat2euler(Quatstruct inquatstruct){
     
 }
 
-
+// takes in an mpstate and navpacket and fuses them into a logpacket
 inline logpacket preplogentry(mpstate MPstate, navpacket NAVstate){
     logpacket result;
     result.r.checksum1 = 0xAB;
@@ -59,6 +62,7 @@ inline logpacket preplogentry(mpstate MPstate, navpacket NAVstate){
     return result;
 }
 
+// converts a vector to a vector quaternion.
 inline Quaterniond vectortoquat(Vector3d vec){
     Quaterniond result;
     result.w() = 0;
@@ -69,6 +73,7 @@ inline Quaterniond vectortoquat(Vector3d vec){
     return result;
 }
 
+//converts a vector quaterion back to a vector
 inline Vector3d quattovector(Quaterniond quat){
     Vector3d result;
     result.x() = quat.x();
@@ -78,6 +83,7 @@ inline Vector3d quattovector(Quaterniond quat){
     return result;
 }
 
+//takes in an mpstate and a navstate and converts them to a telepacket
 inline telepacket statetopacket(mpstate state,navpacket navstate){
     telepacket packet;
     packet.r.checksum = 0x12;
@@ -106,11 +112,13 @@ inline telepacket statetopacket(mpstate state,navpacket navstate){
     return packet;
 }
 
+//prints a number in binary
 inline void printBin(byte aByte) {
   for (int8_t aBit = 7; aBit >= 0; aBit--)
     Serial.write(bitRead(aByte, aBit) ? '1' : '0');
 }
 
+//scans the i2c bus, returns 1 if none are found, otherwise 0
 inline uint8_t scani2c(bool printout){
     byte error, address;
     int nDevices;

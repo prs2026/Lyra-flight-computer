@@ -1,5 +1,6 @@
 #if !defined(MACROS)
 #define MACROS
+// core libs
 #include <Arduino.h>
 #include "pico/stdlib.h"
 #include "pico/multicore.h"
@@ -7,7 +8,7 @@
 #include <hardware/flash.h>
 #include <ArduinoEigenDense.h>
 
-
+// sensor libs
 #include <BMI088.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP3XX.h>
@@ -19,36 +20,42 @@
 
 #include <string.h>
 
+// log buf lib
 #include <CircularBuffer.hpp>
 
-
+// define eigen things to use
 using Eigen::Vector3d;
 using Eigen::Matrix3d;
 using Eigen::Quaterniond;
 using Eigen::AngleAxisd;
 
+// led pins
 #define LEDRED 11
 #define LEDGREEN 10
 #define LEDBLUE 9
 
+// pin for buzzer
 #define BUZZERPIN 21
 
+
+// pyro enable pins
 #define P1_EN 5
 #define P2_EN 3
 #define P3_EN 1
 #define P4_EN 7
 
-
+// pyro cont pins
 #define P1_CONT 4
 #define P2_CONT 2
 #define P3_CONT 0
 #define P4_CONT 6
-
+// battery sense pin
 #define BATT_SENSE 26
-
+// i2c1 lines
 #define SDA 22
 #define SCL 23
 
+// colors to make using the led easier
 #define OFF 0
 #define RED 1
 #define GREEN 2
@@ -65,16 +72,17 @@ using Eigen::AngleAxisd;
 
 // i2c1 is being used
 
-#define P1duration 300
-#define P2duration 300
-
+// size of the buf to log to before launch is detected
 #define LOGBUFSIZE (20*6)
 
+// define the altitude to fire the main charge
 #define MAINALT 400
 
+// flash macros
 #define FLASH_FILESYSTEM_SIZE 13631488 // 13MB
 #define FLASH_TARGET_OFFSET (PICO_FLASH_SIZE_BYTES - (FLASH_FILESYSTEM_SIZE-FLASH_SECTOR_SIZE))
 
+//define basic data structs
 struct Vector3float
 {
     float x;
@@ -95,6 +103,8 @@ struct Quatstruct{
     float z;
 };
 
+
+// define structs to hold all data from sensors
 struct IMUdata{
     Vector3float accel;
     Vector3float gyro;
@@ -107,11 +117,6 @@ struct ADXLdata{
     float absaccel;
 };
 
-struct gaussian{
-    double mean;
-    double varience;
-};
-
 struct BAROdata{
     float pressure;
     float altitude;
@@ -122,6 +127,7 @@ struct BAROdata{
     float padalt;
 };
 
+// struct to hold the variences, needed for KF 
 struct variences{
     float alt;
     float vvel;
@@ -129,6 +135,7 @@ struct variences{
     float orientation;
 };
 
+//struct to hold various position related thijngs so as to not bog down the main nav state struct
 struct position{
     Vector3float accel;
     float alt;
@@ -137,6 +144,7 @@ struct position{
 };
 
 
+// union to hold all data for the nav core that needs to be shared
 union navpacket
 {
     struct
@@ -156,6 +164,7 @@ union navpacket
     } r;
 };
 
+// union for all data relating to the MP core that needs to be shared
 union mpstate{
     struct{
         int32_t errorflag;
@@ -172,7 +181,7 @@ union mpstate{
     uint8_t data8[sizeof(r)/sizeof(uint8_t)];
 };
 
-
+// define the struct to use to log to flash, makes addding checksums easier.
 union logpacket{
     struct{
         uint8_t checksum1;
@@ -183,6 +192,7 @@ union logpacket{
     uint8_t data[sizeof(r)/sizeof(uint8_t)];
 };
 
+// compact struct that holds the data to send to the ground station
 union telepacket{
     struct 
     {
