@@ -685,11 +685,12 @@ int MPCORE::parsecommand(char input){
 
     if (input == 'l' && _sysstate.r.state < 1){
         Serial.println("put into launch mode");
-        _sysstate.r.state = 1;
-        detectiontime = millis();
-        liftofftime = millis();
-        landingdetectiontime = millis();
-        movebuftofile();
+            _sysstate.r.state = 1;
+            detectiontime = millis();
+            ebyte.setPower(Power_27,true);
+            Serial.println("liftoff");
+            liftofftime = millis();
+            movebuftofile();
         return 0;
     }
 
