@@ -197,6 +197,7 @@ void NAVCORE::getsensordata(){
     timestep = micros();
     baro.readsensor();
     Serial.printf(">baroreadtime: %f \n", float(micros()-timestep));
+    adxl.read();
     }
     else
     {

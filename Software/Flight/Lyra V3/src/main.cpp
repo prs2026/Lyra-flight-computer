@@ -123,11 +123,16 @@ void loop() { // main core loop
 
     if (millis()- MP.prevtime.beep >= MP.intervals[MP._sysstate.r.state].beep)
     {
-        MP.beep(MP.freqs[MP._sysstate.r.state]);
-        if (MP._sysstate.r.pyroscont)
+        if (MP._sysstate.r.state == 0)
+        {
+            MP.beepcont();
+        }
+        else
         {
             MP.beep(MP.freqs[MP._sysstate.r.state]);
         }
+        
+        
         
         MP.prevtime.beep = millis();
         eventsfired += 10;

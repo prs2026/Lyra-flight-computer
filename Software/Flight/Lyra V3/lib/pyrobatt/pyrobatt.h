@@ -10,7 +10,6 @@ const int contpins[4] = {P1_CONT,P2_CONT,P3_CONT,P4_CONT};
 
 class PYROCHANNEL{
 volatile int _state = 0;
-uint32_t timeout = 1000;
 int identity;
 
 int EN_PIN;
@@ -20,6 +19,7 @@ int fired = 0;
 public:
     int continuity;
     uint32_t firedtime;
+    uint32_t timeout = 1000;
 
     PYROCHANNEL(int _identifier);
     

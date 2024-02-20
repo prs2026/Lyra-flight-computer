@@ -109,6 +109,7 @@ class MPCORE{
         void beep();
         void beep(int freq);
         void beep(int freq, unsigned int duration);
+        void beepcont();
 
         void setled(int color);
         
@@ -176,6 +177,45 @@ void MPCORE::beep(int freq, unsigned int duration){
     delay(duration);
     noTone(BUZZERPIN);
 return;
+}
+
+void MPCORE::beepcont(){
+    if (_sysstate.r.pyroscont & 0b1)
+    {
+        beep(8000);
+    }
+    else
+    {
+        beep(2000);
+    }
+    delay(50);
+        if (_sysstate.r.pyroscont & 0b10)
+    {
+        beep(8000);
+    }
+    else
+    {
+        beep(2000);
+    }
+    delay(50);
+        if (_sysstate.r.pyroscont & 0b100)
+    {
+        beep(8000);
+    }
+    else
+    {
+        beep(2000);
+    }
+    delay(50);
+        if (_sysstate.r.pyroscont & 0b1000)
+    {
+        beep(8000);
+    }
+    else
+    {
+        beep(2000);
+    }
+
 }
 
 
@@ -286,6 +326,11 @@ int MPCORE::initperipherials(){
         Serial.println(F("Can't set ITimer0. Select another freq. or timer"));
 
     flashtest();
+
+    P1.timeout = 500;
+    P2.timeout = 500;
+    P3.timeout = 2000;
+    P4.timeout = 500;
 
     return 0;
 }
@@ -530,12 +575,15 @@ int MPCORE::changestate(){
     {
         
         
-        NAV._sysstate.r.filtered.alt > 8 && NAV._sysstate.r.filtered.vvel > 5 ? detectiontime = detectiontime : detectiontime = millis();
+        NAV._sysstate.r.filtered.alt > 8 ? detectiontime = detectiontime : detectiontime = millis();
         if (millis() - detectiontime >= 400)
         {
             _sysstate.r.state = 1;
             detectiontime = millis();
-            ebyte.setPower(Power_27,true);
+            if (radiook)
+            {
+                ebyte.setPower(Power_27,true);
+            }
             Serial.println("liftoff");
             liftofftime = millis();
             movebuftofile();
@@ -635,19 +683,18 @@ int MPCORE::checkforpyros(){
     {
         
         _sysstate.r.pyrosfired = _sysstate.r.pyrosfired | 0b10;
-        P3.fire();
+        P2.fire();
     }
 
-    if (_sysstate.r.state == 2 && NAV._sysstate.r.orientationeuler.x < 80 && NAV._sysstate.r.orientationeuler.x < 100  && NAV._sysstate.r.orientationeuler.y < -170 && NAV._sysstate.r.orientationeuler.y < -190 && NAV._sysstate.r.filtered.vvel > 20 && NAV._sysstate.r.filtered.alt > 50 && millis() - burnouttime > 100)
+    if (_sysstate.r.state == 2 && NAV._sysstate.r.orientationeuler.x < 70 && NAV._sysstate.r.orientationeuler.x < 110  && NAV._sysstate.r.orientationeuler.y < -160 && NAV._sysstate.r.orientationeuler.y < -200 && NAV._sysstate.r.filtered.vvel > 5 && NAV._sysstate.r.filtered.alt > 10 && millis() - burnouttime > 100)
     {
         _sysstate.r.pyrosfired = _sysstate.r.pyrosfired | 0b100;
-        P4.fire();
+        P3.fire();
     }
     else
     {
         _sysstate.r.pyrosfired = _sysstate.r.pyrosfired & 0b11;
     }
-    
     
 
     P1.checkfire();
