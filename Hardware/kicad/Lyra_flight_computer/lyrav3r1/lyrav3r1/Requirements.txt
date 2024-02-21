@@ -6,4 +6,9 @@ better pyro contunity checking
 
 intergrated lora telemetry
 
+gps
+
+magnetometer
+
+ptc fuse?
 
