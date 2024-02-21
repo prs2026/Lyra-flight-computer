@@ -684,9 +684,9 @@ int MPCORE::checkforpyros(){
         
         _sysstate.r.pyrosfired = _sysstate.r.pyrosfired | 0b10;
         P2.fire();
-    }
+    } 
 
-    if (_sysstate.r.state == 2 && NAV._sysstate.r.orientationeuler.x < 70 && NAV._sysstate.r.orientationeuler.x < 110  && NAV._sysstate.r.orientationeuler.y < -160 && NAV._sysstate.r.orientationeuler.y < -200 && NAV._sysstate.r.filtered.vvel > 5 && NAV._sysstate.r.filtered.alt > 10 && millis() - burnouttime > 100)
+    if (_sysstate.r.state == 2 && NAV._sysstate.r.orientationeuler.x > 70 && NAV._sysstate.r.orientationeuler.x < 110  && (NAV._sysstate.r.orientationeuler.y < -160 || NAV._sysstate.r.orientationeuler.y < -200) && NAV._sysstate.r.filtered.vvel > 5 && NAV._sysstate.r.filtered.alt > 10 && millis() - burnouttime > 100)
     {
         _sysstate.r.pyrosfired = _sysstate.r.pyrosfired | 0b100;
         P3.fire();
