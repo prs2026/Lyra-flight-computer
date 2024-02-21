@@ -1,0 +1,9 @@
+be powered off a 1s lipo
+
+
+better pyro contunity checking
+
+
+intergrated lora telemetry
+
+
