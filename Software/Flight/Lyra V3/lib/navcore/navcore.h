@@ -35,6 +35,8 @@ class NAVCORE{
 
     uint32_t invertedtime;
 
+    
+
     double accumz = 0;
 
     public:
@@ -104,6 +106,8 @@ class NAVCORE{
         Vector3float getworldaccel(navpacket _state);
 
         void getpadoffset();
+        void getcalibrationdata();
+        void calcnewoffsets();
 
         
 
@@ -384,5 +388,96 @@ void NAVCORE::getpadoffset(){
     _sysstate.r.filtered.maxalt = 0;
 }
 
+void NAVCORE::getcalibrationdata(){
+    Serial.println("calibrating accels");
+    IMUdata imucalidata = imu.readraw(50,1000);
+    ADXLdata adxlcalidata = adxl.readraw(50,1000);
+    double lowestval,highestval = 0;
+    int index = 0;
+
+    if (imucalidata.accel.x < lowestval)
+    {
+        lowestval = imucalidata.accel.x;
+        index = -1;
+    }
+    if (imucalidata.accel.y < lowestval)
+    {
+        lowestval = imucalidata.accel.y;
+        index = -2;
+    }
+    if (imucalidata.accel.z < lowestval)
+    {
+        lowestval = imucalidata.accel.z;
+        index = -3;
+    }
+
+    if (imucalidata.accel.x > highestval)
+    {
+        lowestval = imucalidata.accel.x;
+        index = 1;
+    }
+        if (imucalidata.accel.y > highestval)
+    {
+        lowestval = imucalidata.accel.y;
+        index = 2;
+    }
+        if (imucalidata.accel.z > highestval)
+    {
+        lowestval = imucalidata.accel.z;
+        index = 3;
+    }
+    
+    switch (index)
+    {
+    case -1:
+        imu.calibrationneg.x() = imucalidata.accel.x;
+        adxl.calibrationneg.x() = adxlcalidata.accel.x;
+        break;
+    
+    case -2:
+        imu.calibrationneg.y() = imucalidata.accel.y;
+        adxl.calibrationneg.y() = adxlcalidata.accel.y;
+        break;
+    
+    case -3:
+        imu.calibrationneg.z() = imucalidata.accel.z;
+        adxl.calibrationneg.z() = adxlcalidata.accel.z;
+        break;
+    
+    case 1:
+        imu.calibrationpos.x() = imucalidata.accel.x;
+        adxl.calibrationpos.x() = adxlcalidata.accel.x;
+        break;
+    
+    case 2:
+        imu.calibrationpos.y() = imucalidata.accel.y;
+        adxl.calibrationpos.y() = adxlcalidata.accel.y;
+        break;
+    
+    case 3:
+        imu.calibrationpos.z() = imucalidata.accel.z;
+        adxl.calibrationpos.z() = adxlcalidata.accel.z;
+        break;
+
+    
+    
+    default:
+        break;
+    }
+    
+    return;
+}
+
+void NAVCORE::calcnewoffsets(){
+    Vector3d imubcal,adxlbcal;
+    Matrix3d imuacal;
+
+    imubcal << (imu.calibrationneg + imu.calibrationpos)/2;
+    adxlbcal << (imu.calibrationneg + imu.calibrationpos)/2;
+
+    imu.bcal = imubcal;
+    adxl.bcal = adxlbcal;
+    return;
+}
 
 #endif // NAVCOREHEADER

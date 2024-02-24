@@ -33,9 +33,6 @@ E220 ebyte(&radioserial,BRKOUT2,BRKOUT6,BRKOUT5);
 // imu class, holds all code for the bmi088 imu
 class IMU{
 
-// calibration matrices
-Vector3d bcal;
-Matrix3d acal;
 
 // previous data, used mostly for error checking
 IMUdata prevdata;
@@ -49,6 +46,14 @@ public:
     IMUdata data;
     int init();
     void read(int oversampling = 5);
+    IMUdata readraw(int oversampling = 5,int interval = 100);
+    Vector3d calibrationpos;
+    Vector3d calibrationneg;
+
+    // calibration matrices
+    Vector3d bcal;
+    Matrix3d acal;
+
 
 };
 // constructer, assigns values to bcal and acal
@@ -163,13 +168,62 @@ void IMU::read(int oversampling){
     return;
 }
 
+IMUdata IMU::readraw(int oversampling, int interval){
+    IMUdata _data;
+    Vector3d accel;
+    Vector3d gyro;
+
+    accel << 0,0,0;
+    gyro << 0,0,0;
+    
+    for (int i = 0; i < oversampling; i++)
+    {
+        accelunit.readSensor();
+        gyrounit.readSensor();
+
+        accel.x() += accelunit.getAccelX_mss();
+        accel.y() += accelunit.getAccelZ_mss();
+        accel.z() += accelunit.getAccelY_mss();
+        //Serial.printf("new accelmss z : %f \n",accel.z());
+
+        gyro.x() += -gyrounit.getGyroX_rads();
+        gyro.y() += -gyrounit.getGyroZ_rads();
+        gyro.z() += gyrounit.getGyroY_rads();
+
+        delayMicroseconds(interval);
+        gyro.x() < -73786 || gyro.x() > 73786 ? gyro.x() = data.gyro.x : gyro.x() = gyro.x();
+        gyro.y() < -73786 || gyro.y() > 73786 ? gyro.y() = data.gyro.x : gyro.y() = gyro.y();
+        gyro.z() < -73786 || gyro.z() > 73786 ? gyro.z() = data.gyro.x : gyro.z() = gyro.z();
+
+        accel.x() < -7378 || accel.x() > 7378 ? accel.x() = data.accel.x : accel.x() = accel.x();
+        accel.y() < -7378 || accel.y() > 7378 ? accel.y() = data.accel.x : accel.y() = accel.y();
+        accel.z() < -7378 || accel.z() > 7378 ? accel.z() = data.accel.x : accel.z() = accel.z();
+        
+    }
+
+    accel.x() /= oversampling;
+    accel.y() /= oversampling;
+    accel.z() /= oversampling;
+    
+    gyro.x() /= oversampling;
+    gyro.y() /= oversampling;
+    gyro.z() /= oversampling;
+
+    data.absaccel = accel.norm();
+    _data.accel = vector3tofloat(accel);
+    _data.gyro = vector3tofloat(gyro);
+
+    _data.temp = accelunit.getTemperature_C();
+    
+    return _data;
+
+}
+
 /*--------------------------------------------------------------------------------------*/
 class ADXL
 {
 private:
-    Vector3d offsets;
-    Vector3d bcal;
-    Matrix3d acal;
+
 
 public:
     ADXLdata data;
@@ -177,6 +231,14 @@ public:
     int init();
     int read();
     int getnewoffsets();
+    ADXLdata readraw(int oversampling = 5, int interval = 50);
+
+    Vector3d calibrationpos;
+    Vector3d calibrationneg;
+
+    Vector3d offsets;
+    Vector3d bcal;
+    Matrix3d acal;
 };
 
 ADXL::ADXL()
@@ -262,6 +324,39 @@ int ADXL::read()
     data.accel = vector3tofloat(_accel);
 
     return 0;
+}
+
+ADXLdata ADXL::readraw(int oversampling, int interval){
+    ADXLdata _data;
+    Vector3d accel;
+
+    accel << 0,0,0;
+    
+    for (int i = 0; i < oversampling; i++)
+    {
+        sensors_event_t event;
+        adxl375.getEvent(&event);
+
+        accel.x() = -event.acceleration.x;
+        accel.y() = -event.acceleration.z;
+        accel.z() = event.acceleration.y;
+
+        delayMicroseconds(interval);
+
+        accel.x() < -7378 || accel.x() > 7378 ? accel.x() = data.accel.x : accel.x() = accel.x();
+        accel.y() < -7378 || accel.y() > 7378 ? accel.y() = data.accel.x : accel.y() = accel.y();
+        accel.z() < -7378 || accel.z() > 7378 ? accel.z() = data.accel.x : accel.z() = accel.z();
+        
+    }
+
+    accel.x() /= oversampling;
+    accel.y() /= oversampling;
+    accel.z() /= oversampling;
+
+    _data.absaccel = accel.norm();
+
+    _data.accel = vector3tofloat(accel);
+    return _data;
 }
 
 /*--------------------------------------------------------------------------------------*/

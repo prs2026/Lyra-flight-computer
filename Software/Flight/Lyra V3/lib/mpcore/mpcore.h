@@ -131,6 +131,7 @@ class MPCORE{
         int checkforpyros();
 
         float readbattvoltage();
+        int calibrateimus();
         
 
 };
@@ -878,6 +879,11 @@ int MPCORE::sendtelemetry(){
     }
 
     return 0;
+}
+
+int MPCORE::calibrateimus(){
+
+
 }
 
 

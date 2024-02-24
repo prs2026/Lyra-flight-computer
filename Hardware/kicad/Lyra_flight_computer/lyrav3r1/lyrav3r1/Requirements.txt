@@ -12,3 +12,4 @@ magnetometer
 
 ptc fuse?
 
+better limiting on the breakout powers
