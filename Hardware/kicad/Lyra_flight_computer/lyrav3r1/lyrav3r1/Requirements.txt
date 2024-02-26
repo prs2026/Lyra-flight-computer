@@ -13,3 +13,47 @@ magnetometer
 ptc fuse?
 
 better limiting on the breakout powers
+
+Form factor
+Fit in 29mm airframe
+25x80
+ power supply
+Indicator led
+3v3 reg
+5v reg
+Filtering with ferrite beads etc
+Fusees
+2a for pyro
+Separate 200ma for rest of board
+RP2040 mcu
+Usb connector and connections
+27 ohm termination resistors 
+Swd header
+Jst header
+Qspi memory
+Winbond W25Q16JVUXIQ
+Vreg caps
+1uf
+Led
+Buzzer
+12mhz oscillator
+Reset method
+Boot header
+Sensors
+Bmi088 imu
+MPL3115A2 baro
+LIS3MDL magnetometer
+Adxl375 High grav accel
+Datalogging
+Sd card
+External flash
+I/O
+JST connectors
+Compact Spi header
+Compact uart header
+Compart i2c header
+4 pyro channels with continuity detection
+Batt terminal
+Switch terminal
+Arm terminal
+Gpio breakout
