@@ -3,4 +3,5 @@
   (lib (name "2024-02-26_19-27-30")(type "KiCad")(uri "${LYRAREPO}/Lyra-flight-computer/Hardware/kicad/libs/KiCADv6/2024-02-26_19-27-30.kicad_sym")(options "")(descr ""))
   (lib (name ".kicad_sym")(type "KiCad")(uri "${LYRAREPO}/Lyra-flight-computer/Hardware/kicad/libs/easyeda2kicad/.kicad_sym")(options "")(descr ""))
   (lib (name "easyeda2kicad")(type "KiCad")(uri "${LYRAREPO}/Lyra-flight-computer/Hardware/kicad/libs/easyeda2kicad/easyeda2kicad.kicad_sym")(options "")(descr ""))
+  (lib (name "SamacSys_Parts")(type "KiCad")(uri "${LYRAREPO}/Lyra-flight-computer/Hardware/kicad/libs/SamacSys_Parts.kicad_sym")(options "")(descr ""))
 )

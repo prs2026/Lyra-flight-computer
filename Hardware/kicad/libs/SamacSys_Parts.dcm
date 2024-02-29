@@ -18,4 +18,10 @@ K
 F https://cdn.taoglas.com/datasheets/GP.1575.12.4.A.02.pdf
 $ENDCMP
 #
+$CMP TESEO-LIV3F
+D GPS Modules Tiny GNSS module
+K
+F https://www.st.com/resource/en/datasheet/teseo-liv3f.pdf
+$ENDCMP
+#
 #End Doc Library
