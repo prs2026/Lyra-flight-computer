@@ -1,7 +1,7 @@
 (fp_lib_table
   (version 7)
-  (lib (name "footprints")(type "KiCad")(uri "${LYRAREPO}/Lyra-flight-computer/Hardware/kicad/libs/KiCADv6/footprints.pretty")(options "")(descr ""))
-  (lib (name ".pretty")(type "KiCad")(uri "${LYRAREPO}/Lyra-flight-computer/Hardware/kicad/libs/easyeda2kicad/.pretty")(options "")(descr ""))
-  (lib (name "easyeda2kicad")(type "KiCad")(uri "${LYRAREPO}/Lyra-flight-computer/Hardware/kicad/libs/easyeda2kicad/easyeda2kicad.pretty")(options "")(descr ""))
-  (lib (name "SamacSys_Parts")(type "KiCad")(uri "${LYRAREPO}/Lyra-flight-computer/Hardware/kicad/libs/SamacSys_Parts.pretty")(options "")(descr ""))
+  (lib (name "footprints")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/KiCADv6/footprints.pretty")(options "")(descr ""))
+  (lib (name ".pretty")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/easyeda2kicad/.pretty")(options "")(descr ""))
+  (lib (name "easyeda2kicad")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/easyeda2kicad/easyeda2kicad.pretty")(options "")(descr ""))
+  (lib (name "SamacSys_Parts")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/SamacSys_Parts.pretty")(options "")(descr ""))
 )

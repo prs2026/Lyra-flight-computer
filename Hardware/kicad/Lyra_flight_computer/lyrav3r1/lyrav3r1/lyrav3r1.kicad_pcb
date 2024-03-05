@@ -22498,7 +22498,7 @@
 		)
 		(fp_arc
 			(start -2.5 0.73)
-			(mid -2.50637 -0.729972)
+			(mid -2.50635 -0.729972)
 			(end -2.48726 0.729889)
 			(stroke
 				(width 0.25)
@@ -24870,6 +24870,17 @@
 				(xyz 0 0 0)
 			)
 		)
+	)
+	(gr_rect
+		(start 214.1832 78.298)
+		(end 228.1832 98.298)
+		(stroke
+			(width 0.2)
+			(type default)
+		)
+		(fill none)
+		(layer "F.Cu")
+		(uuid "4e9298f6-0bf3-4b73-a6ff-eaabf833c867")
 	)
 	(gr_rect
 		(start 183.6 64.025)
