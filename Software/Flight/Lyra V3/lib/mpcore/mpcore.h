@@ -860,6 +860,14 @@ int MPCORE::parsecommand(char input){
             erasedata();
         }
         break;
+
+    case 'i':
+    NAV.getcalibrationdata();
+    break;
+
+    case 'c':
+    calibrateimus();
+    break;
     
     default:
         break;
@@ -882,7 +890,8 @@ int MPCORE::sendtelemetry(){
 }
 
 int MPCORE::calibrateimus(){
-
+    imu.bcal = 0.5*(imu.calibrationpos+imu.calibrationneg);
+    adxl.bcal = 0.5*(adxl.calibrationpos+imu.calibrationneg);
 
 }
 
