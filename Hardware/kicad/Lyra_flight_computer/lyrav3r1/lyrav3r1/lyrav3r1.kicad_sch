@@ -21914,6 +21914,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC_Part" ""
+			(at 184.15 46.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "a06d1883-beab-4a6a-973f-631727c32a2a")
 		)
