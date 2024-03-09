@@ -1,4 +1,11 @@
-23104376830880232
+23109379846026553
+.pretty
+APAE1575R1820ABDC1-T
+
+
+0
+1
+1
 .pretty
 COMM-SMD_18P-L16.0-W16.0-P1.27-BL_RA-08H
 
@@ -34,6 +41,13 @@ PQFN-8_L3.0-W3.0-P0.65-LS3.2-BL
 0
 9
 8
+.pretty
+Pad_01x_05
+
+
+0
+5
+5
 .pretty
 QFN-6_L1.0-W1.0-P0.50-LS1.0-BL
 
@@ -76,6 +90,13 @@ WIRELM-SMD_DL-LLCC68-S
 0
 16
 16
+APAE1575R1820ABDC1_T
+XDCR_APAE1575R1820ABDC1-T
+
+
+0
+1
+1
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
