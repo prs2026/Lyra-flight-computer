@@ -135,7 +135,7 @@ struct variences{
     float orientation;
 };
 
-//struct to hold various position related thijngs so as to not bog down the main nav state struct
+//struct to hold various position related things so as to not bog down the main nav state struct
 struct position{
     Vector3float accel;
     float alt;
@@ -170,7 +170,7 @@ union mpstate{
         int32_t errorflag;
         uint32_t uptime;
         uint32_t MET;
-        uint32_t state;
+        uint8_t state;
         uint8_t pyrosfired;
         uint8_t pyroscont;
         uint8_t pyrostate;
@@ -181,7 +181,7 @@ union mpstate{
     uint8_t data8[sizeof(r)/sizeof(uint8_t)];
 };
 
-// define the struct to use to log to flash, makes addding checksums easier.
+// define the struct to use to log to flash, makes adding checksums easier.
 union logpacket{
     struct{
         uint8_t checksum1;
