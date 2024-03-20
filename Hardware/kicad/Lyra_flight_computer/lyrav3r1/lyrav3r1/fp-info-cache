@@ -1,4 +1,4 @@
-23111217533368874
+23112928423593131
 .pretty
 APAE1575R1820ABDC1-T
 
@@ -6,6 +6,13 @@ APAE1575R1820ABDC1-T
 0
 1
 1
+.pretty
+Buzzer_12x9.5RM7.6
+Generic Buzzer, D12mm height 9.5mm with RM7.6mm
+buzzer
+0
+2
+2
 .pretty
 COMM-SMD_18P-L16.0-W16.0-P1.27-BL_RA-08H
 
