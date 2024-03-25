@@ -183,6 +183,7 @@
         0.2,
         0.254,
         0.3,
+        0.354,
         0.5,
         0.75,
         1.0
@@ -560,7 +561,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "",
+      "plot": "./",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "Lyrav3.step",
