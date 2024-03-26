@@ -22120,15 +22120,6 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part" "C392444"
-			(at 196.85 40.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(pin "2"
 			(uuid "e587663d-b948-463f-872a-8f18b30cfe42")
 		)
@@ -23760,15 +23751,6 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part" "C400708"
-			(at 39.37 180.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(pin "1"
 			(uuid "4cb5ebd9-5690-4b82-911e-4e8f7f3ad411")
 		)
@@ -24074,15 +24056,6 @@
 			)
 		)
 		(property "Description" "Potentiometer"
-			(at 121.92 166.37 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" "C36376"
 			(at 121.92 166.37 0)
 			(effects
 				(font
@@ -24653,7 +24626,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" ""
 			(at 563.88 52.07 0)
 			(effects
 				(font
@@ -24672,15 +24645,6 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 563.88 52.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" "C23630"
 			(at 563.88 52.07 0)
 			(effects
 				(font
@@ -26708,7 +26672,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part" "C2297"
+		(property "LCSC Part" ""
 			(at 361.95 359.41 90)
 			(effects
 				(font
@@ -26905,7 +26869,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" ""
 			(at 546.1 54.61 0)
 			(effects
 				(font
@@ -26924,15 +26888,6 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 546.1 54.61 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" "C23630"
 			(at 546.1 54.61 0)
 			(effects
 				(font
@@ -28410,15 +28365,6 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part" "C107671"
-			(at 528.32 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(pin "12"
 			(uuid "c20bfb01-8f06-4984-90fb-ee12bdad2155")
 		)
@@ -28798,7 +28744,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" ""
 			(at 544.83 68.58 0)
 			(effects
 				(font
@@ -28817,15 +28763,6 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 544.83 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" "C23630"
 			(at 544.83 68.58 0)
 			(effects
 				(font
@@ -29335,7 +29272,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "LED_SMD:LED_0805_2012Metric"
+		(property "Footprint" ""
 			(at 116.84 63.5 0)
 			(effects
 				(font
@@ -29354,15 +29291,6 @@
 			)
 		)
 		(property "Description" "Light emitting diode"
-			(at 116.84 63.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" "C2297"
 			(at 116.84 63.5 0)
 			(effects
 				(font
@@ -30518,7 +30446,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+		(property "Footprint" ""
 			(at 116.84 55.88 0)
 			(effects
 				(font
@@ -30537,15 +30465,6 @@
 			)
 		)
 		(property "Description" "Resistor, small symbol"
-			(at 116.84 55.88 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" "C11702"
 			(at 116.84 55.88 0)
 			(effects
 				(font
@@ -31844,15 +31763,6 @@
 			)
 		)
 		(property "Description" "1A Low Dropout regulator, positive, 5.0V fixed output, SOT-223"
-			(at 373.38 322.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" "C6187"
 			(at 373.38 322.58 0)
 			(effects
 				(font
