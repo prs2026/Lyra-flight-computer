@@ -1,4 +1,4 @@
-23129946316343542
+23135080842138514
 .pretty
 ANT-SMD_1909763-1
 
@@ -112,6 +112,13 @@ QFN-6_L1.0-W1.0-P0.50-LS1.0-BL
 6
 6
 .pretty
+RES-ADJ-SMD_3314J
+
+
+0
+3
+3
+.pretty
 SC-70-6_L2.2-W1.3-P0.65-LS2.1-BL
 
 
@@ -161,12 +168,26 @@ SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL
 6
 6
 .pretty
+ST7920 AZ
+STN/FSTN LCD 128x64 dot https://www.digchip.com/datasheets/parts/datasheet/1121/AG-12864E-pdf.php
+AG12864E Graphics Display 128x64 Ampire
+0
+20
+20
+.pretty
 SW-TH_4P-L6.0-W6.0-P4.50-LS6.5
 
 
 0
 4
 4
+.pretty
+SW-TH_SK12D07VG4
+
+
+0
+5
+5
 .pretty
 TF-SMD_TF-115K
 
