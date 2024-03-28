@@ -10363,10 +10363,6 @@
 		(uuid "7aa2ad64-a7a5-4eab-9701-73c41c343079")
 	)
 	(no_connect
-		(at 175.26 347.98)
-		(uuid "895a53c8-c878-4738-9c64-5725f8252c8a")
-	)
-	(no_connect
 		(at 170.18 30.48)
 		(uuid "93cc2efb-38fa-4623-a64d-07b0ce1e079a")
 	)
@@ -11061,6 +11057,16 @@
 			(type default)
 		)
 		(uuid "2135c8e4-6050-4a4c-a389-0d0f1649996f")
+	)
+	(wire
+		(pts
+			(xy 53.34 273.05) (xy 54.61 273.05)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2194bd49-120a-4838-8f59-05e12ef86225")
 	)
 	(wire
 		(pts
@@ -12184,6 +12190,16 @@
 	)
 	(wire
 		(pts
+			(xy 31.75 273.05) (xy 48.26 273.05)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "74b2dedc-4fef-485e-ac68-763d632af0c6")
+	)
+	(wire
+		(pts
 			(xy 39.37 199.39) (xy 39.37 200.66)
 		)
 		(stroke
@@ -12391,6 +12407,16 @@
 			(type default)
 		)
 		(uuid "7ff48990-a50f-4bf3-a23b-2ffc007077cf")
+	)
+	(wire
+		(pts
+			(xy 62.23 273.05) (xy 63.5 273.05)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "801f1152-3455-44e2-8c97-6344c8567faa")
 	)
 	(wire
 		(pts
@@ -13051,6 +13077,16 @@
 			(type default)
 		)
 		(uuid "a87366e5-fc36-41c6-905b-6021e3295aa7")
+	)
+	(wire
+		(pts
+			(xy 175.26 347.98) (xy 192.405 347.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a94cb091-4e6b-4af6-a24d-1c474aec6cd2")
 	)
 	(wire
 		(pts
@@ -18864,6 +18900,17 @@
 		)
 		(uuid "385bb28c-2746-470d-9061-55ea80547ffb")
 	)
+	(label "LEDINDICATION"
+		(at 31.75 273.05 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "38731e70-f467-42f2-ac2a-d2063d9f859c")
+	)
 	(label "MOSI"
 		(at 520.7 332.74 0)
 		(fields_autoplaced yes)
@@ -18918,6 +18965,17 @@
 			(justify left bottom)
 		)
 		(uuid "5020aa71-b221-43f8-9e77-cc55da84f85e")
+	)
+	(label "LEDINDICATION"
+		(at 192.405 347.98 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "50df4a77-7170-4f50-a178-0e2b3e1c71e3")
 	)
 	(label "BATT SENSE"
 		(at 188.595 386.08 180)
@@ -21152,6 +21210,73 @@
 		)
 	)
 	(symbol
+		(lib_id "power:+3V3")
+		(at 63.5 273.05 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "173af3a8-c8a6-43ba-a6b2-617f842de145")
+		(property "Reference" "#PWR087"
+			(at 59.69 273.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 67.31 273.685 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 63.5 273.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 63.5 273.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 63.5 273.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "88ff49e1-5693-47cb-9282-e5afff5721a3")
+		)
+		(instances
+			(project "recivier"
+				(path "/b1fe103e-440e-4024-83bd-442a693ba705"
+					(reference "#PWR087")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_name "GND_3")
 		(lib_id "power:GND")
 		(at 495.3 90.17 0)
@@ -22615,6 +22740,91 @@
 			(project "recivier"
 				(path "/b1fe103e-440e-4024-83bd-442a693ba705"
 					(reference "R17")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_Small")
+		(at 50.8 273.05 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "3d88076c-9b4b-4adf-9136-08c645b86803")
+		(property "Reference" "R15"
+			(at 50.8 275.59 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1k"
+			(at 50.8 278.13 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 50.8 273.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 50.8 273.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 50.8 273.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C11702"
+			(at 50.8 273.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC_Part" ""
+			(at 50.8 273.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "f3bcd10d-ad02-4a5b-800d-647087e2df74")
+		)
+		(pin "2"
+			(uuid "95ff0756-010c-4b39-a749-c117a2761f1f")
+		)
+		(instances
+			(project "recivier"
+				(path "/b1fe103e-440e-4024-83bd-442a693ba705"
+					(reference "R15")
 					(unit 1)
 				)
 			)
@@ -30373,6 +30583,83 @@
 			(project "recivier"
 				(path "/b1fe103e-440e-4024-83bd-442a693ba705"
 					(reference "#PWR026")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:LED")
+		(at 58.42 273.05 0)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid "ccf91dac-f924-418d-9c6d-d742b4ae3102")
+		(property "Reference" "D4"
+			(at 56.8325 265.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "LED"
+			(at 56.8325 267.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_0805_2012Metric"
+			(at 58.42 273.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 58.42 273.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 58.42 273.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C2297"
+			(at 58.42 273.05 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ec40dacb-cdf3-4b09-89a2-354c5f3b8b9f")
+		)
+		(pin "2"
+			(uuid "8cb852f5-aeb9-4cbc-9817-eca50ee1af97")
+		)
+		(instances
+			(project "recivier"
+				(path "/b1fe103e-440e-4024-83bd-442a693ba705"
+					(reference "D4")
 					(unit 1)
 				)
 			)
