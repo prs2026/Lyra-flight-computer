@@ -1,4 +1,4 @@
-23133510472815363
+23141927504032789
 .pretty
 ANT-SMD_1909763-1
 
@@ -20,6 +20,13 @@ APAE1575R1820ABDC1-T
 0
 1
 1
+.pretty
+AUDIO-SMD_PJ-320D
+
+
+0
+6
+4
 .pretty
 Buzzer_12x9.5RM7.6
 Generic Buzzer, D12mm height 9.5mm with RM7.6mm
@@ -125,6 +132,13 @@ QFN-6_L1.0-W1.0-P0.50-LS1.0-BL
 0
 6
 6
+.pretty
+R-TFT032IPS-3.2
+Through hole straight pin header, 2x20, 2.54mm pitch, double rows
+Through hole pin header THT 2x20 2.54mm double row
+0
+44
+41
 .pretty
 RES-ADJ-SMD_3314J
 
@@ -94772,3 +94786,24 @@ XSON-8_L4.0-W4.0-P0.80-TL-EP
 0
 9
 9
+footprints
+0900FM15D0039E_JOT
+
+0900FM15D0039E 
+0
+10
+10
+footprints
+0900FM15D0039E_JOT-L
+
+0900FM15D0039E 
+0
+10
+10
+footprints
+0900FM15D0039E_JOT-M
+
+0900FM15D0039E 
+0
+10
+10

@@ -11,126 +11,6 @@
 		(company "Polaris Rocketry Systems")
 	)
 	(lib_symbols
-		(symbol "+12P_2"
-			(power)
-			(pin_numbers hide)
-			(pin_names
-				(offset 0) hide)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "#PWR"
-				(at 0 -3.81 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Value" "+12P"
-				(at 0 3.556 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Power symbol creates a global label with name \"+12P\""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "global power"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "+12P_2_0_1"
-				(polyline
-					(pts
-						(xy -0.762 1.27) (xy 0 2.54)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 0) (xy 0 2.54)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 2.54) (xy 0.762 1.27)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "+12P_2_1_1"
-				(pin power_in line
-					(at 0 0 90)
-					(length 0)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
 		(symbol "+3V3_1"
 			(power)
 			(pin_numbers hide)
@@ -4639,184 +4519,6 @@
 						)
 					)
 					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
-		(symbol "Device:Q_NPN_BEC"
-			(pin_names
-				(offset 0) hide)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "Q"
-				(at 5.08 1.27 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Value" "Q_NPN_BEC"
-				(at 5.08 -1.27 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Footprint" ""
-				(at 5.08 2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "~"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "NPN transistor, base/emitter/collector"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "transistor NPN"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "Q_NPN_BEC_0_1"
-				(polyline
-					(pts
-						(xy 0.635 0.635) (xy 2.54 2.54)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.635 -0.635) (xy 2.54 -2.54) (xy 2.54 -2.54)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.635 1.905) (xy 0.635 -1.905) (xy 0.635 -1.905)
-					)
-					(stroke
-						(width 0.508)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 -1.778) (xy 1.778 -1.27) (xy 2.286 -2.286) (xy 1.27 -1.778) (xy 1.27 -1.778)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(circle
-					(center 1.27 0)
-					(radius 2.8194)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "Q_NPN_BEC_1_1"
-				(pin input line
-					(at -5.08 0 0)
-					(length 5.715)
-					(name "B"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 2.54 -5.08 90)
-					(length 2.54)
-					(name "E"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 2.54 5.08 270)
-					(length 2.54)
-					(name "C"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -10110,16 +9812,6 @@
 	)
 	(wire
 		(pts
-			(xy 532.13 120.65) (xy 544.195 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "03919f95-9638-48d5-b512-2b0e95224d48")
-	)
-	(wire
-		(pts
 			(xy 223.52 308.61) (xy 218.44 308.61)
 		)
 		(stroke
@@ -11670,16 +11362,6 @@
 	)
 	(wire
 		(pts
-			(xy 549.275 120.65) (xy 551.18 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5d67d8f4-03e9-44aa-9f01-b2edb00a0dc6")
-	)
-	(wire
-		(pts
 			(xy 121.92 80.01) (xy 121.92 82.55)
 		)
 		(stroke
@@ -12640,7 +12322,7 @@
 	)
 	(wire
 		(pts
-			(xy 548.64 109.22) (xy 558.8 109.22)
+			(xy 548.005 109.22) (xy 558.8 109.22)
 		)
 		(stroke
 			(width 0)
@@ -13057,16 +12739,6 @@
 			(type default)
 		)
 		(uuid "b284fb78-7337-47df-82fa-b0f12ebb9238")
-	)
-	(wire
-		(pts
-			(xy 558.8 125.73) (xy 558.8 130.81)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b289708c-16fd-4a3a-94c0-da05fceafaf3")
 	)
 	(wire
 		(pts
@@ -18677,7 +18349,7 @@
 		(uuid "dc3456e6-327d-47ac-82eb-866a11549225")
 	)
 	(label "BUZZER"
-		(at 532.13 120.65 0)
+		(at 548.005 109.22 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -19814,74 +19486,6 @@
 			(project "Lyra V2"
 				(path "/63622aab-8dfa-4523-a589-40aebeb23162"
 					(reference "D2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_name "+12P_2")
-		(lib_id "power:+12P")
-		(at 548.64 109.22 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "11228c53-401f-457b-b494-7a1980aa25fa")
-		(property "Reference" "#PWR046"
-			(at 552.45 109.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+BATT"
-			(at 544.83 109.2199 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 548.64 109.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 548.64 109.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+12P\""
-			(at 548.64 109.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "70b31784-9ca3-4c2b-9378-417771f2808c")
-		)
-		(instances
-			(project "lyrav3r1"
-				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
-					(reference "#PWR046")
 					(unit 1)
 				)
 			)
@@ -26588,7 +26192,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 558.8 130.81 0)
+		(at 558.8 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -26597,7 +26201,7 @@
 		(fields_autoplaced yes)
 		(uuid "8d9102ac-85c0-4d6c-b6d6-b42df7e3d1f8")
 		(property "Reference" "#PWR021"
-			(at 558.8 137.16 0)
+			(at 558.8 121.92 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -26606,7 +26210,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 558.8 135.255 0)
+			(at 558.8 120.015 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -26614,7 +26218,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 558.8 130.81 0)
+			(at 558.8 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -26623,7 +26227,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 558.8 130.81 0)
+			(at 558.8 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -26632,7 +26236,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 558.8 130.81 0)
+			(at 558.8 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28590,91 +28194,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R_Small")
-		(at 546.735 120.65 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "b55e0456-eb7a-4842-adfc-e155a51c2561")
-		(property "Reference" "R5"
-			(at 546.735 118.11 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "100R"
-			(at 546.735 115.57 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 546.735 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 546.735 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 546.735 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" "C25076"
-			(at 546.735 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC_Part" ""
-			(at 546.735 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "693e5458-31ef-4e9c-a219-a0e74a298276")
-		)
-		(pin "2"
-			(uuid "734fb099-8702-4d80-b3c3-1172e0ed7de4")
-		)
-		(instances
-			(project "lyrav3r1"
-				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
-					(reference "R5")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:C_Small")
 		(at 93.98 283.21 0)
 		(unit 1)
@@ -29502,88 +29021,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:Q_NPN_BEC")
-		(at 556.26 120.65 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "c2cbbca5-ed22-4304-b3b6-786425493e08")
-		(property "Reference" "Q11"
-			(at 561.34 119.3799 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "Q_NPN_BEC"
-			(at 561.34 121.9199 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
-			(at 561.34 118.11 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 556.26 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "NPN transistor, base/emitter/collector"
-			(at 556.26 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" "C364312"
-			(at 556.26 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "ef8792ec-dfd5-47f5-8a46-871c22e2e00d")
-		)
-		(pin "3"
-			(uuid "9b751044-e725-4422-803a-7b99365b3f00")
-		)
-		(pin "2"
-			(uuid "0098106e-2199-499a-be95-965e760eac09")
-		)
-		(instances
-			(project "lyrav3r1"
-				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
-					(reference "Q11")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:Buzzer")
 		(at 561.34 111.76 0)
 		(unit 1)
@@ -29774,7 +29211,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "20k"
+		(property "Value" "30k"
 			(at 481.33 262.8899 0)
 			(effects
 				(font
@@ -29810,7 +29247,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part" "C25765"
+		(property "LCSC Part" "C25105"
 			(at 478.79 261.62 0)
 			(effects
 				(font
