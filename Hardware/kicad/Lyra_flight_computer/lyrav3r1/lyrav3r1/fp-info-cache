@@ -1,4 +1,4 @@
-23141891776759053
+23150579144276659
 .pretty
 ANT-SMD_1909763-1
 
@@ -21,6 +21,13 @@ APAE1575R1820ABDC1-T
 1
 1
 .pretty
+AUDIO-SMD_PJ-320D
+
+
+0
+6
+4
+.pretty
 Buzzer_12x9.5RM7.6
 Generic Buzzer, D12mm height 9.5mm with RM7.6mm
 buzzer
@@ -40,6 +47,13 @@ CONN-SMD_KH-SMA-KE8-G
 
 0
 5
+2
+.pretty
+CONN-TH_2P-P5.00_L7.6-W10.0
+
+
+0
+2
 2
 .pretty
 DFN-6_L1.5-W1.0-P0.50-BL
@@ -62,6 +76,13 @@ FILTER-SMD_5P-L1.4-W1.1-L
 0
 5
 5
+.pretty
+FPC-SMD_40P-P0.50_AMPHENOL_62684-402100ALF
+
+
+0
+42
+42
 .pretty
 GPSM-SMD_ATGM336H-TR
 
@@ -111,6 +132,13 @@ QFN-6_L1.0-W1.0-P0.50-LS1.0-BL
 0
 6
 6
+.pretty
+R-TFT032IPS-3.2
+Through hole straight pin header, 2x20, 2.54mm pitch, double rows
+Through hole pin header THT 2x20 2.54mm double row
+0
+44
+41
 .pretty
 RES-ADJ-SMD_3314J
 
@@ -174,6 +202,13 @@ AG12864E Graphics Display 128x64 Ampire
 0
 20
 20
+.pretty
+SW-SMD_6P-L7.0-W7.0-P1.40-LS7.4
+
+
+0
+8
+6
 .pretty
 SW-TH_4P-L6.0-W6.0-P4.50-LS6.5
 

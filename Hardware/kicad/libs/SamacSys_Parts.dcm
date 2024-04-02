@@ -24,4 +24,10 @@ K
 F https://www.st.com/resource/en/datasheet/teseo-liv3f.pdf
 $ENDCMP
 #
+$CMP 12BH349-GR
+D Cylindrical Battery Contacts, Clips, Holders & Springs 4XAA PC BLK
+K
+F 
+$ENDCMP
+#
 #End Doc Library

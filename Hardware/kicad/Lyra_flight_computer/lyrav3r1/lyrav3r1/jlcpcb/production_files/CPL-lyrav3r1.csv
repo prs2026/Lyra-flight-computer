@@ -1,5 +1,5 @@
 Designator,Val,Package,Mid X,Mid Y,Rotation,Layer
-AE3,Antenna_Shield,CONN-SMD_KH-SMA-KE8-G,12.15,52.365,0.0,bottom
+AE3,Antenna_Shield,CONN-SMD_KH-SMA-KE8-G,12.5,52.365,0.0,bottom
 C1,100n,C_0402_1005Metric,18.3808,44.349,270.0,bottom
 C2,100n,C_0402_1005Metric,18.6856,49.3782,0.0,bottom
 C3,100n,C_0402_1005Metric,9.5416,15.647,180.0,bottom

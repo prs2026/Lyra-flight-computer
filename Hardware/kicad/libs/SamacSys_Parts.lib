@@ -119,4 +119,24 @@ P 5 0 1 6 200 100 1400 100 1400 -900 200 -900 200 100 N
 ENDDRAW
 ENDDEF
 #
+#SamacSys ECAD Model 12BH349-GR
+#/1999059/541099/2.50/2/3/Battery
+DEF 12BH349-GR BT 0 30 Y Y 1 F N
+F0 "BT" 650 300 50 H V L CNN
+F1 "12BH349-GR" 650 200 50 H V L CNN
+F2 "12BH349GR" 650 100 50 H I L CNN
+F3 "" 650 0 50 H I L CNN
+F4 "Cylindrical Battery Contacts, Clips, Holders & Springs 4XAA PC BLK" 650 -100 50 H I L CNN "Description"
+F5 "16.5" 650 -200 50 H I L CNN "Height"
+F6 "12BH349-GR" 650 -300 50 H I L CNN "Mouser Part Number"
+F7 "https://www.mouser.co.uk/ProductDetail/Eagle-Plastic-Devices/12BH349-GR?qs=v%2FT7E3ONCqVWv782uaW7yA%3D%3D" 650 -400 50 H I L CNN "Mouser Price/Stock"
+F8 "Eagle Plastic Devices" 650 -500 50 H I L CNN "Manufacturer_Name"
+F9 "12BH349-GR" 650 -600 50 H I L CNN "Manufacturer_Part_Number"
+DRAW
+X + 1 0 0 200 R 50 50 0 0 P
+X - 2 0 -100 200 R 50 50 0 0 P
+P 5 0 1 6 200 100 600 100 600 -200 200 -200 200 100 N
+ENDDRAW
+ENDDEF
+#
 #End Library
