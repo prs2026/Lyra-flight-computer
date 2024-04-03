@@ -15395,9 +15395,9 @@
 			(pintype "passive")
 			(uuid "776bd20f-7f5e-4d89-8146-286d67d46ecc")
 		)
-		(model "C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hardware/kicad/libs/easyeda2kicad/.3dshapes/AUDIO-SMD_L12.1-W6.1-H5.0-4P.wrl"
+		(model "${LYRAREPO}/Hardware/kicad/libs/easyeda2kicad/.3dshapes/AUDIO-SMD_L12.1-W6.1-H5.0-4P.wrl"
 			(offset
-				(xyz 0 2.22 0.7)
+				(xyz 0 4.22 0)
 			)
 			(scale
 				(xyz 1 1 1)
