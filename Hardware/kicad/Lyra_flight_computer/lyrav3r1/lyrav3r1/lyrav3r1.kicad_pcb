@@ -54978,43 +54978,6 @@
 		)
 	)
 	(zone
-		(net 18)
-		(net_name "/GPS 3v3")
-		(layer "B.Cu")
-		(uuid "5767c401-9b9f-40d1-adcb-c8970986504e")
-		(name "$teardrop_padvia$")
-		(hatch full 0.1)
-		(priority 30189)
-		(attr
-			(teardrop
-				(type padvia)
-			)
-		)
-		(connect_pads yes
-			(clearance 0)
-		)
-		(min_thickness 0.0254)
-		(filled_areas_thickness no)
-		(fill yes
-			(thermal_gap 0.5)
-			(thermal_bridge_width 0.5)
-			(island_removal_mode 1)
-			(island_area_min 10)
-		)
-		(polygon
-			(pts
-				(xy 206.769912 88.3) (xy 206.769912 88.1) (xy 206.286945 87.911636) (xy 206.17114 88.1888) (xy 206.286945 88.465964)
-			)
-		)
-		(filled_polygon
-			(layer "B.Cu")
-			(pts
-				(xy 206.769912 88.1) (xy 206.769912 88.3) (xy 206.286945 88.465964) (xy 206.173023 88.193309) (xy 206.172997 88.184355)
-				(xy 206.286945 87.911636)
-			)
-		)
-	)
-	(zone
 		(net 67)
 		(net_name "/SX CS")
 		(layer "B.Cu")
@@ -63321,6 +63284,42 @@
 				(xy 202.416718 115.132833) (xy 202.411507 115.140115) (xy 202.409478 115.141121) (xy 202.154076 115.238169)
 				(xy 202.145125 115.237904) (xy 202.139687 115.232903) (xy 201.890145 114.782515) (xy 201.889134 114.77362)
 				(xy 201.892105 114.768576) (xy 202.091295 114.569386) (xy 202.099567 114.56596)
+			)
+		)
+	)
+	(zone
+		(net 18)
+		(net_name "/GPS 3v3")
+		(layer "B.Cu")
+		(uuid "eb21ede2-3723-4c28-b89d-75c4c53d38d4")
+		(name "$teardrop_padvia$")
+		(hatch full 0.1)
+		(priority 30000)
+		(attr
+			(teardrop
+				(type padvia)
+			)
+		)
+		(connect_pads yes
+			(clearance 0)
+		)
+		(min_thickness 0.0254)
+		(filled_areas_thickness no)
+		(fill yes
+			(thermal_gap 0.5)
+			(thermal_bridge_width 0.5)
+			(island_removal_mode 1)
+			(island_area_min 10)
+		)
+		(polygon
+			(pts
+				(xy 206.769912 88.3) (xy 206.769912 88.1) (xy 206.286945 87.911636) (xy 206.17114 88.1888) (xy 206.286945 88.465964)
+			)
+		)
+		(filled_polygon
+			(layer "B.Cu")
+			(pts
+				(xy 206.769912 88.3) (xy 206.769912 88.1) (xy 206.286945 87.911636) (xy 206.17114 88.1888) (xy 206.286945 88.465964)
 			)
 		)
 	)
