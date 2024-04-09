@@ -1,0 +1,96 @@
+(footprint "screwswitchpad"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at -0.0508 -3.5052 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "cdae2fe3-2878-461b-9a7b-713c602d55de")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "screwswitchpad"
+		(at 0 1 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "3b245c59-8d8d-49b5-b86c-1b880661d275")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "5259ef5a-23e7-4f57-8087-9afb072b6e79")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "e7fffd22-7dd0-4a60-81f5-fa020c39cfb6")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "fb06adae-d0a2-41e6-aa4b-400110fe49f9")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_text user "${REFERENCE}"
+		(at 0 2.5 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "bfc262d8-ed77-4125-b4f7-271a3c6e32e3")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "" np_thru_hole oval
+		(at 0 0)
+		(size 1 1)
+		(drill 2.6)
+		(layers "F&B.Cu" "*.Mask")
+		(clearance 0.01)
+		(uuid "743c46b8-6b9b-45ff-92dc-598adfccf82b")
+	)
+	(pad "1" smd oval
+		(at -0.0254 -0.0254)
+		(size 5 4)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "2f5a2f42-03f2-4554-997a-efe3cbe91635")
+	)
+)
