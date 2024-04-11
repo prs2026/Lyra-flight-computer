@@ -56,6 +56,7 @@ class MPCORE{
         uint32_t liftofftime = 0;
         uint32_t missionelasped = 0;
         uint32_t burnouttime = 0;
+        bool ready = false;
 
 
 
@@ -369,7 +370,7 @@ int MPCORE::logdata(mpstate state, navpacket navstate){
     // }
     // Serial.println("");
 
-    Serial.println("Writing to page #" + String(first_empty_page, DEC));
+    //Serial.println("Writing to page #" + String(first_empty_page, DEC));
     rp2040.idleOtherCore();
     uint32_t ints = save_and_disable_interrupts();
     flash_range_program(FLASH_TARGET_OFFSET + (first_empty_page*FLASH_PAGE_SIZE), (uint8_t *)logbuf, FLASH_PAGE_SIZE);
@@ -821,6 +822,10 @@ int MPCORE::parsecommand(char input){
 
     case 'i':
     NAV.getcalibrationdata();
+    break;
+
+    case 'y':
+    NAV.dumpoffsets();
     break;
 
     case 'c':

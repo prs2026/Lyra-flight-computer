@@ -49,13 +49,11 @@ public:
 // constructer, assigns values to bcal and acal
 IMU::IMU(){
         
-        bcal << 0.01215,
-                0.0558,
-                -0.00645;
+        bcal <<-0,0,0;
 
-        acal << 1.0043134,	0.002845008234,	-0.0003288584787,
-                0.0006194775994,	1.002656361,	-0.0003288584787,
-                0.0006194775994,	0.002845008234,	1.006883084;
+        acal << 0,0,0
+        ,0,0,0,
+        0,0,0;
 };
 
 //inits the imu, returns 1 if the accel unit failed, and 2 if the gyro failed
@@ -102,9 +100,9 @@ void IMU::read(int oversampling){
         accelunit.readSensor();
         gyrounit.readSensor();
 
-        accel.x() += accelunit.getAccelX_mss();
+        accel.x() += accelunit.getAccelY_mss();
         accel.y() += accelunit.getAccelZ_mss();
-        accel.z() += accelunit.getAccelY_mss();
+        accel.z() += accelunit.getAccelX_mss();
         //Serial.printf("new accelmss z : %f \n",accel.z());
 
         gyro.x() += -gyrounit.getGyroX_rads();
@@ -233,18 +231,14 @@ public:
 
 ADXL::ADXL()
 {
-    offsets << -11.82755,
-                8.92885,
-                5.7293;
+    offsets << 0,0,0;
 
     // offsets << 0,0,0;
 
     // bcal << 0,0,0;
     // acal << 0,0,0;
 
-    bcal << 0.0057,
-            -2.7648,
-            -0.07585;
+    bcal << 0,0,0;
 
     acal << 0,	0,	0,
             0,	0,	0,
@@ -299,9 +293,9 @@ int ADXL::read()
 
     adxl375.getEvent(&event);
 
-    _accel.x() = -event.acceleration.x;
+    _accel.x() = -event.acceleration.y;
     _accel.y() = -event.acceleration.z;
-    _accel.z() = event.acceleration.y;
+    _accel.z() = event.acceleration.x;
 
     _accel = _accel - offsets;
 
@@ -393,7 +387,7 @@ int BARO::getpadoffset(int samplesize){
 }
 
 int BARO::init(){
-    if (!bmp.begin_I2C(0x76,&Wire1))
+    if (!bmp.begin_I2C(0x76,&Wire))
     {
         Serial.println("BMP init failure");
         //MP.logtextentry("BMP init fail");
@@ -551,6 +545,8 @@ class RADIO{
 
     uint8_t radiochannel = 68;
 
+    const long frequency = 915E6;  // LoRa Frequency
+
     public:
 
     int init();
@@ -559,10 +555,14 @@ class RADIO{
 };
 
 int RADIO::init(){
-
-        
-        return 0;
+    SPI.setRX(MISO);
+    SPI.setTX(MOSI);
+    LoRa.setPins(SXCS, SXRST);
+    if (!LoRa.begin(frequency)) {
+        Serial.println("LoRa init failed. Check your connections.");
     }
+    return 0;
+}
 
 int RADIO::sendpacket(telepacket packet){
     

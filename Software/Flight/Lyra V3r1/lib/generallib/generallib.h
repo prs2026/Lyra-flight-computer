@@ -130,8 +130,8 @@ inline uint8_t scani2c(bool printout){
         // The i2c_scanner uses the return value of
         // the Write.endTransmisstion to see if
         // a device did acknowledge to the address.
-        Wire1.beginTransmission(address);
-        error = Wire1.endTransmission();
+        Wire.beginTransmission(address);
+        error = Wire.endTransmission();
         if (error == 0)
         {
         printout ? Serial.print("I2C device found at address 0x") : 0;

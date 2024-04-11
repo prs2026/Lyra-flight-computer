@@ -108,6 +108,7 @@ class NAVCORE{
         void getpadoffset();
         void getcalibrationdata();
         void calcnewoffsets();
+        void dumpoffsets();
 
         
 
@@ -147,11 +148,11 @@ negative = fatal error
 */
 
 int NAVCORE::initi2c(){
-    Wire1.setSCL(SCL);
-    Wire1.setSDA(SDA);
-    Wire1.setClock(10000);
-    Wire1.begin();
-    scani2c(false) ? _sysstate.r.errorflag*= 5 : _sysstate.r.errorflag *= 1;
+    Wire.setSCL(SCL);
+    Wire.setSDA(SDA);
+    Wire.setClock(10000);
+    Wire.begin();
+    scani2c(true) ? _sysstate.r.errorflag*= 5 : _sysstate.r.errorflag *= 1;
     return 0;
 }
 
@@ -477,6 +478,11 @@ void NAVCORE::calcnewoffsets(){
 
     imu.bcal = imubcal;
     adxl.bcal = adxlbcal;
+    return;
+}
+
+void NAVCORE::dumpoffsets(){
+    Serial.printf("BMI: %f,%f,%f \n ADXL: %f,%f,%f",imu.bcal.x(),imu.bcal.y(),imu.bcal.z(),adxl.bcal.x(),adxl.bcal.y(),adxl.bcal.z());
     return;
 }
 
