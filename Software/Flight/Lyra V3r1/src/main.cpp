@@ -10,8 +10,8 @@ bool dataismoved = false;
 void setup() { // main core setup
     MP.setuppins();
     MP.beep();
-    delay(10);
-    //MP.setled(1);
+    delay(2000);
+    MP.setled(1);
     MP.initperipherials();
 
     
