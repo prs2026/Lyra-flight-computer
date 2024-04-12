@@ -19,7 +19,7 @@ Adafruit_BMP3XX bmp;
 // adafruit adxl object
 Adafruit_ADXL375 adxl375((int32_t)12345,&Wire);
 
-LLCC68 radio;
+SX126x Lora;
 
 
 /*----------------------------------------------------------------------------------------*/
@@ -548,7 +548,11 @@ class RADIO{
 
     uint8_t radiochannel = 68;
 
-    const long frequency = 915E6;  // LoRa Frequency
+    const long frequency = 916E6;  // LoRa Frequency
+
+    uint8_t sf = 7;                                                     // LoRa spreading factor: 7
+    uint32_t bw = 125000;                                               // Bandwidth: 125 kHz
+    uint8_t cr = 5;                                                     // Coding rate: 4/5
 
     public:
 
@@ -560,12 +564,31 @@ class RADIO{
 int RADIO::init(){
     SPI.setRX(MISO);
     SPI.setTX(MOSI);
-    
+    SPI.setSCK(SPISCK);
+    SPI.begin();
+    Lora.setSPI(SPI);
+    Lora.setPins(SXCS,SXRST,BUSY,-1,TXEN,RXEN);
+    if(!Lora.begin()){
+        Serial.println("lora init fail, cry");
+    }
+    Lora.setFrequency(frequency);
+    Lora.setTxPower(22,SX126X_TX_POWER_SX1261);
+    Lora.setLoRaModulation(sf, bw, cr);
+
+    uint8_t headerType = SX126X_HEADER_EXPLICIT;                        // Explicit header mode
+    uint16_t preambleLength = 12;                                       // Set preamble length to 12
+    uint8_t payloadLength = 15;                                         // Initialize payloadLength to 15
+    bool crcType = true;                                                // Set CRC enable
+    Lora.setLoRaPacket(headerType, preambleLength, payloadLength, crcType);
+    Lora.setSyncWord(0x3444);
+
     return 0;
 }
 
 int RADIO::sendpacket(telepacket packet){
-    
+    Lora.beginPacket();
+    Lora.write(101);
+    Lora.endPacket();
     return 0;
 }
 

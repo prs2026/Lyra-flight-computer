@@ -2,86 +2,55 @@
 #define MACROS
 // core libs
 #include <Arduino.h>
-#include "pico/stdlib.h"
-#include "pico/multicore.h"
-#include <hardware/sync.h>
-#include <hardware/flash.h>
-#include <ArduinoEigenDense.h>
 
 // sensor libs
-#include <BMI088.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BMP3XX.h>
-#include <Adafruit_ADXL375.h>
 
 #include "SPI.h"
 #include <Wire.h>
 
-#include <string.h>
-
-// log buf lib
-#include <CircularBuffer.hpp>
 #include <SX126x.h>
 
-// define eigen things to use
-using Eigen::Vector3d;
-using Eigen::Matrix3d;
-using Eigen::Quaterniond;
-using Eigen::AngleAxisd;
+#define BUTTON1 5
+#define BUTTON2 3
+#define BUTTON3 4
+#define BUTTON4 6
+#define BUTTON5 2
 
-// led pins
-#define LEDPIN 17
+#define BCK 7
+#define SCK 8
+#define DIN 9
+#define LRCK 10
 
-// pin for buzzer
-#define BUZZERPIN 16
+#define LCDRST 11
 
-
-// pyro enable pins
-#define P1_EN 19
-#define P2_EN 21
-#define P3_EN 23
-#define P4_EN 25
-
-// pyro cont pins
-#define P1_CONT 18
-#define P2_CONT 20
-#define P3_CONT 22
-#define P4_CONT 24
-// battery sense pin
-#define BATT_SENSE 26
-// i2c0 lines
 #define SDA 12
 #define SCL 13
 
-//spi lines
-#define MOSI 3
-#define MISO 4
-#define SPISCK 6
+#define LCDCS 14
+#define LCDDC 15
 
-#define RXEN 0
-#define TXEN 1
-#define SXRST 2
-#define SXCS 5
-#define BUSY 7
+#define UART0TX 16
+#define UART0RX 17
 
-#define GPSRST  11
+#define LEDINDICATION 18
 
-#define BRKOUT1 10 //      SPI1 SCK  UART1 CTS  I2C1 SDA
-#define BRKOUT2 27 // ADC1 SPI1 TX   UART1 RTS  I2C1 SCL
-#define BRKOUT3 28 // ADC2 SPI1 RX   UART0 TX   I2C0 SDA
-#define BRKOUT4 29 // ADC3 SPI1 CSN  UART0 RX   I2C0 SCL
+#define SXRST 19
+#define BUSY 20
+#define SXCS 21
 
-// i2c0 is being used
+#define SCLK 22
+#define MOSI 23
+#define MISO 24
 
-// size of the buf to log to before launch is detected
-#define LOGBUFSIZE (20*6)
+#define LCDWR 25
+#define SDCS 26
 
-// define the altitude to fire the main charge
-#define MAINALT 400
+#define TXEN 27
+#define RXEN 28
 
-// flash macros
-#define FLASH_FILESYSTEM_SIZE 13631488 // 13MB
-#define FLASH_TARGET_OFFSET (PICO_FLASH_SIZE_BYTES - (FLASH_FILESYSTEM_SIZE-FLASH_SECTOR_SIZE))
+#define BATTSENSE 29
+
+
 
 //define basic data structs
 struct Vector3float
