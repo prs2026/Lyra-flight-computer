@@ -19,6 +19,9 @@ Adafruit_BMP3XX bmp;
 // adafruit adxl object
 Adafruit_ADXL375 adxl375((int32_t)12345,&Wire);
 
+LLCC68 radio;
+
+
 /*----------------------------------------------------------------------------------------*/
 // imu class, holds all code for the bmi088 imu
 class IMU{
@@ -551,16 +554,13 @@ class RADIO{
 
     int init();
     int sendpacket(telepacket packet);
-    int setpower(int power);
+
 };
 
 int RADIO::init(){
     SPI.setRX(MISO);
     SPI.setTX(MOSI);
-    LoRa.setPins(SXCS, SXRST);
-    if (!LoRa.begin(frequency)) {
-        Serial.println("LoRa init failed. Check your connections.");
-    }
+    
     return 0;
 }
 

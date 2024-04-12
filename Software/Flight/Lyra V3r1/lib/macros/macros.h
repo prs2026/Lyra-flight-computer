@@ -21,7 +21,7 @@
 
 // log buf lib
 #include <CircularBuffer.hpp>
-#include <LoRa.h>
+#include <RadioLib.h>
 
 // define eigen things to use
 using Eigen::Vector3d;
