@@ -5,7 +5,7 @@
 
 // sensor libs
 
-#include "SPI.h"
+#include <SPI.h>
 #include <Wire.h>
 
 #include <SX126x.h>
@@ -49,8 +49,6 @@
 #define RXEN 28
 
 #define BATTSENSE 29
-
-
 
 //define basic data structs
 struct Vector3float

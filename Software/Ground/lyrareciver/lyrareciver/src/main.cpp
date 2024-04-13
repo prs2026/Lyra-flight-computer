@@ -16,16 +16,17 @@ void setup() {
   
   radio.init();
   Serial.println("radio good");
-  //Lora.request();
+  Lora.request(SX126X_RX_CONTINUOUS);
 }
 
 void loop() {
 
-  // if (Lora.available())
-  // {
-  //   uint8_t message;
-  //   message = Lora.read();
-  //   Serial.printf("new message: %d",message);
-  // }
+  if (Lora.available())
+  {
+    uint8_t message;
+    message = Lora.read();
+    Serial.printf("new message: %d",message);
+    Lora.request();
+  }
   
 }
