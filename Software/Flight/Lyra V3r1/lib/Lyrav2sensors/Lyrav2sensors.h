@@ -54,9 +54,9 @@ IMU::IMU(){
         
         bcal <<-0,0,0;
 
-        acal << 0,0,0
-        ,0,0,0,
-        0,0,0;
+        acal << 1,0,0
+        ,0,1,0,
+        0,0,1;
 };
 
 //inits the imu, returns 1 if the accel unit failed, and 2 if the gyro failed
@@ -243,9 +243,9 @@ ADXL::ADXL()
 
     bcal << 0,0,0;
 
-    acal << 0,	0,	0,
-            0,	0,	0,
-            0,	0,	0;
+    acal << 1,	0,	0,
+            0,	1,	0,
+            0,	0,	1;
     return;
 }
 
@@ -543,8 +543,6 @@ int SERIALPORT::senddata(mpstate state,navpacket navstate){
 
 class RADIO{
 
-    uint16_t groundaddress = 0x1234; 
-    uint16_t airaddress = 0xABCD; 
 
     uint8_t radiochannel = 68;
 
@@ -572,23 +570,29 @@ int RADIO::init(){
         Serial.println("lora init fail, cry");
     }
     Lora.setFrequency(frequency);
-    Lora.setTxPower(22,SX126X_TX_POWER_SX1261);
+    Lora.setTxPower(17,SX126X_TX_POWER_SX1261);
     Lora.setLoRaModulation(sf, bw, cr);
 
     uint8_t headerType = SX126X_HEADER_EXPLICIT;                        // Explicit header mode
     uint16_t preambleLength = 12;                                       // Set preamble length to 12
-    uint8_t payloadLength = 15;                                         // Initialize payloadLength to 15
+    uint8_t payloadLength = 16;                                         // Initialize payloadLength to 15
     bool crcType = true;                                                // Set CRC enable
     Lora.setLoRaPacket(headerType, preambleLength, payloadLength, crcType);
     Lora.setSyncWord(0x3444);
+ 
 
     return 0;
 }
 
 int RADIO::sendpacket(telepacket packet){
+    //Serial.println("sending packet");
     Lora.beginPacket();
     Lora.write(101);
-    Lora.endPacket();
+    if (!Lora.endPacket())
+    {
+        Serial.println("packet send fail");
+        Serial.printf("error code :%d ",Lora.getError());
+    }
     return 0;
 }
 

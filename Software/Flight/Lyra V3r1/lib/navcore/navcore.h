@@ -3,7 +3,7 @@
 
 #include <Lyrav2sensors.h>
 
-#define VERBOSETIMES
+//#define VERBOSETIMES
 
 IMU imu;
 BARO baro;
@@ -214,10 +214,12 @@ void NAVCORE::getsensordata(){
    #endif // VERBOSETIMES
     
     #if !defined(VERBOSETIMES)
-    imu.read();
-            baro.readsensor();
-            adxl.read();
+        imu.read();
+        baro.readsensor();
+        adxl.read();
     #endif // VERBOSETIMES
+
+    
     
     if (useaccel == 1)
     {
@@ -228,6 +230,8 @@ void NAVCORE::getsensordata(){
             invertedtime = millis();
         }
     }
+
+    
     
     if (upsidedown == 1)
     {

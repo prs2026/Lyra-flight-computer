@@ -90,12 +90,12 @@ class MPCORE{
             uint32_t loop;
         };
         timings intervals[6] = {
-            {50,1000,50,500,10000}, // ground idle
-            {50,500,100, 200,800}, // powered ascent
-            {50,500,100,200,800}, // unpowered ascent
-            {50,500,100,200,800}, // ballistic descent
-            {50,800,100,200,800}, //ready to land
-            {1000,1500,100,200,500} // landed
+            {50,1000,50,1000,10000}, // ground idle
+            {50,500,100, 1000,800}, // powered ascent
+            {50,500,100,1000,800}, // unpowered ascent
+            {50,500,100,1000,800}, // ballistic descent
+            {50,800,100,1000,800}, //ready to land
+            {1000,1500,100,1000,500} // landed
         };
         timings prevtime;
         bool ledstate = false;
@@ -648,7 +648,7 @@ int MPCORE::checkforpyros(){
         P2.fire();
     } 
 
-    if (_sysstate.r.state == 2 && NAV._sysstate.r.orientationeuler.x > 70 && NAV._sysstate.r.orientationeuler.x < 110  && (NAV._sysstate.r.orientationeuler.y < -160 || NAV._sysstate.r.orientationeuler.y < -200) && NAV._sysstate.r.filtered.vvel > 5 && NAV._sysstate.r.filtered.alt > 10 && millis() - burnouttime > 100)
+    if (_sysstate.r.state == 2 && NAV._sysstate.r.orientationeuler.x > 70 && NAV._sysstate.r.orientationeuler.x < 110  && (NAV._sysstate.r.orientationeuler.y > 170 || NAV._sysstate.r.orientationeuler.y < -170) && NAV._sysstate.r.filtered.vvel > 40 && NAV._sysstate.r.filtered.alt > 100 && millis() - burnouttime > 500)
     {
         _sysstate.r.pyrosfired = _sysstate.r.pyrosfired | 0b100;
         P3.fire();
