@@ -6,7 +6,7 @@
 RADIO radio;
 
 void setup() {
-  
+  delay(3000);
   Serial.begin();
   Serial.print("init");
   pinMode(LEDINDICATION,OUTPUT);
@@ -16,16 +16,16 @@ void setup() {
   
   radio.init();
   Serial.println("radio good");
-  Lora.request();
+  //Lora.request();
 }
 
 void loop() {
 
-  if (Lora.available())
-  {
-    uint8_t message;
-    message = Lora.read();
-    Serial.printf("new message: %d",message);
-  }
+  // if (Lora.available())
+  // {
+  //   uint8_t message;
+  //   message = Lora.read();
+  //   Serial.printf("new message: %d",message);
+  // }
   
 }

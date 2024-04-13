@@ -27,10 +27,12 @@ class RADIO{
 };
 
 int RADIO::init(){
+    Serial.println("radio init start");
     SPI.setRX(MISO);
     SPI.setTX(MOSI);
     SPI.setSCK(SCLK);
     SPI.begin();
+    Serial.println("radio spi start");
     Lora.setSPI(SPI);
     Lora.setPins(SXCS,SXRST,BUSY,-1,TXEN,RXEN);
     if(!Lora.begin()){
@@ -52,7 +54,7 @@ int RADIO::init(){
 int RADIO::recivepacket(telepacket packet){
     
 
-    
+
     return 0;
 }
 
