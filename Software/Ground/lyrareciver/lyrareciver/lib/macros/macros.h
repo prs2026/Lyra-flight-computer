@@ -9,6 +9,7 @@
 #include <Wire.h>
 
 #include <SX126x.h>
+#include <Adafruit_ST7789.h>
 
 #define BUTTON1 5
 #define BUTTON2 3

@@ -19,6 +19,8 @@ Adafruit_BMP3XX bmp;
 // adafruit adxl object
 Adafruit_ADXL375 adxl375((int32_t)12345,&Wire);
 
+Adafruit_LIS3MDL mag;
+
 SX126x Lora;
 
 
@@ -348,6 +350,47 @@ ADXLdata ADXL::readraw(int oversampling, int interval){
 
 /*--------------------------------------------------------------------------------------*/
 
+class MAG
+{
+
+uint64_t prevtime;
+
+float lpfal = 0.7;
+float lpfalv = 0.7;
+
+public:
+    MAG();
+    BAROdata data;
+
+    int init();
+    void readsensor();
+
+};
+
+MAG::MAG(){
+    return;
+}
+
+
+int MAG::init(){
+    if (!mag.begin_I2C(28,&Wire))
+    {
+        Serial.println("mag init failure");
+        //MP.logtextentry("BMP init fail");
+        return 1;
+    }
+    //Serial.println("BMP init success");
+    //MP.logtextentry("BMP init fail");
+    return 0;
+}
+
+void MAG::readsensor(){
+    
+
+    prevtime = micros();
+}
+/*-------------------------------------------------------------------------------------*/
+
 class BARO
 {
 float prevverticalvel[5];
@@ -452,8 +495,6 @@ void BARO::readsensor(){
     prevtime = micros();
     data = _data;
 }
-/*-------------------------------------------------------------------------------------*/
-
 
 class SERIALPORT{
 public:

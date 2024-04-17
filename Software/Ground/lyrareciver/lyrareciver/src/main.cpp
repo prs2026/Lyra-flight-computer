@@ -1,9 +1,11 @@
 #include <Arduino.h>
 #include <macros.h>
 #include <radio.h>
+#include <lcd.h>
 
 
 RADIO radio;
+LCDDISPLAY lcddisplay;
 
 void setup() {
   delay(3000);
@@ -16,6 +18,8 @@ void setup() {
   
   radio.init();
   Serial.println("radio good");
+  lcddisplay.init();
+  
   Lora.request(SX126X_RX_CONTINUOUS);
 }
 
