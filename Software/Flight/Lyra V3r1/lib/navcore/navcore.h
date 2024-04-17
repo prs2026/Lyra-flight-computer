@@ -8,6 +8,7 @@
 IMU imu;
 BARO baro;
 ADXL adxl;
+MAG magclass;
 
 class NAVCORE{
 
@@ -38,6 +39,10 @@ class NAVCORE{
     
 
     double accumz = 0;
+
+    uint64_t softwareintheloopindex = 0;
+    uint8_t hitlteston = 0;
+    uint64_t hitlcurrenttime = 0;
 
     public:
     
@@ -181,6 +186,7 @@ uint32_t NAVCORE::sensorinit(){
     barostatus ? _sysstate.r.errorflag *= 13 : _sysstate.r.errorflag *= 1;
     adxlstatus = adxl.init();
     barostatus ? _sysstate.r.errorflag *= 17 : _sysstate.r.errorflag *= 1;
+    magclass.init();
 
     if (adxlstatus != 0 || imustatus != 0 || barostatus != 0)
     {
@@ -192,6 +198,8 @@ uint32_t NAVCORE::sensorinit(){
 }
 
 void NAVCORE::getsensordata(){
+
+
     #if defined(VERBOSETIMES)
     if (sendtoserial)
     {
@@ -203,22 +211,30 @@ void NAVCORE::getsensordata(){
     baro.readsensor();
     Serial.printf(">baroreadtime: %f \n", float(micros()-timestep));
     adxl.read();
+    magclass.readsensor();
     }
     else
     {
         imu.read();
         baro.readsensor();
         adxl.read();
+        magclass.readsensor();
     }
 
    #endif // VERBOSETIMES
     
+
     #if !defined(VERBOSETIMES)
         imu.read();
         baro.readsensor();
         adxl.read();
+        magclass.readsensor();
     #endif // VERBOSETIMES
 
+    if (hitlteston)
+    {
+        
+    }
     
     
     if (useaccel == 1)
@@ -232,12 +248,13 @@ void NAVCORE::getsensordata(){
     }
 
     
-    
     if (upsidedown == 1)
     {
         imu.data.accel = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(imu.data.accel)) * upsidedownadj.inverse()) ));
         imu.data.gyro = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(imu.data.gyro)) * upsidedownadj.inverse()) ));
         adxl.data.accel = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(adxl.data.accel)) * upsidedownadj.inverse()) ));
+        magclass.data.utesla = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(magclass.data.utesla)) * upsidedownadj.inverse()) ));
+        magclass.data.gauss = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(magclass.data.gauss)) * upsidedownadj.inverse()) ));
     }
     
     if (imu.data.absaccel > 20 || adxl.data.absaccel > 40)
@@ -250,6 +267,8 @@ void NAVCORE::getsensordata(){
     _sysstate.r.adxldata = adxl.data;
     _sysstate.r.imudata = imu.data;
     _sysstate.r.barodata = baro.data;
+    _sysstate.r.magdata = magclass.data;
+    
     return;
 }
 

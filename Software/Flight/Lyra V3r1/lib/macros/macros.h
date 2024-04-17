@@ -129,6 +129,11 @@ struct BAROdata{
     float padalt;
 };
 
+struct MAGdata{
+    Vector3float gauss;
+    Vector3float utesla;
+};
+
 // struct to hold the variences, needed for KF 
 struct variences{
     float alt;
@@ -156,6 +161,7 @@ union navpacket
         IMUdata imudata;
         BAROdata barodata;
         ADXLdata adxldata;
+        MAGdata magdata;
         Vector3float accelworld;
         Vector3float orientationeuler;
         Quatstruct orientationquat;

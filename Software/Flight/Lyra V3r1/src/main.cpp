@@ -14,7 +14,7 @@ void setup() { // main core setup
     MP.setled(1);
     MP.initperipherials();
 
-    Serial.println("\nit be living yo");
+    //Serial.println("\nit be living yo");
     MP.flashinit();
     Serial.println("flash inited");
 
@@ -53,7 +53,7 @@ void setup1() { // nav core setup
     {   
         delay(10);
     }
-    Serial.print("nav init start");
+    Serial.println("\n\nnav init start");
     NAV.initi2c();
     NAV.sensorinit();
     NAV.getpadoffset();

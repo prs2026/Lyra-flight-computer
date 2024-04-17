@@ -3,6 +3,7 @@
 
 // include the general lib and macros, which are included by the general lib
 #include <generallib.h>
+#include <hitltestdata.h>
 
 
 // sea level pressure, adjust to where you are
@@ -360,7 +361,7 @@ float lpfalv = 0.7;
 
 public:
     MAG();
-    BAROdata data;
+    MAGdata data;
 
     int init();
     void readsensor();
@@ -379,13 +380,29 @@ int MAG::init(){
         //MP.logtextentry("BMP init fail");
         return 1;
     }
-    //Serial.println("BMP init success");
+    Serial.println("MAG init success");
     //MP.logtextentry("BMP init fail");
     return 0;
 }
 
 void MAG::readsensor(){
-    
+
+    MAGdata _data;
+
+    mag.read(); 
+
+    _data.gauss.x = mag.x_gauss;
+    _data.gauss.y = mag.y_gauss;
+    _data.gauss.z = mag.z_gauss;
+
+    sensors_event_t event; 
+    mag.getEvent(&event);
+
+    _data.utesla.x = event.magnetic.x;
+    _data.utesla.y = event.magnetic.y;
+    _data.utesla.z = event.magnetic.z;
+
+    data = _data;
 
     prevtime = micros();
 }
@@ -539,6 +556,9 @@ int SERIALPORT::senddata(mpstate state,navpacket navstate){
             Serial.printf(">accel x: %f \n",navstate.r.imudata.accel.x );
             Serial.printf(">accel y: %f \n",navstate.r.imudata.accel.y);
             Serial.printf(">accel z: %f \n",navstate.r.imudata.accel.z);
+            Serial.printf(">mag x: %f \n",navstate.r.magdata.utesla.x );
+            Serial.printf(">mag y: %f \n",navstate.r.magdata.utesla.y);
+            Serial.printf(">mag z: %f \n",navstate.r.magdata.utesla.z);
             Serial.printf(">accelabs: %f \n",navstate.r.imudata.absaccel);
             Serial.printf(">highaccel x: %f \n",navstate.r.adxldata.accel.x );
             Serial.printf(">highaccel y: %f \n",navstate.r.adxldata.accel.y);

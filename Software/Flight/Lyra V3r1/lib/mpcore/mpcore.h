@@ -225,11 +225,11 @@ float MPCORE::readbattvoltage(){
 }
 
 int MPCORE::flashtest(){
-    Serial.println("FLASH_PAGE_SIZE = " + String(FLASH_PAGE_SIZE, DEC));
-    Serial.println("FLASH_SECTOR_SIZE = " + String(FLASH_SECTOR_SIZE,DEC));
-    Serial.println("FLASH_BLOCK_SIZE = " + String(FLASH_BLOCK_SIZE, DEC));
-    Serial.println("PICO_FLASH_SIZE_BYTES = " + String(PICO_FLASH_SIZE_BYTES, DEC));
-    Serial.println("XIP_BASE = 0x" + String(XIP_BASE, HEX));
+    // Serial.println("FLASH_PAGE_SIZE = " + String(FLASH_PAGE_SIZE, DEC));
+    // Serial.println("FLASH_SECTOR_SIZE = " + String(FLASH_SECTOR_SIZE,DEC));
+    // Serial.println("FLASH_BLOCK_SIZE = " + String(FLASH_BLOCK_SIZE, DEC));
+    // Serial.println("PICO_FLASH_SIZE_BYTES = " + String(PICO_FLASH_SIZE_BYTES, DEC));
+    // Serial.println("XIP_BASE = 0x" + String(XIP_BASE, HEX));
     
     // Read the flash using memory-mapped addresses
     // For that we must skip over the XIP_BASE worth of RAM
