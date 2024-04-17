@@ -41,12 +41,12 @@ class NAVCORE{
     double accumz = 0;
 
     uint64_t softwareintheloopindex = 0;
-    uint8_t hitlteston = 0;
-    uint64_t hitlcurrenttime = 0;
+    
+    uint64_t hitltime = 0;
 
     public:
     
-    
+        uint8_t hitlteston = 0;
         navpacket _sysstate;
 
         int useaccel = 1;
@@ -223,19 +223,30 @@ void NAVCORE::getsensordata(){
 
    #endif // VERBOSETIMES
     
-
-    #if !defined(VERBOSETIMES)
-        imu.read();
-        baro.readsensor();
-        adxl.read();
-        magclass.readsensor();
-    #endif // VERBOSETIMES
+    uint32_t hitlindex = 0;
 
     if (hitlteston)
     {
+        while (hitldata[hitlindex][0] < millis() - hitltime && hitlteston)
+        {
+            hitlindex++;
+            if (hitlindex > (sizeof(hitldata)/sizeof(hitldata[0]))-1)
+            {
+                hitlteston = 0;
+                
+            }
+            
+        }
         
     }
     
+
+    #if !defined(VERBOSETIMES)
+        imu.read(5,hitlteston,hitlindex);
+        baro.readsensor(hitlteston,hitlindex);
+        adxl.read(hitlteston,hitlindex);
+        magclass.readsensor();
+    #endif // VERBOSETIMES
     
     if (useaccel == 1)
     {

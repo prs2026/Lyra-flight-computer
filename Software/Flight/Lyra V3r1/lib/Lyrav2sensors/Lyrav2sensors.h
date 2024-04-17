@@ -41,7 +41,7 @@ public:
     IMU();
     IMUdata data;
     int init();
-    void read(int oversampling = 5);
+    void read(int oversampling = 5,int hitltesting = 0,int hitlindex = 0);
     IMUdata readraw(int oversampling = 5,int interval = 100);
     Vector3d calibrationpos;
     Vector3d calibrationneg;
@@ -93,13 +93,27 @@ int IMU::init(){
 }
 
 // reads the imu and applies calibration matrices
-void IMU::read(int oversampling){
+void IMU::read(int oversampling, int hitltesting,int hitlindex){
     IMUdata _data;
     Vector3d accel;
     Vector3d gyro;
 
     accel << 0,0,0;
     gyro << 0,0,0;
+
+    if (hitltesting)
+    {
+        //time,baro_altitude,accl_z,accl_y,accl_x,gps_altitude,gyro_roll,gyro_pitch,gyro_yaw
+        accel.x() = hitldata[hitlindex][4];
+        accel.y() = hitldata[hitlindex][3];
+        accel.z() = hitldata[hitlindex][2];
+        gyro.x() = hitldata[hitlindex][8];
+        gyro.y() = hitldata[hitlindex][7];
+        gyro.z() = hitldata[hitlindex][6];
+    }
+    
+    else
+    {    
     
     for (int i = 0; i < oversampling; i++)
     {
@@ -112,6 +126,7 @@ void IMU::read(int oversampling){
         //Serial.printf("new accelmss z : %f \n",accel.z());
 
         gyro.x() += -gyrounit.getGyroX_rads();
+
         gyro.y() += -gyrounit.getGyroZ_rads();
         gyro.z() += gyrounit.getGyroY_rads();
 
@@ -126,6 +141,7 @@ void IMU::read(int oversampling){
         
     }
     
+    
     accel.x() /= oversampling;
     accel.y() /= oversampling;
     accel.z() /= oversampling;
@@ -138,6 +154,7 @@ void IMU::read(int oversampling){
     accel = accel - bcal;
 
     accel = acal * accel;
+    }
 
     // low pass filter
     gyro.x() = gyroal*prevdata.gyro.x + (1-gyroal)*gyro.x();
@@ -223,7 +240,7 @@ public:
     ADXLdata data;
     ADXL();
     int init();
-    int read();
+    int read(int htiltest = 0, int hitlindex = 0);
     int getnewoffsets();
     ADXLdata readraw(int oversampling = 5, int interval = 50);
 
@@ -291,11 +308,20 @@ int ADXL::getnewoffsets(){
     return 0;
 }
 
-int ADXL::read()
+int ADXL::read(int hitltest,int hitlindex)
 {
     Vector3d _accel;
 
     sensors_event_t event;
+    //time,baro_altitude,accl_z,accl_y,accl_x,gps_altitude,gyro_roll,gyro_pitch,gyro_yaw
+    if(hitltest){
+        _accel.x() = hitldata[hitlindex][4];
+        _accel.y() = hitldata[hitlindex][3];
+        _accel.z() = hitldata[hitlindex][2];
+    }
+
+    else
+    {
 
     adxl375.getEvent(&event);
 
@@ -306,6 +332,8 @@ int ADXL::read()
     _accel = _accel - offsets;
 
     _accel = _accel - bcal;
+
+    }
 
     //_accel = acal * _accel;
 
@@ -425,7 +453,7 @@ public:
 
     int getpadoffset(int samplesize = 1);
     int init();
-    void readsensor();
+    void readsensor(int hitltest = 0, int hitlindex = 0);
 
 };
 
@@ -464,11 +492,23 @@ int BARO::init(){
     return 0;
 }
 
-void BARO::readsensor(){
+void BARO::readsensor(int hitltest, int hitlindex){
     BAROdata _data;
+    //time,baro_altitude,accl_z,accl_y,accl_x,gps_altitude,gyro_roll,gyro_pitch,gyro_yaw
+    float timestep;
+    if (hitltest)
+    {
+        _data.altitudeagl = hitldata[hitlindex][1];
+        timestep = hitldata[hitlindex][0]-hitldata[hitlindex-1][0];
+    }
+
+    else{
+    
+    
     bmp.performReading();
 
-    float timestep = (micros() - prevtime)/1e6;
+
+    timestep = (micros() - prevtime)/1e6;
     // float hpfgain = hpfcutoff / (2* M_PI * 1/timestep);
 
     _data.altitude = bmp.readAltitude(SEALEVELPRESSURE);//44330.0 * (1.0 - pow((bmp.pressure/100.0F) / SEALEVELPRESSURE, 0.1903));
@@ -482,7 +522,7 @@ void BARO::readsensor(){
     _data.altitudeagl = _data.altitude-data.padalt;
     _data.pressure = bmp.pressure;
     _data.temp = bmp.temperature;
-
+    }
     
     //Serial.printf(">timestep: %f \n",timestep);
     //prevverticalvel[address] = ((data.altitude - prevalt)/timestep);

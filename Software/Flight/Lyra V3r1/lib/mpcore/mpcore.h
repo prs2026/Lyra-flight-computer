@@ -746,7 +746,7 @@ int MPCORE::parsecommand(char input){
     
     case 't':
         Serial.println("testing");
-        logdata(_sysstate,NAV._sysstate);
+        NAV.hitlteston = 1;
         break;
     case 'r':
         page = Serial.parseInt();
