@@ -57,6 +57,7 @@ class MPCORE{
         uint32_t missionelasped = 0;
         uint32_t burnouttime = 0;
         bool ready = false;
+        bool beepon = 1;
 
 
 
@@ -158,23 +159,32 @@ void MPCORE::setled(int state){
 }
 
 void MPCORE::beep(){
-    tone(BUZZERPIN,2000,200);
-    delay(200);
-    noTone(BUZZERPIN);
+    if (beepon){
+        tone(BUZZERPIN,2000,200);
+        delay(200);
+        noTone(BUZZERPIN);
+    }
+    
+
     return;
 }
 
 void MPCORE::beep(int freq){
+    if (beepon){
     tone(BUZZERPIN,freq,200);
     delay(200);
     noTone(BUZZERPIN);
+    }
     return;
 }
 
 void MPCORE::beep(int freq, unsigned int duration){
+    if (beepon)
+    {
     tone(BUZZERPIN,freq,duration);
     delay(duration);
     noTone(BUZZERPIN);
+    }
 return;
 }
 
@@ -721,13 +731,18 @@ int MPCORE::parsecommand(char input){
         sendserialon = !sendserialon;
         port.sendtoplot = false;
         break;
+
+    case 'b':
+        Serial.println("toggle beeping");
+        beepon = !beepon;
+        break;
     
     case 'X':
         Serial.println("getting new offsets for adxl");
         adxl.getnewoffsets();
         break;
 
-    case 'b':
+    case 'B':
         Serial.println("dumping databuf");
         j = 0;
         for (int i = 0; i < LOGBUFSIZE; i++)
@@ -736,7 +751,6 @@ int MPCORE::parsecommand(char input){
             port.senddata(currentpacket.r.MPstate,currentpacket.r.navsysstate);
             j++;
         }
-        
         break;
 
     case 'D':
@@ -745,7 +759,8 @@ int MPCORE::parsecommand(char input){
         break;
     
     case 't':
-        Serial.println("testing");
+        Serial.println(" hitltesting");
+        NAV.hitltime = millis();
         NAV.hitlteston = 1;
         break;
     case 'r':
@@ -755,7 +770,6 @@ int MPCORE::parsecommand(char input){
         break;
     
     case 'd':
-
         previewdata();
         break;
     

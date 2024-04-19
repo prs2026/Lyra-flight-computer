@@ -40,12 +40,12 @@ class NAVCORE{
 
     double accumz = 0;
 
-    uint64_t softwareintheloopindex = 0;
+    uint64_t hitlindex = 0;
     
-    uint64_t hitltime = 0;
+    
 
     public:
-    
+        uint64_t hitltime = 0;
         uint8_t hitlteston = 0;
         navpacket _sysstate;
 
@@ -198,46 +198,22 @@ uint32_t NAVCORE::sensorinit(){
 }
 
 void NAVCORE::getsensordata(){
-
-
-    #if defined(VERBOSETIMES)
-    if (sendtoserial)
-    {
-            
-    uint32_t timestep = micros();
-    imu.read();
-    Serial.printf(">imureadtime: %f \n", float(micros()-timestep));
-    timestep = micros();
-    baro.readsensor();
-    Serial.printf(">baroreadtime: %f \n", float(micros()-timestep));
-    adxl.read();
-    magclass.readsensor();
-    }
-    else
-    {
-        imu.read();
-        baro.readsensor();
-        adxl.read();
-        magclass.readsensor();
-    }
-
-   #endif // VERBOSETIMES
     
     uint32_t hitlindex = 0;
 
     if (hitlteston)
     {
+        Serial.println("hitltesting");
         while (hitldata[hitlindex][0] < millis() - hitltime && hitlteston)
         {
+            Serial.printf("%d,%d\n",hitldata[hitlindex][0],millis() - hitltime);
             hitlindex++;
             if (hitlindex > (sizeof(hitldata)/sizeof(hitldata[0]))-1)
             {
                 hitlteston = 0;
-                
+                Serial.println("out of hitltesting");
             }
-            
         }
-        
     }
     
 
