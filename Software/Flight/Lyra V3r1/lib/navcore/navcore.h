@@ -165,10 +165,12 @@ void NAVCORE::upsidedowncheck(){
     if (accumz > 0)
     {
         upsidedown = 0;
+        Serial.println("rightsideup");
     }
     else
     {
         upsidedown = 1;
+        Serial.println("upsidedown");
     }
     accumz = 0;
     
@@ -203,10 +205,10 @@ void NAVCORE::getsensordata(){
 
     if (hitlteston)
     {
-        Serial.println("hitltesting");
-        while (hitldata[hitlindex][0] < millis() - hitltime && hitlteston)
+        //Serial.println("hitltesting");
+        while (hitldata[hitlindex][0]*1000 < millis() - hitltime && hitlteston)
         {
-            Serial.printf("%d,%d\n",hitldata[hitlindex][0],millis() - hitltime);
+            //Serial.printf("%f,%d\n",hitldata[hitlindex][0]*1000,millis() - hitltime);
             hitlindex++;
             if (hitlindex > (sizeof(hitldata)/sizeof(hitldata[0]))-1)
             {
@@ -314,6 +316,16 @@ void NAVCORE::KFupdate(){
     {
         _sysstate.r.orientationquat = adjustwithaccel(0.1);
     }
+
+    if (_sysstate.r.filtered.alt == NULL)
+    {
+        _sysstate.r.filtered.alt = _sysstate.r.barodata.altitudeagl;
+    }
+    if (_sysstate.r.filtered.vvel == NULL)
+    {
+        _sysstate.r.filtered.vvel = _sysstate.r.barodata.verticalvel;
+    }
+    
 
     prevsysstate = _sysstate;
     kfupdatetime = micros();

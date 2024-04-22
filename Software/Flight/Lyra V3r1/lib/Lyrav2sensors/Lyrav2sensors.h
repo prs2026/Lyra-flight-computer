@@ -107,9 +107,10 @@ void IMU::read(int oversampling, int hitltesting,int hitlindex){
         accel.x() = hitldata[hitlindex][4];
         accel.y() = hitldata[hitlindex][3];
         accel.z() = hitldata[hitlindex][2];
-        gyro.x() = hitldata[hitlindex][8];
-        gyro.y() = hitldata[hitlindex][7];
-        gyro.z() = hitldata[hitlindex][6];
+        float convertorads = (PI/180);
+        gyro.x() = hitldata[hitlindex][7]*convertorads;
+        gyro.y() = hitldata[hitlindex][8]*convertorads;
+        gyro.z() = hitldata[hitlindex][6]*convertorads;
     }
     
     else
@@ -125,10 +126,10 @@ void IMU::read(int oversampling, int hitltesting,int hitlindex){
         accel.z() += accelunit.getAccelX_mss();
         //Serial.printf("new accelmss z : %f \n",accel.z());
 
-        gyro.x() += -gyrounit.getGyroX_rads();
+        gyro.x() += gyrounit.getGyroY_rads();
 
-        gyro.y() += -gyrounit.getGyroZ_rads();
-        gyro.z() += gyrounit.getGyroY_rads();
+        gyro.y() += gyrounit.getGyroZ_rads();
+        gyro.z() += gyrounit.getGyroX_rads();
 
         delayMicroseconds(1);
         gyro.x() < -73786 || gyro.x() > 73786 ? gyro.x() = data.gyro.x : gyro.x() = gyro.x();
@@ -454,6 +455,7 @@ public:
     int getpadoffset(int samplesize = 1);
     int init();
     void readsensor(int hitltest = 0, int hitlindex = 0);
+    void setforhitl();
 
 };
 
@@ -466,7 +468,7 @@ int BARO::getpadoffset(int samplesize){
     // for (int i = 0; i < samplesize; i++)
     // {
         _padalt = bmp.readAltitude(SEALEVELPRESSURE);
-        delayMicroseconds(100);
+        // delayMicroseconds(100);
     // }
 
     //_padalt /= samplesize;
@@ -477,6 +479,16 @@ int BARO::getpadoffset(int samplesize){
     return 0;
 }
 
+void BARO::setforhitl(){
+    prevalt = hitldata[0][1];
+    prevverticalvel[0] = 0;
+    prevverticalvel[1] = 0;
+    prevverticalvel[2] = 0;
+    prevverticalvel[3] = 0;
+    prevverticalvel[4] = 0;
+    return;
+}
+
 int BARO::init(){
     if (!bmp.begin_I2C(0x76,&Wire))
     {
@@ -484,7 +496,7 @@ int BARO::init(){
         //MP.logtextentry("BMP init fail");
         return 1;
     }
-    bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
+    bmp.setPressureOversampling(BMP3_OVERSAMPLING_8X);
     bmp.setOutputDataRate(BMP3_ODR_100_HZ);
     getpadoffset();
     //Serial.println("BMP init success");
@@ -498,7 +510,7 @@ void BARO::readsensor(int hitltest, int hitlindex){
     float timestep;
     if (hitltest)
     {
-        _data.altitudeagl = hitldata[hitlindex][1];
+        _data.altitude = hitldata[hitlindex][1]+data.padalt;
         timestep = hitldata[hitlindex][0]-hitldata[hitlindex-1][0];
     }
 
@@ -514,16 +526,18 @@ void BARO::readsensor(int hitltest, int hitlindex){
     _data.altitude = bmp.readAltitude(SEALEVELPRESSURE);//44330.0 * (1.0 - pow((bmp.pressure/100.0F) / SEALEVELPRESSURE, 0.1903));
 
     _data.altitude = lpfal*prevalt + (1-lpfal)*_data.altitude;
+
+    }
     // _data.altitude = _data.altitude - hpfstate;
 
     // hpfstate += hpfgain * _data.altitude;
 
 
-    _data.altitudeagl = _data.altitude-data.padalt;
+    
     _data.pressure = bmp.pressure;
     _data.temp = bmp.temperature;
-    }
     
+    _data.altitudeagl = _data.altitude-data.padalt;
     //Serial.printf(">timestep: %f \n",timestep);
     //prevverticalvel[address] = ((data.altitude - prevalt)/timestep);
     float deltaaltitude = _data.altitude - prevalt;
@@ -616,7 +630,6 @@ int SERIALPORT::senddata(mpstate state,navpacket navstate){
             Serial.printf(">orientation pitch: %f \n",navstate.r.orientationeuler.x*(180/M_PI));
             Serial.printf(">orientation yaw: %f \n",navstate.r.orientationeuler.y*(180/M_PI));
             Serial.printf(">orientation roll: %f \n",navstate.r.orientationeuler.z*(180/M_PI));
-
             Serial.printf(">maxrecorded alt: %f \n",navstate.r.barodata.maxrecordedalt);
             Serial.printf(">filtered alt: %f \n",navstate.r.filtered.alt);
             Serial.printf(">state : %d \n",state.r.state);

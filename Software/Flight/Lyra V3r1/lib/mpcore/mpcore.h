@@ -139,7 +139,7 @@ class MPCORE{
 MPCORE::MPCORE(){
     _sysstate.r.state = 0;
     _sysstate.r.errorflag = 1;
-    _sysstate.r.pyrosfired = 0b1000;
+    _sysstate.r.pyrosfired = 0b000;
 };
 
 void MPCORE::setuppins(){
@@ -305,7 +305,7 @@ int MPCORE::initperipherials(){
 
     P1.timeout = 500;
     P2.timeout = 500;
-    P3.timeout = 2000;
+    P3.timeout = 500;
     P4.timeout = 500;
 
     return 0;
@@ -550,8 +550,7 @@ int MPCORE::changestate(){
     if (_sysstate.r.state == 0) // detect liftoff
     {
         
-        
-        NAV._sysstate.r.filtered.alt > 8 ? detectiontime = detectiontime : detectiontime = millis();
+        NAV._sysstate.r.filtered.alt > 8 && _sysstate.r.uptime > 8000 ? detectiontime = detectiontime : detectiontime = millis();
         if (millis() - detectiontime >= 400)
         {
             _sysstate.r.state = 1;
@@ -573,6 +572,7 @@ int MPCORE::changestate(){
             _sysstate.r.state = 2;
             detectiontime = millis();
             Serial.println("burnout");
+            burnouttime = millis();
         }
     }
 
@@ -644,9 +644,10 @@ int MPCORE::changestate(){
 // 0 = ground idle  1 = powered ascent 2 = unpowered ascent 3 = ballisitic decsent 4 = under chute 5 = landed
 int MPCORE::checkforpyros(){
 
-    if (NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt && _sysstate.r.state >= 3 && !_sysstate.r.pyrosfired & 1)
+    if (NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt && _sysstate.r.state >= 3)
     {
         _sysstate.r.pyrosfired =  _sysstate.r.pyrosfired | 0b1;
+        //Serial.println("deploying apogee");
         P1.fire();
 
     }  
@@ -655,18 +656,35 @@ int MPCORE::checkforpyros(){
     {
         
         _sysstate.r.pyrosfired = _sysstate.r.pyrosfired | 0b10;
+        //Serial.println("deploying main");
         P2.fire();
     } 
 
-    if (_sysstate.r.state == 2 && NAV._sysstate.r.orientationeuler.x > 70 && NAV._sysstate.r.orientationeuler.x < 110  && (NAV._sysstate.r.orientationeuler.y > 170 || NAV._sysstate.r.orientationeuler.y < -170) && NAV._sysstate.r.filtered.vvel > 40 && NAV._sysstate.r.filtered.alt > 100 && millis() - burnouttime > 500)
+    int stagingstate = 0;
+    if (_sysstate.r.state == 2){
+        stagingstate = 1;
+    if (NAV._sysstate.r.orientationeuler.x*(180/M_PI) > 70){
+        stagingstate = 2;
+    if (NAV._sysstate.r.orientationeuler.x*(180/M_PI) < 110){
+        stagingstate = 3;
+    if(abs(NAV._sysstate.r.orientationeuler.y*(180/M_PI)) > 170){
+        stagingstate = 4;
+    if(NAV._sysstate.r.filtered.vvel > 40){
+        stagingstate = 5;
+    if(NAV._sysstate.r.filtered.alt > 100){
+        stagingstate = 6;
+    if(millis() - burnouttime > 4000)
     {
+        stagingstate = 7;
         _sysstate.r.pyrosfired = _sysstate.r.pyrosfired | 0b100;
         P3.fire();
     }
+    }}}}}}
     else
     {
-        _sysstate.r.pyrosfired = _sysstate.r.pyrosfired & 0b11;
+        //_sysstate.r.pyrosfired = _sysstate.r.pyrosfired & 0b11;
     }
+    //Serial.printf(">stagingstate: %d\n",stagingstate);
     
 
     P1.checkfire();

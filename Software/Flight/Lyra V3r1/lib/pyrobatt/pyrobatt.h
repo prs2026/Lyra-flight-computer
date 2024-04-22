@@ -50,7 +50,7 @@ void PYROCHANNEL::fire(){
     {
         Serial.printf("firing pyro %d\n",identity+1);
         firedtime = millis();
-        // todo: schedule an inturrupt to turn it off?
+        
         digitalWrite(EN_PIN,HIGH);
         _state = 1;
         fired = 1;
