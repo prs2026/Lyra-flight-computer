@@ -63,15 +63,14 @@ class NAVCORE{
 
         NAVCORE();
         /*
-        1 = no errors
-        3 = failed handshake
-        5 = i2c devices fail
-        7 = accel init fail
-        11 = gyro init fail
-        13 = baro init fail
-        17 = mag init fail
-        19 = packet send fail
-        negative = fatal error
+        0 = no errors 
+        1 = i2c devices fail
+        10 = accel init fail
+        100 = gyro init fail
+        1000 = baro init fail
+        10000 = adxl init fail
+        100000 = mag init fail
+        1000000 = gps init fail
         */
         struct timings{
             uint32_t sendpacket;
@@ -114,9 +113,6 @@ class NAVCORE{
         void getcalibrationdata();
         void calcnewoffsets();
         void dumpoffsets();
-
-        
-
 };
 
 void NAVCORE::KFinit(){
@@ -134,30 +130,27 @@ void NAVCORE::KFinit(){
 
 NAVCORE::NAVCORE(){
     _sysstate.r.orientationquat = {1,0,0,0};
-    _sysstate.r.errorflag = 1;
+    _sysstate.r.errorflag = 0;
     Vector3d axis;
     axis << 1,0,0;
     Quaterniond tempquat(AngleAxisd(0.5*PI,axis));
     vectoradj = tempquat;
 };
 /*
-1 = no errors
-3 = failed handshake
-5 = i2c devices fail
-7 = accel init fail
-11 = gyro init fail
-13 = baro init fail
-17 = adxl init fail
-19 = packet send fail
-negative = fatal error
+0 = no errors 
+1 = i2c devices fail
+10 = accel init fail
+100 = gyro init fail
+1000 = baro init fail
+10000 = adxl init fail
+100000 = mag init fail
 */
-
 int NAVCORE::initi2c(){
     Wire.setSCL(SCL);
     Wire.setSDA(SDA);
     Wire.setClock(10000);
     Wire.begin();
-    scani2c(true) ? _sysstate.r.errorflag*= 5 : _sysstate.r.errorflag *= 1;
+    scani2c(true) ? _sysstate.r.errorflag || 0b1 : _sysstate.r.errorflag;
     return 0;
 }
 
@@ -182,18 +175,13 @@ uint32_t NAVCORE::sensorinit(){
     int barostatus;
     int adxlstatus;
     imustatus = imu.init();;
-    imustatus == 1 ? _sysstate.r.errorflag *= 7 : _sysstate.r.errorflag *= 1;
-    imustatus == 2 ? _sysstate.r.errorflag *= 11 : _sysstate.r.errorflag *= 1;
+    imustatus == 1 ? _sysstate.r.errorflag || 0b10 : _sysstate.r.errorflag;
+    imustatus == 2 ? _sysstate.r.errorflag || 0b100 : _sysstate.r.errorflag;
     barostatus = baro.init();
-    barostatus ? _sysstate.r.errorflag *= 13 : _sysstate.r.errorflag *= 1;
+    barostatus ? _sysstate.r.errorflag || 0b1000 : _sysstate.r.errorflag;
     adxlstatus = adxl.init();
-    barostatus ? _sysstate.r.errorflag *= 17 : _sysstate.r.errorflag *= 1;
+    barostatus ? _sysstate.r.errorflag || 0b10000 : _sysstate.r.errorflag;
     magclass.init();
-
-    if (adxlstatus != 0 || imustatus != 0 || barostatus != 0)
-    {
-        _sysstate.r.errorflag *= -1;
-    }
     
     
     return 0;

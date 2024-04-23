@@ -64,17 +64,11 @@ class MPCORE{
 
         MPCORE();
 
-        //int32_t _sysstate.errorflag = 1;
+        //int32_t _sysstate.errorflag = 0;
         /*
-            1 = no error
-            3 = handshake fail
-            5 = serial init failure
-            7 = sd init fail
-            11 = flash init fail
-            13 = no packet recived
-            17 = bad telemetry packet
-            19 = radio init fail
-            23 = bad telemetry packet
+            0 = no error
+            1 = serial init failure
+            10 = radio init fail
         */
         bool sendserialon = false;
         bool sendtoteleplot = true;
@@ -138,7 +132,7 @@ class MPCORE{
 
 MPCORE::MPCORE(){
     _sysstate.r.state = 0;
-    _sysstate.r.errorflag = 1;
+    _sysstate.r.errorflag = 0;
     _sysstate.r.pyrosfired = 0b000;
 };
 
@@ -160,7 +154,7 @@ void MPCORE::setled(int state){
 
 void MPCORE::beep(){
     if (beepon){
-        tone(BUZZERPIN,2000,200);
+        tone(BUZZERPIN,4000,200);
         delay(200);
         noTone(BUZZERPIN);
     }
@@ -171,9 +165,9 @@ void MPCORE::beep(){
 
 void MPCORE::beep(int freq){
     if (beepon){
-    tone(BUZZERPIN,freq,200);
-    delay(200);
-    noTone(BUZZERPIN);
+        tone(BUZZERPIN,freq,200);
+        delay(200);
+        noTone(BUZZERPIN);
     }
     return;
 }
@@ -181,9 +175,9 @@ void MPCORE::beep(int freq){
 void MPCORE::beep(int freq, unsigned int duration){
     if (beepon)
     {
-    tone(BUZZERPIN,freq,duration);
-    delay(duration);
-    noTone(BUZZERPIN);
+        tone(BUZZERPIN,freq,duration);
+        delay(duration);
+        noTone(BUZZERPIN);
     }
 return;
 }
@@ -191,38 +185,38 @@ return;
 void MPCORE::beepcont(){
     if (_sysstate.r.pyroscont & 0b1)
     {
-        beep(8000);
+        beep(4500);
     }
     else
     {
-        beep(2000);
+        beep(4000);
     }
     delay(50);
         if (_sysstate.r.pyroscont & 0b10)
     {
-        beep(8000);
+        beep(4500);
     }
     else
     {
-        beep(2000);
+        beep(4000);
     }
     delay(50);
         if (_sysstate.r.pyroscont & 0b100)
     {
-        beep(8000);
+        beep(4500);
     }
     else
     {
-        beep(2000);
+        beep(4000);
     }
     delay(50);
         if (_sysstate.r.pyroscont & 0b1000)
     {
-        beep(8000);
+        beep(4500);
     }
     else
     {
-        beep(2000);
+        beep(4000);
     }
 
 }
@@ -284,14 +278,11 @@ int MPCORE::flashtest(){
 
 
 int MPCORE::initperipherials(){
-    port.init();
-    int error = telemetryradio.init();
+    int error = port.init();
+    error ? _sysstate.r.errorflag || 0b1 : _sysstate.r.errorflag;
+    error = telemetryradio.init();
+    error ? _sysstate.r.errorflag || 0b10 : _sysstate.r.errorflag;
     _sysstate.r.batterystate = readbattvoltage();
-
-    if (error)
-    {
-        radiook = 0;
-    }
     
 
     if (PyroTimer0.attachInterruptInterval(100 * 1000, checkfirepyros))
@@ -533,14 +524,6 @@ int MPCORE::dumpdata(){
     Serial.println("done");
     return 0;
 }
-
-int MPCORE::flashinit(){
-      
-        return 0;
-}
-
-
-
 
 int MPCORE::changestate(){
 

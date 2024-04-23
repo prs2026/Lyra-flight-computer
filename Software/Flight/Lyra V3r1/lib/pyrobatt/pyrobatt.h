@@ -37,7 +37,7 @@ PYROCHANNEL::PYROCHANNEL(int _identifier){
     CONT_PIN = contpins[identity];
     pinMode(EN_PIN,OUTPUT);
     digitalWrite(EN_PIN,LOW);
-    pinMode(CONT_PIN,INPUT);
+    pinMode(CONT_PIN,INPUT_PULLUP);
 }
 
  int PYROCHANNEL::state(){

@@ -156,7 +156,7 @@ union navpacket
 {
     struct
     {
-        int32_t errorflag;
+        uint16_t errorflag;
         uint32_t uptime;
         IMUdata imudata;
         BAROdata barodata;
@@ -175,7 +175,7 @@ union navpacket
 // union for all data relating to the MP core that needs to be shared
 union mpstate{
     struct{
-        int32_t errorflag;
+        uint16_t errorflag;
         uint32_t uptime;
         uint32_t MET;
         uint8_t state;
