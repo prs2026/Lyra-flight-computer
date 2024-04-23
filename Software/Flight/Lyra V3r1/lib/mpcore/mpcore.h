@@ -437,7 +437,7 @@ int MPCORE::previewdata(){
 int MPCORE::dumpdata(){
     Serial.println("dumping data to serial");
     Serial.println("newfile");
-    Serial.println("index, checksum,uptime mp,uptime nav,missiontime,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, accelhighg x, accelhighg y, accelhighg z, gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, presusre, verticalvel,filtered vvel, maxalt, altitudeagl, filtered alt, imutemp, barotemp,state,battstate,pyros fired,pyros cont,pyros state, checksum2");
+    Serial.println("index, checksum,uptime mp,uptime nav,missiontime,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, mag x, mag y, mag z, accelhighg x, accelhighg y, accelhighg z, gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, presusre, verticalvel,filtered vvel, maxalt, altitudeagl, filtered alt, imutemp, barotemp,state,battstate,pyros fired,pyros cont,pyros state, checksum2");
     uint32_t entrynum = 0;
     logpacket preventry;
     while (entrynum < first_empty_page)
@@ -453,6 +453,7 @@ int MPCORE::dumpdata(){
         "%d, 101,"// index checksum,
         "%d,%d,%d,"//uptimes, mission time
         "%d,%d,"//errorflag
+        "%f,%f,%f," // accel
         "%f,%f,%f," // accel
         "%f,%f,%f," // accel world
         "%f,%f,%f," // high g accel
@@ -480,6 +481,10 @@ int MPCORE::dumpdata(){
         readentry.r.navsysstate.r.accelworld.x, 
         readentry.r.navsysstate.r.accelworld.y, 
         readentry.r.navsysstate.r.accelworld.z,
+
+        readentry.r.navsysstate.r.magdata.utesla.x, 
+        readentry.r.navsysstate.r.magdata.utesla.y, 
+        readentry.r.navsysstate.r.magdata.utesla.z,
 
         readentry.r.navsysstate.r.adxldata.accel.x, 
         readentry.r.navsysstate.r.adxldata.accel.y, 

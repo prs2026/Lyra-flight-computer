@@ -24,6 +24,11 @@
 #include <CircularBuffer.hpp>
 #include <SX126x.h>
 
+#include <Kalman.h>
+#include <BasicLinearAlgebra.h>
+
+using namespace BLA;
+
 // define eigen things to use
 using Eigen::Vector3d;
 using Eigen::Matrix3d;

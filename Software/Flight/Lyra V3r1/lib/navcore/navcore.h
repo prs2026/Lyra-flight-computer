@@ -5,6 +5,22 @@
 
 //#define VERBOSETIMES
 
+
+// Dimensions of the matrices
+#define Nstate 2 // length of the state vector
+#define Nobs 2   // length of the measurement vector
+
+// measurement std (to be characterized from your sensors)
+#define n1 0.2 // noise on the 1st measurement component
+#define n2 0.1 // noise on the 2nd measurement component 
+
+// model std (~1/inertia). Freedom you give to relieve your evolution equation
+#define m1 0.01
+#define m2 0.02
+
+KALMAN<Nstate,Nobs> K; // your Kalman filter
+BLA::Matrix<Nobs> obs; // observation vector
+
 IMU imu;
 BARO baro;
 ADXL adxl;
@@ -135,7 +151,20 @@ NAVCORE::NAVCORE(){
     axis << 1,0,0;
     Quaterniond tempquat(AngleAxisd(0.5*PI,axis));
     vectoradj = tempquat;
-};
+
+        //evolution matrix
+    K.F = {1.0, 0.0,
+            0.0, 1.0};
+    // measurement matrix
+    K.H = {1.0, 0.0,
+            0.0, 1.0};
+    //measurement covariance matrix.
+    K.R = {n1*n1,   0.0,
+            0.0, n2*n2};
+    // model covariance matrix. 
+    K.Q = {m1*m1,   0.0,
+            0.0, m2*m2};
+    };
 /*
 0 = no errors 
 1 = i2c devices fail

@@ -15,8 +15,6 @@ void setup() { // main core setup
     MP.initperipherials();
 
     //Serial.println("\nit be living yo");
-    MP.flashinit();
-    Serial.println("flash inited");
 
     MP.ready = true;
     while (!NAV.ready)
