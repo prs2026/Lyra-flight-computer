@@ -159,16 +159,27 @@ void loop1() { // nav core loop
     
     NAV.prevtime.getdata = micros();
     NAV.getsensordata();
-    
-    
     if (MP.sendserialon && MP.sendtoteleplot)
     {
             Serial.printf(">sensordatatime: %f \n",float(micros()-NAV.prevtime.getdata)/1000);
+            NAV.prevtime.predictkf = micros();
     }
-    NAV.prevtime.kfupdate = millis();
-    NAV.KFupdate();
+    NAV.KFrun();
+    //Serial.printf(">kfpredicttime: %f \n",float(micros()-NAV.prevtime.predictkf)/1000);
 
+    if (millis() - NAV.prevtime.kfupdate >= 100)
+    {
+        NAV.prevtime.updatekf = micros();
+        if (NAV.useaccel == 1)
+    {
+        NAV._sysstate.r.orientationquat = NAV.adjustwithaccel(0.1);
+    }
+        NAV.prevtime.kfupdate = millis();
+        //Serial.printf(">kfupdatetime: %f \n",float(micros()-NAV.prevtime.updatekf)/1000);
+    }
 
+    
+    
     if (MP.sendserialon && MP.sendtoteleplot)
     {
         Serial.printf(">navlooprate: %f \n", 1/(float(micros() - NAV.prevtime.looptime)/1e6));

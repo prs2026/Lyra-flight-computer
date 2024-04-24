@@ -33,12 +33,27 @@ class NAVCORE{
     Quaterniond vectoradj = {0.707,0,0.707,0};
 
     Quaterniond upsidedownadj = {0,1,0,0};
+
+
+    const float ALTVAR = 0.01;
+    const float VVELVAR = 0.12;
+    const float VACCELVAR = 0.6;
+    const float ORIENTVAR = 0.4;
+
+    const float ALTNOISE = 0.1;
+    const float VVELNOISE = 1.5;
+    const float VACCELNOISE = 0.2;
+    const float ORIENTNOISE = 0.4;
+
+
     
-    //navpacket prevsysstate;
+    navpacket prevsysstate;
     uint32_t kfupdatetime;
     uint32_t kfpredicttime;
 
     uint32_t invertedtime;
+
+    
 
     double accumz = 0;
 
@@ -80,6 +95,8 @@ class NAVCORE{
             uint32_t kfupdate;
             uint32_t looptime;
             uint32_t getdata;
+            uint32_t predictkf;
+            uint32_t updatekf;
         };
         timings intervals[6] = {
             {50}, // ground idle
@@ -97,7 +114,8 @@ class NAVCORE{
         uint32_t sensorinit();
         void getsensordata();
 
-        void KFupdate();                                                         
+        void KFrun();                                                         
+        void KFupdate();
         
 
         Quatstruct intergrategyros(double timestep);
@@ -118,20 +136,24 @@ void NAVCORE::KFinit(){
     _sysstate.r.filtered.alt = _sysstate.r.barodata.altitudeagl;
     _sysstate.r.filtered.vvel = _sysstate.r.barodata.verticalvel;
     _sysstate.r.filtered.accel = _sysstate.r.accelworld;
-
+    
+    _sysstate.r.uncertainty.alt = 100;
+    _sysstate.r.uncertainty.vvel = 100;
+    _sysstate.r.uncertainty.vaccel = 100;
+    prevsysstate = _sysstate;
     prevtime.kfupdate = micros();
     _sysstate.r.orientationquat = adjustwithaccel(0);
 }
 
 NAVCORE::NAVCORE(){
-    _sysstate.r.orientationquat = {0,1,0,0};
+    _sysstate.r.orientationquat = {1,0,0,0};
     _sysstate.r.errorflag = 0;
     Vector3d axis;
     axis << 1,0,0;
     Quaterniond tempquat(AngleAxisd(0.5*PI,axis));
     vectoradj = tempquat;
 
-    //evolution matrix
+ //evolution matrix
     K.F = { 1.0,0.0,0.0,
             0.0,1.0,0.0,
             0.0,0.0,1.0};
@@ -146,8 +168,7 @@ NAVCORE::NAVCORE(){
     K.Q = {m1*m1, 0.0,  0.0,
            0.0, m2*m2, 0.0,
            0.0, 0.0, m3*m3};
-    };
-
+}
 /*
 0 = no errors 
 1 = i2c devices fail
@@ -157,7 +178,6 @@ NAVCORE::NAVCORE(){
 10000 = adxl init fail
 100000 = mag init fail
 */
-
 int NAVCORE::initi2c(){
     Wire.setSCL(SCL);
     Wire.setSDA(SDA);
@@ -218,6 +238,7 @@ void NAVCORE::getsensordata(){
             }
         }
     }
+    
 
     #if !defined(VERBOSETIMES)
         imu.read(5,hitlteston,hitlindex);
@@ -235,6 +256,7 @@ void NAVCORE::getsensordata(){
             invertedtime = millis();
         }
     }
+
     
     if (upsidedown == 1)
     {
@@ -244,6 +266,13 @@ void NAVCORE::getsensordata(){
         magclass.data.utesla = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(magclass.data.utesla)) * upsidedownadj.inverse()) ));
         magclass.data.gauss = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(magclass.data.gauss)) * upsidedownadj.inverse()) ));
     }
+    
+    if (imu.data.absaccel > 20 || adxl.data.absaccel > 40)
+    {
+        event = 1;
+    }
+    
+    
 
     _sysstate.r.adxldata = adxl.data;
     _sysstate.r.imudata = imu.data;
@@ -253,7 +282,7 @@ void NAVCORE::getsensordata(){
     return;
 }
 
-void NAVCORE::KFupdate(){
+void NAVCORE::KFrun(){
     navpacket extrapolatedsysstate = _sysstate;
 
     double timestep = (micros() - kfpredicttime)/1e6;
@@ -272,18 +301,14 @@ void NAVCORE::KFupdate(){
     BLA::Matrix<3> newstate = K.getxcopy();
 
     extrapolatedsysstate.r.filtered.alt = newstate(0); 
-    extrapolatedsysstate.r.filtered.vvel = newstate(1);
+    extrapolatedsysstate.r.filtered.vvel = newstate(1); 
+    
 
     extrapolatedsysstate.r.orientationquat = intergrategyros(timestep);
     extrapolatedsysstate.r.orientationquatadj = eigentoquatstruct(adjquat* (quatstructtoeigen(extrapolatedsysstate.r.orientationquat).normalized() * adjquat.inverse()));
     
     extrapolatedsysstate.r.accelworld = getworldaccel(extrapolatedsysstate);
     extrapolatedsysstate.r.orientationeuler = quat2euler(extrapolatedsysstate.r.orientationquatadj);
-
-    // if (useaccel == 1)
-    // {
-    //     _sysstate.r.orientationquat = adjustwithaccel(0.1);
-    // }
 
     _sysstate.r.filtered.alt > _sysstate.r.filtered.maxalt ? _sysstate.r.filtered.maxalt = _sysstate.r.filtered.alt : _sysstate.r.filtered.alt = _sysstate.r.filtered.alt;
 

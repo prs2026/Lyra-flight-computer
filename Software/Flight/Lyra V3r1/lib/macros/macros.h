@@ -138,6 +138,15 @@ struct MAGdata{
     Vector3float gauss;
     Vector3float utesla;
 };
+
+// struct to hold the variences, needed for KF 
+struct variences{
+    float alt;
+    float vvel;
+    float vaccel;
+    float orientation;
+};
+
 //struct to hold various position related things so as to not bog down the main nav state struct
 struct position{
     Vector3float accel;
@@ -162,6 +171,7 @@ union navpacket
         Vector3float orientationeuler;
         Quatstruct orientationquat;
         Quatstruct orientationquatadj;
+        variences uncertainty;
         position filtered;
         
     } r;
