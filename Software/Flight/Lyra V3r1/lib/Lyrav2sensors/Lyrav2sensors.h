@@ -634,8 +634,6 @@ int SERIALPORT::senddata(mpstate state,navpacket navstate){
             Serial.printf(">filtered alt: %f \n",navstate.r.filtered.alt);
             Serial.printf(">state : %d \n",state.r.state);
             Serial.printf(">altitudeagl : %f \n",navstate.r.barodata.altitudeagl);
-            Serial.printf(">varience alt : %f \n",navstate.r.uncertainty.alt);
-            Serial.printf(">varience vvel : %f \n",navstate.r.uncertainty.vvel);
             Serial.printf(">battery vol : %f \n",state.r.batterystate);
             Serial.printf(">baro temp : %f \n",navstate.r.barodata.temp);
             Serial.printf(">pyro cont : %d \n",state.r.pyroscont);

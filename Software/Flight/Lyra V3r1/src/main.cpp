@@ -164,7 +164,7 @@ void loop1() { // nav core loop
             Serial.printf(">sensordatatime: %f \n",float(micros()-NAV.prevtime.getdata)/1000);
             NAV.prevtime.predictkf = micros();
     }
-    NAV.KFpredict();
+
     //Serial.printf(">kfpredicttime: %f \n",float(micros()-NAV.prevtime.predictkf)/1000);
 
     if (millis() - NAV.prevtime.kfupdate >= 100)

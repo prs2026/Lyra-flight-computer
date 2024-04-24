@@ -7,7 +7,7 @@
 
 
 // Dimensions of the matrices
-#define Nstate 2 // length of the state vector
+#define Nstate 3 // length of the state vector
 #define Nobs 2   // length of the measurement vector
 
 // measurement std (to be characterized from your sensors)
@@ -17,6 +17,7 @@
 // model std (~1/inertia). Freedom you give to relieve your evolution equation
 #define m1 0.01
 #define m2 0.02
+#define m3 0.02
 
 KALMAN<Nstate,Nobs> K; // your Kalman filter
 BLA::Matrix<Nobs> obs; // observation vector
@@ -32,27 +33,12 @@ class NAVCORE{
     Quaterniond vectoradj = {0.707,0,0.707,0};
 
     Quaterniond upsidedownadj = {0,1,0,0};
-
-
-    const float ALTVAR = 0.01;
-    const float VVELVAR = 0.12;
-    const float VACCELVAR = 0.6;
-    const float ORIENTVAR = 0.4;
-
-    const float ALTNOISE = 0.1;
-    const float VVELNOISE = 1.5;
-    const float VACCELNOISE = 0.2;
-    const float ORIENTNOISE = 0.4;
-
-
     
     navpacket prevsysstate;
     uint32_t kfupdatetime;
     uint32_t kfpredicttime;
 
     uint32_t invertedtime;
-
-    
 
     double accumz = 0;
 
@@ -113,8 +99,7 @@ class NAVCORE{
         uint32_t sensorinit();
         void getsensordata();
 
-        void KFpredict();                                                         
-        void KFupdate();
+        void KFupdate();                                                         
         
 
         Quatstruct intergrategyros(double timestep);
@@ -135,10 +120,7 @@ void NAVCORE::KFinit(){
     _sysstate.r.filtered.alt = _sysstate.r.barodata.altitudeagl;
     _sysstate.r.filtered.vvel = _sysstate.r.barodata.verticalvel;
     _sysstate.r.filtered.accel = _sysstate.r.accelworld;
-    
-    _sysstate.r.uncertainty.alt = 100;
-    _sysstate.r.uncertainty.vvel = 100;
-    _sysstate.r.uncertainty.vaccel = 100;
+
     prevsysstate = _sysstate;
     prevtime.kfupdate = micros();
     _sysstate.r.orientationquat = adjustwithaccel(0);
@@ -152,9 +134,10 @@ NAVCORE::NAVCORE(){
     Quaterniond tempquat(AngleAxisd(0.5*PI,axis));
     vectoradj = tempquat;
 
-        //evolution matrix
-    K.F = {1.0, 0.0,
-            0.0, 1.0};
+    //evolution matrix
+    K.F = { 1.0,0.0,0.0,
+            0.0,1.0,0.0,
+            0.0,0.0,0.1};
     // measurement matrix
     K.H = {1.0, 0.0,
             0.0, 1.0};
@@ -165,6 +148,7 @@ NAVCORE::NAVCORE(){
     K.Q = {m1*m1,   0.0,
             0.0, m2*m2};
     };
+
 /*
 0 = no errors 
 1 = i2c devices fail
@@ -174,6 +158,7 @@ NAVCORE::NAVCORE(){
 10000 = adxl init fail
 100000 = mag init fail
 */
+
 int NAVCORE::initi2c(){
     Wire.setSCL(SCL);
     Wire.setSDA(SDA);
@@ -234,7 +219,6 @@ void NAVCORE::getsensordata(){
             }
         }
     }
-    
 
     #if !defined(VERBOSETIMES)
         imu.read(5,hitlteston,hitlindex);
@@ -252,7 +236,6 @@ void NAVCORE::getsensordata(){
             invertedtime = millis();
         }
     }
-
     
     if (upsidedown == 1)
     {
@@ -262,13 +245,6 @@ void NAVCORE::getsensordata(){
         magclass.data.utesla = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(magclass.data.utesla)) * upsidedownadj.inverse()) ));
         magclass.data.gauss = vector3tofloat(quattovector(upsidedownadj *  (vectortoquat(vectorfloatto3(magclass.data.gauss)) * upsidedownadj.inverse()) ));
     }
-    
-    if (imu.data.absaccel > 20 || adxl.data.absaccel > 40)
-    {
-        event = 1;
-    }
-    
-    
 
     _sysstate.r.adxldata = adxl.data;
     _sysstate.r.imudata = imu.data;
@@ -278,21 +254,21 @@ void NAVCORE::getsensordata(){
     return;
 }
 
-void NAVCORE::KFpredict(){
+void NAVCORE::KFupdate(){
     navpacket extrapolatedsysstate = _sysstate;
 
     double timestep = (micros() - kfpredicttime)/1e6;
 
     Quaterniond adjquat = quatstructtoeigen(quatadj).normalized();
 
+    obs(0) = _sysstate.r.barodata.altitudeagl;
+    obs(1) = _sysstate.r.accelworld.z;
 
-    extrapolatedsysstate.r.filtered.alt = _sysstate.r.filtered.alt + (timestep*_sysstate.r.filtered.vvel); // extrapolate with velocity dynamics
-    extrapolatedsysstate.r.filtered.vvel = _sysstate.r.filtered.vvel + (timestep*_sysstate.r.accelworld.z); 
 
 
-    extrapolatedsysstate.r.uncertainty.alt = _sysstate.r.uncertainty.alt + ((timestep*timestep)*_sysstate.r.uncertainty.vvel) + ALTVAR; // extrapolate variences with velocity dynamics
-    extrapolatedsysstate.r.uncertainty.vvel = _sysstate.r.uncertainty.vvel + VVELVAR;
 
+    extrapolatedsysstate.r.filtered.alt; 
+    extrapolatedsysstate.r.filtered.vvel;
 
     extrapolatedsysstate.r.orientationquat = intergrategyros(timestep);
     extrapolatedsysstate.r.orientationquatadj = eigentoquatstruct(adjquat* (quatstructtoeigen(extrapolatedsysstate.r.orientationquat).normalized() * adjquat.inverse()));
@@ -305,48 +281,6 @@ void NAVCORE::KFpredict(){
     kfpredicttime = micros();
     _sysstate = extrapolatedsysstate;
 }                                                         
-
-
-
-void NAVCORE::KFupdate(){
-    double timestep = (micros() - kfupdatetime)/1e6;
-
-    variences kgain; // calc new kalman gain
-    kgain.alt = _sysstate.r.uncertainty.alt/(_sysstate.r.uncertainty.alt+ALTNOISE);
-    kgain.vvel = _sysstate.r.uncertainty.vvel/(_sysstate.r.uncertainty.vvel+VVELNOISE);
-    //Serial.printf(">kalman gain: %f\n",kgain.alt);
-    
-    if (_sysstate.r.filtered.vvel < 240 || useaccel == 1)
-    {
-        _sysstate.r.filtered.alt = prevsysstate.r.filtered.alt + kgain.alt*(_sysstate.r.barodata.altitudeagl - prevsysstate.r.filtered.alt); // state update
-        _sysstate.r.filtered.vvel = prevsysstate.r.filtered.vvel + kgain.vvel*(_sysstate.r.barodata.verticalvel - prevsysstate.r.filtered.vvel);
-    
-        _sysstate.r.uncertainty.alt = (1-kgain.alt)*prevsysstate.r.uncertainty.alt; // variences update
-        _sysstate.r.uncertainty.vvel = (1-kgain.vvel)*prevsysstate.r.uncertainty.vvel;
-
-    }
-
-
-    _sysstate.r.filtered.alt > _sysstate.r.filtered.maxalt ? _sysstate.r.filtered.maxalt = _sysstate.r.filtered.alt : _sysstate.r.filtered.alt = _sysstate.r.filtered.alt;
-
-    if (useaccel == 1)
-    {
-        _sysstate.r.orientationquat = adjustwithaccel(0.1);
-    }
-
-    if (_sysstate.r.filtered.alt == NULL)
-    {
-        _sysstate.r.filtered.alt = _sysstate.r.barodata.altitudeagl;
-    }
-    if (_sysstate.r.filtered.vvel == NULL)
-    {
-        _sysstate.r.filtered.vvel = _sysstate.r.barodata.verticalvel;
-    }
-    
-
-    prevsysstate = _sysstate;
-    kfupdatetime = micros();
-}
 
 Quatstruct NAVCORE::intergrategyros(double timestep){
     Quaterniond orientationquat = quatstructtoeigen(_sysstate.r.orientationquat);
