@@ -140,8 +140,9 @@ void MPCORE::setuppins(){
     pinMode(LEDPIN,OUTPUT);
     pinMode(BUZZERPIN,OUTPUT);
     pinMode(BATT_SENSE,INPUT);
+    pinMode(GPSRST,OUTPUT);
 
-
+    digitalWrite(GPSRST,HIGH);
     digitalWrite(LEDPIN, HIGH);
     
     return;

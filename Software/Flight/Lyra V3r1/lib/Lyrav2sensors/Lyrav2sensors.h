@@ -24,6 +24,17 @@ Adafruit_LIS3MDL mag;
 
 SX126x Lora;
 
+#define DEFAULT_DEVICE_ADDRESS 0x3A
+#define DEFAULT_DEVICE_PORT 0xFF
+#define I2C_DELAY 1
+
+#define RESET_PIN 7
+
+//MicroNMEA library structures
+char nmeaBuffer[100];
+MicroNMEA nmea(nmeaBuffer, sizeof(nmeaBuffer));
+
+
 /*
 adresses
 bmi088 accel = 0x18
@@ -720,5 +731,38 @@ int RADIO::sendpacket(telepacket packet){
     }
     return 0;
 }
+
+
+
+class GPS{
+
+    char buff[32];
+    int idx = 0;
+
+
+
+
+    public:
+
+    int init();
+
+    int reset();
+
+
+};
+
+int GPS::init(){
+
+
+    return 0;
+}
+
+int GPS::reset(){
+    digitalWrite(GPSRST,LOW);
+    delay(50);
+    digitalWrite(GPSRST,HIGH);
+
+}
+
 
 #endif // LYRAV2SENSORSLIB

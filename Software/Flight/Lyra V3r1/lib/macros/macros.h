@@ -27,6 +27,8 @@
 #include <Kalman.h>
 #include <BasicLinearAlgebra.h>
 
+#include <MicroNMEA.h>
+
 using namespace BLA;
 
 // define eigen things to use

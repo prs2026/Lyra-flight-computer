@@ -27,6 +27,7 @@ IMU imu;
 BARO baro;
 ADXL adxl;
 MAG magclass;
+GPS gps;
 
 class NAVCORE{
 

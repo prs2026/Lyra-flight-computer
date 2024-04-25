@@ -10,12 +10,13 @@ bool dataismoved = false;
 void setup() { // main core setup
     MP.setuppins();
     MP.beep();
+    gps.reset();
     delay(2000);
     MP.setled(1);
     MP.initperipherials();
 
     //Serial.println("\nit be living yo");
-
+    
     MP.ready = true;
     while (!NAV.ready)
     {
@@ -34,6 +35,7 @@ void setup() { // main core setup
     MP.beep(4000,200);
     MP.beep(4500,200);
     Serial.println("mpcore out of setup");
+    
 }
 
 void setup1() { // nav core setup
