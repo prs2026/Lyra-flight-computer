@@ -24,6 +24,18 @@ Adafruit_LIS3MDL mag;
 
 SX126x Lora;
 
+/*
+adresses
+bmi088 accel = 0x18
+bmi088 gyro = 0x68
+
+bmp = 0x76
+
+adxl = 0x53
+
+mag = 0x1c
+*/
+
 
 /*----------------------------------------------------------------------------------------*/
 // imu class, holds all code for the bmi088 imu
@@ -403,7 +415,7 @@ MAG::MAG(){
 
 
 int MAG::init(){
-    if (!mag.begin_I2C(28,&Wire))
+    if (!mag.begin_I2C(0x1C,&Wire))
     {
         Serial.println("mag init failure");
         //MP.logtextentry("BMP init fail");
@@ -627,10 +639,11 @@ int SERIALPORT::senddata(mpstate state,navpacket navstate){
             Serial.printf(">altitude: %f \n" ,navstate.r.barodata.altitude);
             Serial.printf(">verticalvel: %f \n",navstate.r.barodata.verticalvel);
             Serial.printf(">filtered vvel: %f \n",navstate.r.filtered.vvel);
+            Serial.printf(">filtered accel: %f \n",navstate.r.filtered.vertaccel);
             Serial.printf(">orientation pitch: %f \n",navstate.r.orientationeuler.x*(180/M_PI));
             Serial.printf(">orientation yaw: %f \n",navstate.r.orientationeuler.y*(180/M_PI));
             Serial.printf(">orientation roll: %f \n",navstate.r.orientationeuler.z*(180/M_PI));
-            Serial.printf(">maxrecorded alt: %f \n",navstate.r.barodata.maxrecordedalt);
+            Serial.printf(">maxrecorded alt: %f \n",navstate.r.filtered.maxalt);
             Serial.printf(">filtered alt: %f \n",navstate.r.filtered.alt);
             Serial.printf(">state : %d \n",state.r.state);
             Serial.printf(">altitudeagl : %f \n",navstate.r.barodata.altitudeagl);

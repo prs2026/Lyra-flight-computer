@@ -538,7 +538,7 @@ int MPCORE::changestate(){
     if (_sysstate.r.state == 0) // detect liftoff
     {
         
-        NAV._sysstate.r.filtered.alt > 8 && _sysstate.r.uptime > 8000 ? detectiontime = detectiontime : detectiontime = millis();
+        NAV._sysstate.r.filtered.alt > 8 && _sysstate.r.uptime > 500 ? detectiontime = detectiontime : detectiontime = millis();
         if (millis() - detectiontime >= 400)
         {
             _sysstate.r.state = 1;
@@ -553,7 +553,7 @@ int MPCORE::changestate(){
     else if (_sysstate.r.state == 1) // detect burnout
     {
 
-        accelvec.z() < 8 ? detectiontime = detectiontime : detectiontime = millis();
+        NAV._sysstate.r.accelworld.z < 8 ? detectiontime = detectiontime : detectiontime = millis();
         
         if (millis() - detectiontime >= 200)
         {
@@ -566,7 +566,7 @@ int MPCORE::changestate(){
 
     else if (_sysstate.r.state == 2) // detect appogee
     {
-        NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt - 4 ?  detectiontime = detectiontime : detectiontime = millis();
+        NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt *0.99 && NAV._sysstate.r.filtered.vvel < 50 ?  detectiontime = detectiontime : detectiontime = millis();
 
         if (millis() - detectiontime >= 300)
         {

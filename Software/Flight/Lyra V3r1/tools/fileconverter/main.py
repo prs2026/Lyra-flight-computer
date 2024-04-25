@@ -7,6 +7,6 @@ inputfile.close()
 
 outputfile = open("outputfile.txt",'w')
 outputfile.truncate(0)
-outputfile.write("float hitldata[][] = {")
+outputfile.write("float hitldata[][] = {{")
 outputfile.write(filecontent)
 outputfile.close()

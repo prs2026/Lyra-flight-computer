@@ -149,7 +149,7 @@ struct variences{
 
 //struct to hold various position related things so as to not bog down the main nav state struct
 struct position{
-    Vector3float accel;
+    float vertaccel;
     float alt;
     float vvel;
     float maxalt;
