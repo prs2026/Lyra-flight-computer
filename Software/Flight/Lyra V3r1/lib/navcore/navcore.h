@@ -11,7 +11,7 @@
 #define Nobs 2   // length of the measurement vector
 
 // measurement std (to be characterized from your sensors)
-#define n1 0.1101 // noise on the 1st measurement component (baro)
+#define n1 2 // noise on the 1st measurement component (baro)
 #define n12 5 // noise on baro when over mach
 #define n2 0.0186 // noise on the 2nd measurement component (accel)
 
@@ -217,7 +217,7 @@ uint32_t NAVCORE::sensorinit(){
     adxlstatus = adxl.init();
     barostatus ? _sysstate.r.errorflag || 0b10000 : _sysstate.r.errorflag;
     magclass.init();
-    
+    gps.init();
     
     return 0;
 }
@@ -247,6 +247,7 @@ void NAVCORE::getsensordata(){
         baro.readsensor(hitlteston,hitlindex);
         adxl.read(hitlteston,hitlindex);
         magclass.readsensor();
+        gps.read();
     #endif // VERBOSETIMES
     
     if (useaccel == 1)
@@ -280,6 +281,7 @@ void NAVCORE::getsensordata(){
     _sysstate.r.imudata = imu.data;
     _sysstate.r.barodata = baro.data;
     _sysstate.r.magdata = magclass.data;
+    _sysstate.r.gpsdata = gps.data;
     
     return;
 }
@@ -291,7 +293,7 @@ void NAVCORE::KFrun(){
 
     Quaterniond adjquat = quatstructtoeigen(quatadj).normalized();
 
-    if (_sysstate.r.filtered.vvel >= 250)
+    if (_sysstate.r.filtered.vvel >= 100)
     {
         K.R = {n12*n12,   0.0,
                 0.0, n2*n2};

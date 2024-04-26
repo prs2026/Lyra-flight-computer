@@ -15,7 +15,7 @@ void setup() { // main core setup
     MP.setled(1);
     MP.initperipherials();
 
-    //Serial.println("\nit be living yo");
+    Serial.println("\n\nit be living yo");
     
     MP.ready = true;
     while (!NAV.ready)

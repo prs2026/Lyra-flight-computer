@@ -24,6 +24,8 @@ Adafruit_LIS3MDL mag;
 
 SX126x Lora;
 
+TeseoLIV3F *teseo;
+
 #define DEFAULT_DEVICE_ADDRESS 0x3A
 #define DEFAULT_DEVICE_PORT 0xFF
 #define I2C_DELAY 1
@@ -663,6 +665,7 @@ int SERIALPORT::senddata(mpstate state,navpacket navstate){
             Serial.printf(">pyro cont : %d \n",state.r.pyroscont);
             Serial.printf(">pyros fired : %d \n",state.r.pyrosfired);
             Serial.printf(">pyro state: %d \n",state.r.pyrostate);
+            Serial.printf(">gps sats: %d \n",navstate.r.gpsdata.sats);
             return 0;
         }
         else
@@ -739,19 +742,39 @@ class GPS{
     char buff[32];
     int idx = 0;
 
-
-
-
     public:
+
+    GPSdata data;
+
+    GPGGA_Info_t gpggainfo;
 
     int init();
 
     int reset();
 
+    int read();
 
 };
 
 int GPS::init(){
+    teseo = new TeseoLIV3F(&Wire,GPSRST,-1);
+
+    if(teseo->init() == GNSS_OK){
+        Serial.println("gps init");
+    }
+    else
+    {
+        Serial.println("gps not ok ):");
+    }
+
+    if(teseo->update() == GNSS_OK){
+        Serial.println("gps ok");
+    }
+    else
+    {
+        Serial.println("gps not ok ):");
+    }
+
 
 
     return 0;
@@ -761,7 +784,17 @@ int GPS::reset(){
     digitalWrite(GPSRST,LOW);
     delay(50);
     digitalWrite(GPSRST,HIGH);
+    return 0;
+}
 
+int GPS::read(){
+    teseo->update();
+
+    gpggainfo = teseo->getGPGGAData();
+
+    data.sats = gpggainfo.sats;
+
+    return 0;
 }
 
 

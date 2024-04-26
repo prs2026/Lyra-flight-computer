@@ -28,6 +28,7 @@
 #include <BasicLinearAlgebra.h>
 
 #include <MicroNMEA.h>
+#include <teseo_liv3f_class.h>
 
 using namespace BLA;
 
@@ -87,6 +88,7 @@ using Eigen::AngleAxisd;
 // define the altitude to fire the main charge
 #define MAINALT 400
 
+
 // flash macros
 #define FLASH_FILESYSTEM_SIZE 13631488 // 13MB
 #define FLASH_TARGET_OFFSET (PICO_FLASH_SIZE_BYTES - (FLASH_FILESYSTEM_SIZE-FLASH_SECTOR_SIZE))
@@ -141,6 +143,12 @@ struct MAGdata{
     Vector3float utesla;
 };
 
+struct GPSdata
+{
+    int sats;
+};
+
+
 // struct to hold the variences, needed for KF 
 struct variences{
     float alt;
@@ -175,7 +183,7 @@ union navpacket
         Quatstruct orientationquatadj;
         variences uncertainty;
         position filtered;
-        
+        GPSdata gpsdata;
     } r;
 };
 
