@@ -10,15 +10,15 @@
 #define Nstate 3 // length of the state vector
 #define Nobs 2   // length of the measurement vector
 
-// measurement std (to be characterized from your sensors)
-#define n1 2 // noise on the 1st measurement component (baro)
-#define n12 5 // noise on baro when over mach
-#define n2 0.0186 // noise on the 2nd measurement component (accel)
+// measurement std 
+#define n1 2 // noise on baro when slow
+#define n12 5 // noise on baro when fast (>100m/s as of 4/25)
+#define n2 0.0186 // noise on accel
 
-// model std (~1/inertia). Freedom you give to relieve your evolution equation
-#define m1 0.05
-#define m2 0.06
-#define m3 0.04
+// model std 
+#define m1 0.05 //alt
+#define m2 0.06 //vel
+#define m3 0.04 //accel
 
 KALMAN<Nstate,Nobs> K; // your Kalman filter
 BLA::Matrix<Nobs> obs; // observation vector
@@ -134,13 +134,11 @@ class NAVCORE{
 };
 
 void NAVCORE::KFinit(){
-    _sysstate.r.filtered.alt = _sysstate.r.barodata.altitudeagl;
-    _sysstate.r.filtered.vvel = _sysstate.r.barodata.verticalvel;
+    _sysstate.r.filtered.alt = 0;
+    _sysstate.r.filtered.vvel = 0;
     _sysstate.r.filtered.vertaccel = 0;
+    _sysstate.r.gpsdata.sats = 100;
     
-    _sysstate.r.uncertainty.alt = 100;
-    _sysstate.r.uncertainty.vvel = 100;
-    _sysstate.r.uncertainty.vaccel = 100;
     prevsysstate = _sysstate;
     prevtime.kfupdate = micros();
     _sysstate.r.orientationquat = adjustwithaccel(0);

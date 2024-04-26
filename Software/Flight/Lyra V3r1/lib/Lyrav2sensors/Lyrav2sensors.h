@@ -746,7 +746,7 @@ class GPS{
 
     GPSdata data;
 
-    GPGGA_Info_t gpggainfo;
+    GSV_Info_t gsvinfo;
 
     int init();
 
@@ -775,8 +775,6 @@ int GPS::init(){
         Serial.println("gps not ok ):");
     }
 
-
-
     return 0;
 }
 
@@ -790,9 +788,10 @@ int GPS::reset(){
 int GPS::read(){
     teseo->update();
 
-    gpggainfo = teseo->getGPGGAData();
+    gsvinfo = teseo->getGSVData();
+    
 
-    data.sats = gpggainfo.sats;
+    data.sats = gsvinfo.tot_sats;
 
     return 0;
 }
