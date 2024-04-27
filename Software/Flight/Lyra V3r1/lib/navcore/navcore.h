@@ -11,14 +11,15 @@
 #define Nobs 2   // length of the measurement vector
 
 // measurement std 
-#define n1 2 // noise on baro when slow
-#define n12 5 // noise on baro when fast (>100m/s as of 4/25)
+#define n1 0.1 // noise on baro when slow
+#define n12 5 // noise on baro when fast (>200m/s as of 4/25)
 #define n2 0.0186 // noise on accel
+#define n22 5 // noise on accel when descending
 
 // model std 
-#define m1 0.05 //alt
-#define m2 0.06 //vel
-#define m3 0.04 //accel
+#define m1 0.01 //alt
+#define m2 0.0005 //vel
+#define m3 0.1 //accel
 
 KALMAN<Nstate,Nobs> K; // your Kalman filter
 BLA::Matrix<Nobs> obs; // observation vector
@@ -57,6 +58,8 @@ class NAVCORE{
 
     
 
+    
+
     double accumz = 0;
 
     uint64_t hitlindex = 0;
@@ -67,6 +70,8 @@ class NAVCORE{
         uint64_t hitltime = 0;
         uint8_t hitlteston = 0;
         navpacket _sysstate;
+
+        uint8_t state;
 
         int useaccel = 1;
 
@@ -168,6 +173,8 @@ NAVCORE::NAVCORE(){
     K.Q = {m1*m1, 0.0,  0.0,
            0.0, m2*m2, 0.0,
            0.0, 0.0, m3*m3};
+
+    state = 0;
 }
 /*
 0 = no errors 
@@ -227,7 +234,7 @@ void NAVCORE::getsensordata(){
     if (hitlteston)
     {
         //Serial.println("hitltesting");
-        while (hitldata[hitlindex][0]*1000 < millis() - hitltime && hitlteston)
+        while ((hitldata[hitlindex][0]*1000)-(timetostart*1000) < millis() - hitltime && hitlteston)
         {
             //Serial.printf("%f,%d\n",hitldata[hitlindex][0]*1000,millis() - hitltime);
             hitlindex++;
@@ -291,10 +298,15 @@ void NAVCORE::KFrun(){
 
     Quaterniond adjquat = quatstructtoeigen(quatadj).normalized();
 
-    if (_sysstate.r.filtered.vvel >= 100)
+    if (_sysstate.r.filtered.vvel >= 200)
     {
         K.R = {n12*n12,   0.0,
                 0.0, n2*n2};
+    }
+    else if (state >= 3)
+    {
+        K.R = {n1*n1,   0.0,
+                0.0, n22*n22};
     }
     else
     {
@@ -312,6 +324,10 @@ void NAVCORE::KFrun(){
     K.update(obs);
 
     BLA::Matrix<3> newstate = K.getxcopy();
+
+    extrapolatedsysstate.r.covariences.x = K.P(0,0);
+    extrapolatedsysstate.r.covariences.y = K.P(1,1);
+    extrapolatedsysstate.r.covariences.z = K.P(2,2);
 
     extrapolatedsysstate.r.filtered.alt = newstate(0); 
     extrapolatedsysstate.r.filtered.vvel = newstate(1); 

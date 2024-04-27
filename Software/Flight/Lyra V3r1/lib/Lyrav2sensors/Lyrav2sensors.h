@@ -130,8 +130,8 @@ void IMU::read(int oversampling, int hitltesting,int hitlindex){
     {
         //time,baro_altitude,accl_z,accl_y,accl_x,gps_altitude,gyro_roll,gyro_pitch,gyro_yaw
         accel.x() = hitldata[hitlindex][4];
-        accel.y() = hitldata[hitlindex][3];
-        accel.z() = hitldata[hitlindex][2];
+        accel.y() = hitldata[hitlindex][2];
+        accel.z() = hitldata[hitlindex][3];
         float convertorads = (PI/180);
         gyro.x() = hitldata[hitlindex][7]*convertorads;
         gyro.y() = hitldata[hitlindex][8]*convertorads;
@@ -342,8 +342,8 @@ int ADXL::read(int hitltest,int hitlindex)
     //time,baro_altitude,accl_z,accl_y,accl_x,gps_altitude,gyro_roll,gyro_pitch,gyro_yaw
     if(hitltest){
         _accel.x() = hitldata[hitlindex][4];
-        _accel.y() = hitldata[hitlindex][3];
-        _accel.z() = hitldata[hitlindex][2];
+        _accel.y() = hitldata[hitlindex][2];
+        _accel.z() = hitldata[hitlindex][3];
     }
 
     else
@@ -490,13 +490,13 @@ BARO::BARO(){
     
 int BARO::getpadoffset(int samplesize){
     double _padalt = 0;
-    // for (int i = 0; i < samplesize; i++)
-    // {
+    for (int i = 0; i < samplesize; i++)
+    {
         _padalt = bmp.readAltitude(SEALEVELPRESSURE);
-        // delayMicroseconds(100);
-    // }
+        delayMicroseconds(100);
+    }
 
-    //_padalt /= samplesize;
+    _padalt /= samplesize;
     Serial.printf("new pad offset: %f\n",_padalt);
     //MP.logtextentry("BMP new pad offset: ",float(_padalt));
     data.padalt = _padalt;
@@ -666,6 +666,9 @@ int SERIALPORT::senddata(mpstate state,navpacket navstate){
             Serial.printf(">pyros fired : %d \n",state.r.pyrosfired);
             Serial.printf(">pyro state: %d \n",state.r.pyrostate);
             Serial.printf(">gps sats: %d \n",navstate.r.gpsdata.sats);
+            Serial.printf(">covarience x: %f \n",navstate.r.covariences.x );
+            Serial.printf(">covarience y: %f \n",navstate.r.covariences.y);
+            Serial.printf(">covarience z: %f \n",navstate.r.covariences.z);
             return 0;
         }
         else

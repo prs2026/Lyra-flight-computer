@@ -174,6 +174,7 @@ union navpacket
         Quatstruct orientationquat;
         Quatstruct orientationquatadj;
         position filtered;
+        Vector3float covariences;
         GPSdata gpsdata;
     } r;
 };

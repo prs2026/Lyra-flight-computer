@@ -1,6 +1,9 @@
 #if !defined(HITLTESTDATA)
 #define HITLTESTDATA
 #include <macros.h>
+
+
+const int timetostart = 10;
 //time,baro_altitude,accl_z,accl_y,accl_x,gps_altitude,gyro_roll,gyro_pitch,gyro_yaw
 const float hitldata[][9] = {
 {0.0,0.0,-0.421237627,9.69803797,1.392956239,0.0,0.004856016,0.003793577,-0.003827341},

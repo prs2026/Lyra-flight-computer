@@ -50,6 +50,7 @@ void setup1() { // nav core setup
     NAV.getpadoffset();
     NAV.KFinit();
     NAV.getsensordata();
+    NAV.getpadoffset();
     NAV.ready = 1;
 }
 
@@ -151,6 +152,8 @@ void loop() { // main core loop
 
     MP.prevtime.loop = micros();
     MP._sysstate.r.state >= 1 ? MP.missionelasped = millis() - MP.liftofftime : MP.missionelasped = 0, MP.landedtime = millis();
+
+    NAV.state = MP._sysstate.r.state;
 
     MP._sysstate.r.uptime = millis();
 }

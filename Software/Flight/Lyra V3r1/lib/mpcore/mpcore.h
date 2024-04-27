@@ -652,11 +652,11 @@ int MPCORE::checkforpyros(){
     int stagingstate = 0;
     if (_sysstate.r.state == 2){
         stagingstate = 1;
-    if (NAV._sysstate.r.orientationeuler.x*(180/M_PI) > 70){
+    if (NAV._sysstate.r.orientationeuler.x*(180/M_PI) > 90-20){
         stagingstate = 2;
-    if (NAV._sysstate.r.orientationeuler.x*(180/M_PI) < 110){
+    if (NAV._sysstate.r.orientationeuler.x*(180/M_PI) < 90+20){
         stagingstate = 3;
-    if(abs(NAV._sysstate.r.orientationeuler.y*(180/M_PI)) > 170){
+    if(abs(NAV._sysstate.r.orientationeuler.y*(180/M_PI)) > 180-20){
         stagingstate = 4;
     if(NAV._sysstate.r.filtered.vvel > 40){
         stagingstate = 5;
@@ -673,7 +673,7 @@ int MPCORE::checkforpyros(){
     {
         //_sysstate.r.pyrosfired = _sysstate.r.pyrosfired & 0b11;
     }
-    //Serial.printf(">stagingstate: %d\n",stagingstate);
+    Serial.printf(">stagingstate: %d\n",stagingstate);
     
 
     P1.checkfire();
