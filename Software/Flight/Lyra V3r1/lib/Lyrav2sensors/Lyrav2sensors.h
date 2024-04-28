@@ -707,19 +707,21 @@ int RADIO::init(){
     SPI.setSCK(SPISCK);
     SPI.begin();
     Lora.setSPI(SPI);
-    Lora.setPins(SXCS,SXRST,BUSY,-1,TXEN,RXEN);
+    Lora.setPins(SXCS,SXRST,BUSY,-1,-1,-1);
     if(!Lora.begin()){
         Serial.println("lora init fail, cry");
     }
+    Serial.println("radio init ok");
     Lora.setFrequency(frequency);
     Lora.setTxPower(17,SX126X_TX_POWER_SX1261);
-    Lora.setLoRaModulation(sf, bw, cr);
+    Lora.setRxGain(LORA_RX_GAIN_BOOSTED);
+    Lora.setLoRaModulation(sf, bw, cr,false);
 
-    uint8_t headerType = SX126X_HEADER_EXPLICIT;                        // Explicit header mode
+    uint8_t headerType = LORA_HEADER_EXPLICIT;                        // Explicit header mode
     uint16_t preambleLength = 12;                                       // Set preamble length to 12
     uint8_t payloadLength = 16;                                         // Initialize payloadLength to 15
     bool crcType = true;                                                // Set CRC enable
-    Lora.setLoRaPacket(headerType, preambleLength, payloadLength, crcType);
+    Lora.setLoRaPacket(headerType, preambleLength, payloadLength, crcType,false);
     Lora.setSyncWord(0x3444);
  
 
@@ -729,12 +731,17 @@ int RADIO::init(){
 int RADIO::sendpacket(telepacket packet){
     //Serial.println("sending packet");
     Lora.beginPacket();
-    Lora.write(101);
+    int j = 0;
+    for (int i = 0; i < sizeof(packet.data); i++)
+    {
+        Lora.write(packet.data[j++]);
+    }
+    
     if (!Lora.endPacket())
     {
         Serial.println("packet send fail");
-        Serial.printf("error code :%d ",Lora.getError());
     }
+    //Serial.printf("error code :%d \n",Lora.getError());
     return 0;
 }
 
@@ -792,7 +799,6 @@ int GPS::read(){
     teseo->update();
 
     gsvinfo = teseo->getGSVData();
-    
 
     data.sats = gsvinfo.tot_sats;
 

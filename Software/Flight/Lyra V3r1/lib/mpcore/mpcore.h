@@ -58,6 +58,7 @@ class MPCORE{
         uint32_t burnouttime = 0;
         bool ready = false;
         bool beepon = 1;
+        bool dogpspassthrough = false;
 
 
 
@@ -673,7 +674,7 @@ int MPCORE::checkforpyros(){
     {
         //_sysstate.r.pyrosfired = _sysstate.r.pyrosfired & 0b11;
     }
-    Serial.printf(">stagingstate: %d\n",stagingstate);
+    //Serial.printf(">stagingstate: %d\n",stagingstate);
     
 
     P1.checkfire();
@@ -852,6 +853,10 @@ int MPCORE::parsecommand(char input){
     case 'c':
     calibrateimus();
     break;
+
+    case 'g':
+    dogpspassthrough = !dogpspassthrough;
+    break;
     
     default:
         break;
@@ -863,7 +868,6 @@ int MPCORE::parsecommand(char input){
 
 int MPCORE::sendtelemetry(){
     telepacket packettosend;
-    uint8_t databufs[32];
     if (radiook = 1)
     {
         packettosend = statetopacket(_sysstate,NAV._sysstate);

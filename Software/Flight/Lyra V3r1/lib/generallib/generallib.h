@@ -105,8 +105,8 @@ inline telepacket statetopacket(mpstate state,navpacket navstate){
     packet.r.errorflagnav = navstate.r.errorflag;
     packet.r.state = state.r.state;
 
-    packet.r.altitude = int16_t(navstate.r.barodata.altitudeagl*10);
-    packet.r.verticalvel = int16_t(navstate.r.barodata.verticalvel*100);
+    packet.r.altitude = int16_t(navstate.r.filtered.alt*10);
+    packet.r.verticalvel = int16_t(navstate.r.filtered.vvel*100);
     
     packet.r.status = state.r.status;
     return packet;
