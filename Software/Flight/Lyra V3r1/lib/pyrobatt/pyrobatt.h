@@ -70,7 +70,7 @@ void PYROCHANNEL::checkfire(){
 }
 
 int PYROCHANNEL::getcont(){
-    continuity = digitalRead(CONT_PIN);
+    continuity = !digitalRead(CONT_PIN);
     return continuity;
 }
 
