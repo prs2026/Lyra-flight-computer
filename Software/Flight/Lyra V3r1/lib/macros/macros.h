@@ -15,20 +15,27 @@
 #include <Adafruit_ADXL375.h>
 #include <Adafruit_LIS3MDL.h>
 
+//comms libs
 #include "SPI.h"
 #include <Wire.h>
 
+// im not sure why this is there tbh
 #include <string.h>
 
 // log buf lib
 #include <CircularBuffer.hpp>
+
+// radio lib
 #include <SX126x.h>
 
+//filter lib and dependecy
 #include <Kalman.h>
 #include <BasicLinearAlgebra.h>
 
+//gps libraries
 #include <MicroNMEA.h>
 #include <teseo_liv3f_class.h>
+
 
 using namespace BLA;
 
@@ -43,7 +50,6 @@ using Eigen::AngleAxisd;
 
 // pin for buzzer
 #define BUZZERPIN 16
-
 
 // pyro enable pins
 #define P1_EN 19
@@ -67,14 +73,17 @@ using Eigen::AngleAxisd;
 #define MISO 4
 #define SPISCK 6
 
+//radio lines
 #define RXEN 0
 #define TXEN 1
 #define SXRST 2
 #define SXCS 5
 #define BUSY 7
 
+//gps rst line
 #define GPSRST  11
 
+//pins broken out to pads
 #define BRKOUT1 10 //      SPI1 SCK  UART1 CTS  I2C1 SDA
 #define BRKOUT2 27 // ADC1 SPI1 TX   UART1 RTS  I2C1 SCL
 #define BRKOUT3 28 // ADC2 SPI1 RX   UART0 TX   I2C0 SDA
@@ -115,7 +124,7 @@ struct Quatstruct{
 };
 
 
-// define structs to hold all data from sensors
+// struct to hold all low G IMU data
 struct IMUdata{
     Vector3float accel;
     Vector3float gyro;
@@ -123,11 +132,13 @@ struct IMUdata{
     float temp;
 };
 
+// struct to hold all high G IMU data
 struct ADXLdata{
     Vector3float accel;
     float absaccel;
 };
 
+//struct to hold all barometer data
 struct BAROdata{
     float pressure;
     float altitude;
@@ -138,11 +149,13 @@ struct BAROdata{
     float padalt;
 };
 
+// struct to hold all magnetometer data
 struct MAGdata{
     Vector3float gauss;
     Vector3float utesla;
 };
 
+// struct to hold all gps data
 struct GPSdata
 {
     int sats;

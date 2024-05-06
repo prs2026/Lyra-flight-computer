@@ -19,13 +19,17 @@ Adafruit_BMP3XX bmp;
 
 // adafruit adxl object
 Adafruit_ADXL375 adxl375((int32_t)12345,&Wire);
-
+// adafruit magnetometer object
 Adafruit_LIS3MDL mag;
 
+//radio object
 SX126x Lora;
 
+
+//gps object
 TeseoLIV3F *teseo;
 
+//gps defines
 #define DEFAULT_DEVICE_ADDRESS 0x3A
 #define DEFAULT_DEVICE_PORT 0xFF
 #define I2C_DELAY 1
@@ -68,6 +72,8 @@ public:
     int init();
     void read(int oversampling = 5,int hitltesting = 0,int hitlindex = 0);
     IMUdata readraw(int oversampling = 5,int interval = 100);
+
+    //calibration matrices (todo)
     Vector3d calibrationpos;
     Vector3d calibrationneg;
 
@@ -257,6 +263,8 @@ IMUdata IMU::readraw(int oversampling, int interval){
 }
 
 /*--------------------------------------------------------------------------------------*/
+
+//class to store all code to interface with the high G accel 
 class ADXL
 {
 private:
@@ -278,6 +286,7 @@ public:
     Matrix3d acal;
 };
 
+//constructor, assigns values to the offsets, bcal, and acal
 ADXL::ADXL()
 {
     offsets << 0,0,0;
@@ -295,6 +304,7 @@ ADXL::ADXL()
     return;
 }
 
+//initlizes the sensor library, returns 1 if failed and 0 if success
 int ADXL::init()
 {
     //Serial.println("starting adxl init");
@@ -313,6 +323,7 @@ int ADXL::init()
     
 }
 
+//copy pasted get offset function
 int ADXL::getnewoffsets(){
     int16_t x, y, z;
     x = adxl375.getX();
@@ -334,12 +345,14 @@ int ADXL::getnewoffsets(){
     return 0;
 }
 
+// read sensor and apply correction matrices
 int ADXL::read(int hitltest,int hitlindex)
 {
     Vector3d _accel;
 
     sensors_event_t event;
     //time,baro_altitude,accl_z,accl_y,accl_x,gps_altitude,gyro_roll,gyro_pitch,gyro_yaw
+    // if in the HITL test, inject those readings
     if(hitltest){
         _accel.x() = hitldata[hitlindex][4];
         _accel.y() = hitldata[hitlindex][2];
@@ -370,6 +383,8 @@ int ADXL::read(int hitltest,int hitlindex)
     return 0;
 }
 
+
+// read direct from sensor without any corrections
 ADXLdata ADXL::readraw(int oversampling, int interval){
     ADXLdata _data;
     Vector3d accel;
@@ -426,7 +441,7 @@ MAG::MAG(){
     return;
 }
 
-
+//init sensor library and begin communications with the sensor, returns 1 if failed and 0 if successful.
 int MAG::init(){
     if (!mag.begin_I2C(0x1C,&Wire))
     {
@@ -438,7 +453,7 @@ int MAG::init(){
     //MP.logtextentry("BMP init fail");
     return 0;
 }
-
+//read sensor and store data to internal struct
 void MAG::readsensor(){
 
     MAGdata _data;
@@ -487,7 +502,7 @@ public:
 BARO::BARO(){
     return;
 }
-    
+//take a bunch of readings and average them to get the pad altitude
 int BARO::getpadoffset(int samplesize){
     double _padalt = 0;
     for (int i = 0; i < samplesize; i++)
@@ -504,6 +519,7 @@ int BARO::getpadoffset(int samplesize){
     return 0;
 }
 
+// prep the vvel calcs for HITL
 void BARO::setforhitl(){
     prevalt = hitldata[0][1];
     prevverticalvel[0] = 0;
@@ -514,6 +530,7 @@ void BARO::setforhitl(){
     return;
 }
 
+// initilizing the baro sensor library, returns 1 if failure and 0 if success
 int BARO::init(){
     if (!bmp.begin_I2C(0x76,&Wire))
     {
@@ -528,7 +545,7 @@ int BARO::init(){
     //MP.logtextentry("BMP init fail");
     return 0;
 }
-
+// reads sensor and calcs vvel from the derivative, then stores data in internal struct. 
 void BARO::readsensor(int hitltest, int hitlindex){
     BAROdata _data;
     //time,baro_altitude,accl_z,accl_y,accl_x,gps_altitude,gyro_roll,gyro_pitch,gyro_yaw
@@ -590,6 +607,7 @@ void BARO::readsensor(int hitltest, int hitlindex){
     prevalt = _data.altitude;
     prevtime = micros();
     data = _data;
+    return;
 }
 
 class SERIALPORT{
@@ -604,6 +622,7 @@ public:
 
 SERIALPORT::SERIALPORT(){}
 
+//code to initilze the serial moniter
 int SERIALPORT::init(){
             Serial.begin(115200);
 
@@ -623,6 +642,7 @@ int SERIALPORT::init(){
             }
     }
 
+// send telemetr yover serial to teleplot, its ugly and I hate it but idk a better + more readable way would be 
 int SERIALPORT::senddata(mpstate state,navpacket navstate){
         if (sendtoplot)
         {
@@ -682,7 +702,6 @@ int SERIALPORT::senddata(mpstate state,navpacket navstate){
     }
 /*-------------------------------------------------------------------------------------------*/
 
-
 class RADIO{
 
 
@@ -700,7 +719,7 @@ class RADIO{
     int sendpacket(telepacket packet);
 
 };
-
+// init all the pins and everything for the radio, then inits the library and communications with it. returns 1 if failed and 0 if succesful
 int RADIO::init(){
     SPI.setRX(MISO);
     SPI.setTX(MOSI);
@@ -710,6 +729,7 @@ int RADIO::init(){
     Lora.setPins(SXCS,SXRST,BUSY,-1,-1,-1);
     if(!Lora.begin()){
         Serial.println("lora init fail, cry");
+        return 1;
     }
     Serial.println("radio init ok");
     Lora.setFrequency(frequency);
@@ -727,7 +747,7 @@ int RADIO::init(){
 
     return 0;
 }
-
+//send a telemetry packet
 int RADIO::sendpacket(telepacket packet){
     //Serial.println("sending packet");
     Lora.beginPacket();
@@ -765,7 +785,7 @@ class GPS{
     int read();
 
 };
-
+// initilize the gps, im not conviced this can return false but if it did it would return 1 for failure and 0 for success.
 int GPS::init(){
     teseo = new TeseoLIV3F(&Wire,GPSRST,-1);
 
@@ -775,6 +795,7 @@ int GPS::init(){
     else
     {
         Serial.println("gps not ok ):");
+        return 1;
     }
 
     if(teseo->update() == GNSS_OK){
@@ -783,11 +804,13 @@ int GPS::init(){
     else
     {
         Serial.println("gps not ok ):");
+        return 1;
     }
 
     return 0;
 }
 
+//do hardware reset of teseo gps
 int GPS::reset(){
     digitalWrite(GPSRST,LOW);
     delay(50);
@@ -795,6 +818,8 @@ int GPS::reset(){
     return 0;
 }
 
+
+//read the gps and store data in the internal struct
 int GPS::read(){
     teseo->update();
 
