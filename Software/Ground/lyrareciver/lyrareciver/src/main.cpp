@@ -2,10 +2,12 @@
 #include <macros.h>
 #include <radio.h>
 #include <lcd.h>
+#include <sdcard.h>
 
 
 RADIO radio;
 LCDDISPLAY lcddisplay;
+SDCARD sdcard;
 
 telepacket currentstate;
 
@@ -27,6 +29,7 @@ void setup() {
   radio.init();
   Serial.println("radio good");
   lcddisplay.init();
+  sdcard.init();
   ready = true;
 }
 
@@ -60,6 +63,7 @@ void loop1(){
     Serial.printf(">State: %d\n",currentstate.r.state);
     Serial.printf(">Altitude: %f\n",float(currentstate.r.altitude)/10);
     Serial.printf(">Verticalvel: %f\n",float(currentstate.r.verticalvel)/100);
+    Serial.printf(">RSSI: %f\n",radio.laspacketrssi);
     packettime = millis();
   }
 }

@@ -17,7 +17,9 @@ class RADIO{
     uint32_t bw = 125000;                                               // Bandwidth: 125 kHz
     uint8_t cr = 5;    
 
+    
     public:
+    float laspacketrssi = 0;
 
     int init();
     telepacket recivepacket();
@@ -81,6 +83,8 @@ telepacket RADIO::recivepacket(){
         //Serial.printf("%d, ",buff[k]);
         k++;
     }
+
+    laspacketrssi = Lora.packetRssi();
     
 
     return result;

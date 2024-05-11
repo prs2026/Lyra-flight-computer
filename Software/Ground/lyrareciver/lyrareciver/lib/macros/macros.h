@@ -3,13 +3,16 @@
 // core libs
 #include <Arduino.h>
 
-// sensor libs
-
 #include <SPI.h>
 #include <Wire.h>
 
 #include <SX126x.h>
-#include <Adafruit_ST7789.h>
+// #include <GFX.h>    // Core graphics library 
+// #include <ST7789.h>  // Hardware-specific library 
+
+
+#include <SD.h>
+#include "pico/stdlib.h"
 
 #define BUTTON1 5
 #define BUTTON2 3
@@ -50,6 +53,7 @@
 #define RXEN 28
 
 #define BATTSENSE 29
+
 
 //define basic data structs
 struct Vector3float

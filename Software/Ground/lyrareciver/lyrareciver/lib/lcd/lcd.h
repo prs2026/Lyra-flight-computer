@@ -4,8 +4,9 @@
 #include <Arduino.h>
 #include <macros.h>
 
-Adafruit_ST7789 tft = Adafruit_ST7789(&SPI, LCDCS, LCDDC, LCDRST);
-
+#include <Arduino_GFX_Library.h>
+Arduino_DataBus *bus = new Arduino_HWSPI(LCDDC /* DC */, LCDCS /* CS */, &SPI);
+Arduino_GFX *gfx = new Arduino_ILI9341(bus, LCDRST /* RST */);
 
 class LCDDISPLAY
 {
@@ -22,10 +23,15 @@ LCDDISPLAY::LCDDISPLAY(/* args */)
 
 bool LCDDISPLAY::init(){
     Serial.println("init display");
-    tft.init(240,320);
-    Serial.println("init complete?");
+    if(!gfx->begin()){
+        Serial.println("display init fail ):");
+    }
 
-    tft.fillScreen(ST77XX_BLACK);
+    gfx->fillScreen(BLACK);
+    gfx->setCursor(10, 10);
+    gfx->setTextColor(RED);
+    gfx->println("Hello World!");
+    Serial.println("out of lcd init");
     return 1;
 }
 
