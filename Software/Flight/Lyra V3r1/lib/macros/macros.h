@@ -126,48 +126,48 @@ struct Quatstruct{
 
 // struct to hold all low G IMU data
 struct IMUdata{
-    Vector3float accel;
-    Vector3float gyro;
-    float absaccel;
-    float temp;
+    Vector3float accel; //
+    Vector3float gyro; //
+    float absaccel; //
+    float temp;//
 };
 
 // struct to hold all high G IMU data
 struct ADXLdata{
-    Vector3float accel;
-    float absaccel;
+    Vector3float accel;//
+    float absaccel;//
 };
 
 //struct to hold all barometer data
 struct BAROdata{
-    float pressure;
-    float altitude;
-    float temp;
-    float verticalvel;
-    float maxrecordedalt;
-    float altitudeagl;
-    float padalt;
+    float pressure; //
+    float altitude;//
+    float temp;//
+    float verticalvel;//
+    float maxrecordedalt;//
+    float altitudeagl;//
+    float padalt;//
 };
 
 // struct to hold all magnetometer data
 struct MAGdata{
-    Vector3float gauss;
-    Vector3float utesla;
+    Vector3float gauss; //
+    Vector3float utesla; //
 };
 
 // struct to hold all gps data
 struct GPSdata
 {
-    int sats;
+    int sats; //
 };
 
 
 //struct to hold various position related things so as to not bog down the main nav state struct
 struct position{
-    float vertaccel;
-    float alt;
-    float vvel;
-    float maxalt;
+    float vertaccel; //
+    float alt;//
+    float vvel;//
+    float maxalt;//
 };
 
 
@@ -176,35 +176,35 @@ union navpacket
 {
     struct
     {
-        uint16_t errorflag;
-        uint32_t uptime;
-        IMUdata imudata;
-        BAROdata barodata;
-        ADXLdata adxldata;
-        MAGdata magdata;
-        Vector3float accelworld;
-        Vector3float orientationeuler;
-        Quatstruct orientationquat;
-        Quatstruct orientationquatadj;
-        position filtered;
-        Vector3float covariences;
-        GPSdata gpsdata;
+        uint16_t errorflag;//
+        uint32_t uptime; //
+        IMUdata imudata; //
+        BAROdata barodata; //
+        ADXLdata adxldata; //
+        MAGdata magdata; //
+        Vector3float accelworld; //
+        Vector3float orientationeuler; //
+        Quatstruct orientationquat; //
+        Quatstruct orientationquatadj; //
+        position filtered; //
+        Vector3float covariences; //
+        GPSdata gpsdata; //
     } r;
 };
 
 // union for all data relating to the MP core that needs to be shared
 union mpstate{
     struct{
-        uint16_t errorflag;
-        uint32_t uptime;
-        uint32_t MET;
-        uint8_t state;
-        uint8_t pyrosfired;
-        uint8_t pyroscont;
-        uint8_t pyrostate;
-        uint16_t status;
-        int32_t missiontime;
-        float batterystate;
+        uint16_t errorflag; //
+        uint32_t uptime; //
+        uint32_t MET; //
+        uint8_t state; //
+        uint8_t pyrosfired; //
+        uint8_t pyroscont;//
+        uint8_t pyrostate;//
+        uint16_t status; //
+        int32_t missiontime; //
+        float batterystate; //
     } r;
     uint8_t data8[sizeof(r)/sizeof(uint8_t)];
 };

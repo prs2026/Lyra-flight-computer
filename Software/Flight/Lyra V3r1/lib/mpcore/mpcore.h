@@ -439,7 +439,7 @@ int MPCORE::previewdata(){
 int MPCORE::dumpdata(){
     Serial.println("dumping data to serial");
     Serial.println("newfile");
-    Serial.println("index, checksum,uptime mp,uptime nav,missiontime,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, mag x, mag y, mag z, accelhighg x, accelhighg y, accelhighg z, gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, presusre, verticalvel,filtered vvel, maxalt, altitudeagl, filtered alt, imutemp, barotemp,state,battstate,pyros fired,pyros cont,pyros state, checksum2");
+    Serial.println("index, checksum,uptime mp,uptime nav,missiontime,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, mag x, mag y, mag z, accelhighg x, accelhighg y, accelhighg z, gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z,quatadj w, quatadj x, quatadj y, quatadj z, altitude, presusre, verticalvel,filtered vvel, maxalt, altitudeagl, filtered alt, imutemp, barotemp,abs imu accel,abs adxl accel, pad altitude, baro max alt, mag raw x, mag raw y, mag raw z, cov x, cov y, cov z, sats, status, met, filtered accel ,state,battstate,pyros fired,pyros cont,pyros state, checksum2");
     uint32_t entrynum = 0;
     logpacket preventry;
     while (entrynum < first_empty_page)
@@ -448,25 +448,33 @@ int MPCORE::dumpdata(){
         if (readentry.r.MPstate.r.missiontime < preventry.r.MPstate.r.missiontime)
         {
             Serial.println("newfile");
-            Serial.println("index, checksum,uptime mp,uptime nav,missiontime,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, accelhighg x, accelhighg y, accelhighg z, gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z, altitude, presusre, verticalvel,filtered vvel, maxalt, altitudeagl, filtered alt, imutemp, barotemp,state,battstate,pyros fired,pyros cont,pyros state, checksum2");
+            Serial.println("index, checksum,uptime mp,uptime nav,missiontime,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, mag x, mag y, mag z, accelhighg x, accelhighg y, accelhighg z, gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z,quatadj w, quatadj x, quatadj y, quatadj z, altitude, presusre, verticalvel,filtered vvel, maxalt, altitudeagl, filtered alt, imutemp, barotemp,abs imu accel,abs adxl accel, pad altitude, baro max alt, mag raw x, mag raw y, mag raw z, cov x, cov y, cov z, sats, status, met, filtered accel ,state,battstate,pyros fired,pyros cont,pyros state, checksum2");
         }
         
         Serial.printf(
-        "%d, 101,"// index checksum,
-        "%d,%d,%d,"//uptimes, mission time
-        "%d,%d,"//errorflag
-        "%f,%f,%f," // accel
-        "%f,%f,%f," // accel
-        "%f,%f,%f," // accel world
-        "%f,%f,%f," // high g accel
-        "%f,%f,%f," // gyro
-        "%f,%f,%f," // orientation euler"
-        "%f,%f,%f,%f," // orientation quat"
-        "%f,%f," //altitude, presusre
-        "%f,%f," //verticalvel,filtered vvel,
-        "%f,%f,%f," // max alt, altitudeagl, filtered alt
-        "%f,%f," // temps, imu baro
-        "%d,%f,%d,%d,%d, 202\n", //state, battstate, pyros, pyrocont, pyrostate
+        "%d, 101,"// index checksum, /
+        "%d,%d,%d,"//uptimes, mission time /
+        "%d,%d,"//errorflag //
+        "%f,%f,%f," // accel /
+        "%f,%f,%f," // accel world /
+        "%f,%f,%f," // mag /
+        "%f,%f,%f," // high g accel /
+        "%f,%f,%f," // gyro /
+        "%f,%f,%f," // orientation euler" /
+        "%f,%f,%f,%f," // orientation quat" /
+        "%f,%f,%f,%f," // orientation quatadj" /
+        "%f,%f," //altitude, presusre /
+        "%f,%f," //verticalvel,filtered vvel, /
+        "%f,%f,%f," // max alt, altitudeagl, filtered alt /
+        "%f,%f," // temps, imu baro /
+        "%f,%f," // abs accel imu, abs accel adxl //
+        "%f,%f," // pad altitude, baro max alt //
+        "%f,%f,%f," // mag raw //
+        "%f,%f,%f," // filter covariences //
+        "%d," // num gps sats //
+        "%d,%d," // status? MET? //
+        "%f," // filtered accel /
+        "%d,%f,%d,%d,%d,%d\n", //state, battstate, pyros fired, pyrocont, pyrostate //
         entrynum,
         readentry.r.MPstate.r.uptime, 
         readentry.r.navsysstate.r.uptime,
@@ -505,6 +513,11 @@ int MPCORE::dumpdata(){
         readentry.r.navsysstate.r.orientationquat.y, 
         readentry.r.navsysstate.r.orientationquat.z,
 
+        readentry.r.navsysstate.r.orientationquatadj.w, 
+        readentry.r.navsysstate.r.orientationquatadj.x,
+        readentry.r.navsysstate.r.orientationquatadj.y, 
+        readentry.r.navsysstate.r.orientationquatadj.z,
+
         readentry.r.navsysstate.r.barodata.altitude, 
         readentry.r.navsysstate.r.barodata.pressure, 
 
@@ -518,11 +531,34 @@ int MPCORE::dumpdata(){
         readentry.r.navsysstate.r.imudata.temp,
         readentry.r.navsysstate.r.barodata.temp,
 
+        readentry.r.navsysstate.r.imudata.absaccel,
+        readentry.r.navsysstate.r.adxldata.absaccel,
+
+        readentry.r.navsysstate.r.barodata.padalt,
+        readentry.r.navsysstate.r.barodata.maxrecordedalt,
+
+        readentry.r.navsysstate.r.magdata.gauss.x, 
+        readentry.r.navsysstate.r.magdata.gauss.y, 
+        readentry.r.navsysstate.r.magdata.gauss.z,
+
+        readentry.r.navsysstate.r.covariences.x, 
+        readentry.r.navsysstate.r.covariences.y, 
+        readentry.r.navsysstate.r.covariences.z,
+
+        readentry.r.navsysstate.r.gpsdata.sats,
+
+        readentry.r.MPstate.r.status,
+        readentry.r.MPstate.r.MET,
+
+        readentry.r.navsysstate.r.filtered.vertaccel,
+
         readentry.r.MPstate.r.state,
         readentry.r.MPstate.r.batterystate,
         readentry.r.MPstate.r.pyrosfired,
         readentry.r.MPstate.r.pyroscont,
-        readentry.r.MPstate.r.pyrostate
+        readentry.r.MPstate.r.pyrostate,
+        202
+        
     );
     entrynum++;
     preventry = readentry;
