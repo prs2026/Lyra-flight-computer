@@ -695,11 +695,11 @@ int MPCORE::checkforpyros(){
         stagingstate = 3;
     if(abs(NAV._sysstate.r.orientationeuler.y*(180/M_PI)) > 180-20){
         stagingstate = 4;
-    if(NAV._sysstate.r.filtered.vvel > 40){
+    if(NAV._sysstate.r.filtered.vvel > 20){
         stagingstate = 5;
     if(NAV._sysstate.r.filtered.alt > 100){
         stagingstate = 6;
-    if(millis() - burnouttime > 4000)
+    if(millis() - burnouttime > 1000)
     {
         stagingstate = 7;
         _sysstate.r.pyrosfired = _sysstate.r.pyrosfired | 0b100;
