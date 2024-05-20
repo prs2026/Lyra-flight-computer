@@ -400,6 +400,12 @@ Quatstruct NAVCORE::adjustwithaccel(float alpha){
 
 Vector3float NAVCORE::getworldaccel(navpacket _state){
     Vector3d accelvec = vectorfloatto3(_state.r.imudata.accel);
+    
+    if (accelvec.norm() > 20*9.81)
+    {
+        Vector3d accelvec = vectorfloatto3(_state.r.adxldata.accel);
+    }
+
     Quaterniond orientationquat3 = quatstructtoeigen(_state.r.orientationquatadj);//.inverse();
 
     Quaterniond accelquat2;

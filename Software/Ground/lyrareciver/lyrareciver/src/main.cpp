@@ -64,6 +64,19 @@ void loop1(){
     Serial.printf(">Altitude: %f\n",float(currentstate.r.altitude)/10);
     Serial.printf(">Verticalvel: %f\n",float(currentstate.r.verticalvel)/100);
     Serial.printf(">RSSI: %f\n",radio.laspacketrssi);
+    Serial.printf(">Accel X: %f\n",float(currentstate.r.accel.x)/100);
+    Serial.printf(">Accel Y: %f\n",float(currentstate.r.accel.y)/100);
+    Serial.printf(">Accel Z: %f\n",float(currentstate.r.accel.z)/100);
+    Serial.printf(">Gyro X: %f\n",float(currentstate.r.gyro.x)/100);
+    Serial.printf(">Gyro Y: %f\n",float(currentstate.r.gyro.y)/100);
+    Serial.printf(">Gyro Z: %f\n",float(currentstate.r.gyro.z)/100);
+    Serial.printf(">Pitch: %f\n",float(currentstate.r.orientationeuler.x)/100);
+    Serial.printf(">Yaw: %f\n",float(currentstate.r.orientationeuler.y)/100);
+    Serial.printf(">Roll: %f\n",float(currentstate.r.orientationeuler.z)/100);
+    Serial.printf(">Uptime: %d\n",currentstate.r.uptime);
     packettime = millis();
+    digitalWrite(LEDINDICATION,HIGH);
+    delay(100);
+    digitalWrite(LEDINDICATION,LOW);
   }
 }

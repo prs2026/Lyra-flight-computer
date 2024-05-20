@@ -4,10 +4,6 @@
 #include <Arduino.h>
 #include <macros.h>
 
-#include <Arduino_GFX_Library.h>
-Arduino_DataBus *bus = new Arduino_HWSPI(LCDDC /* DC */, LCDCS /* CS */, &SPI);
-Arduino_GFX *gfx = new Arduino_ILI9341(bus, LCDRST /* RST */);
-
 class LCDDISPLAY
 {
 private:
@@ -23,14 +19,11 @@ LCDDISPLAY::LCDDISPLAY(/* args */)
 
 bool LCDDISPLAY::init(){
     Serial.println("init display");
-    if(!gfx->begin()){
-        Serial.println("display init fail ):");
-    }
-
-    gfx->fillScreen(BLACK);
-    gfx->setCursor(10, 10);
-    gfx->setTextColor(RED);
-    gfx->println("Hello World!");
+    digitalWrite(LCDCS,LOW);
+    int8_t returned = SPI.transfer(0xab);
+    digitalWrite(LCDCS,HIGH);
+    
+    Serial.printf("recived: %d\n");
     Serial.println("out of lcd init");
     return 1;
 }
