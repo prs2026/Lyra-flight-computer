@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name ".kicad_sym")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/easyeda2kicad/.kicad_sym")(options "")(descr ""))
+)
