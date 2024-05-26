@@ -1,0 +1,6 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "lyrav2lib")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/Lyra_flight_computer/lyrav3r1/lyrav3r2/lyrav2lib.kicad_sym")(options "")(descr ""))
+  (lib (name ".kicad_sym")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/easyeda2kicad/.kicad_sym")(options "")(descr ""))
+  (lib (name "easyeda2kicad")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/easyeda2kicad/easyeda2kicad.kicad_sym")(options "")(descr ""))
+)
