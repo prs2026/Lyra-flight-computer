@@ -30,4 +30,10 @@ K
 F 
 $ENDCMP
 #
+$CMP CPT-14146-80T
+D Piezo Buzzers & Audio Indicators buzzer, 14 mm Round, 6.7 mm deep, 10 Vp-p, 80 dB, Through Hole, Piezo Audio Transducer
+K
+F https://www.cuidevices.com/product/resource/digikeypdf/cpt-14146-80t.pdf
+$ENDCMP
+#
 #End Doc Library
