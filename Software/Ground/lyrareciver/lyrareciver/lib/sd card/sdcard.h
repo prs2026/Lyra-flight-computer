@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <macros.h>
 
+
 #define SPI_SPEED SD_SCK_MHZ(4)
 
 class SDCARD
@@ -20,6 +21,8 @@ SDCARD::SDCARD(/* args */)
 }
 
 bool SDCARD::init(){
+    SPI.end();
+    SPI.begin();
     Serial.println("init start");
     if (!SD.begin(SDCS))
     {
@@ -32,7 +35,7 @@ bool SDCARD::init(){
     {
         Serial.println("SD file init fail");
     }
-    dataFile.print("testing");
+    dataFile.print("testing\n");
     dataFile.close();
     return 0;
 }

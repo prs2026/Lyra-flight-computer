@@ -25,11 +25,12 @@ void setup() {
   digitalWrite(LEDINDICATION,HIGH);
   delay(500);
   digitalWrite(LEDINDICATION,LOW);
-  
   radio.init();
-  Serial.println("radio good");
-  lcddisplay.init();
   sdcard.init();
+  Serial.println("radio good");
+  
+  lcddisplay.init();
+
   ready = true;
 }
 

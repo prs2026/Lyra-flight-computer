@@ -35,6 +35,7 @@ int RADIO::init(){
     Lora.setPins(SXCS,SXRST,BUSY,-1,-1,-1);
     if(!Lora.begin()){
         Serial.println("lora init fail, cry");
+        return 1;
     }
     Serial.println("radio init ok");
     Lora.setFrequency(frequency);
@@ -65,9 +66,14 @@ telepacket RADIO::recivepacket(){
         j++;
     }
     int k = 0;
+    if (buff[k] != 0x12)
+    {
+        Serial.println("packet not aligned, expected ");
+    }
+    
     while (buff[k] != 0x12 && k < 127)
     {
-        Serial.printf("packet not aligned, expected 0x12 got %x\n",buff[k]);
+        Serial.printf("0x12 got %x\n",buff[k]);
         k++;
     }
     if (k >= 127)
