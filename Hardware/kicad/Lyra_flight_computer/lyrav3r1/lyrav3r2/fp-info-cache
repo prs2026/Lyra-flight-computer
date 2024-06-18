@@ -1,4 +1,4 @@
-23136941012596810
+23162474680572488
 .pretty
 ANT-SMD_1909763-1
 
@@ -77,6 +77,13 @@ FILTER-SMD_5P-L1.4-W1.1-L
 5
 5
 .pretty
+FILTER-SMD_5P-L1.4-W1.1-L_HDF1588E-B2
+
+
+0
+5
+5
+.pretty
 FPC-SMD_40P-P0.50_AMPHENOL_62684-402100ALF
 
 
@@ -90,6 +97,20 @@ GPSM-SMD_ATGM336H-TR
 0
 18
 18
+.pretty
+IND-SMD_L1.7-W1.0-1
+
+
+0
+2
+2
+.pretty
+LGA-6_L1.1-W0.7-P0.40-BL
+
+
+0
+6
+6
 .pretty
 LGA-12_L2.0-W2.0-P0.50-BL
 
@@ -66345,6 +66366,13 @@ net tie
 0
 4
 4
+Oh_Fuck
+Oh Fuck 0603
+Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator
+resistor
+0
+4
+4
 OptoDevice
 ADNS-9800
 Laser Gaming Sensor ADNS-9800
@@ -87338,6 +87366,62 @@ rotary encoder
 0
 7
 6
+SamacSys_Parts
+12BH349GR
+12BH349-GR-1
+Battery
+0
+2
+2
+SamacSys_Parts
+CPT1414680T
+CPT-14146-80T-2
+Inductor
+0
+2
+2
+SamacSys_Parts
+GP1575124A02
+GP.1575.12.4.A.02-1
+Antenna
+0
+1
+1
+SamacSys_Parts
+HDRRA12W64P254_3X4_1016X254X810P
+TSW-104-08-T-T-RA
+Connector
+0
+12
+12
+SamacSys_Parts
+NE555DR
+D (R-PDSO-G8)
+Integrated Circuit
+0
+8
+8
+SamacSys_Parts
+PKMCS0909E4000R1
+PKMCS0909E4000-R1-6
+Loudspeaker or Buzzer
+0
+2
+2
+SamacSys_Parts
+SON110P970X1010X230-18N
+TESEO-LIV3F
+Integrated Circuit
+0
+18
+18
+SamacSys_Parts
+TESEOLIV4FTR
+TESEO-LIV4FTR-1
+Integrated Circuit
+0
+18
+18
 Sensor
 ASAIR_AM2302_P2.54mm_Lead2.75mm_TabDown
 Temperature and humidity module, http://akizukidenshi.com/download/ds/aosong/AM2302.pdf
@@ -94786,3 +94870,24 @@ XSON-8_L4.0-W4.0-P0.80-TL-EP
 0
 9
 9
+footprints
+0900FM15D0039E_JOT
+
+0900FM15D0039E 
+0
+10
+10
+footprints
+0900FM15D0039E_JOT-L
+
+0900FM15D0039E 
+0
+10
+10
+footprints
+0900FM15D0039E_JOT-M
+
+0900FM15D0039E 
+0
+10
+10
