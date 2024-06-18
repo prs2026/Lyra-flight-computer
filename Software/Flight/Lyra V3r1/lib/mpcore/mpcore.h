@@ -59,6 +59,7 @@ class MPCORE{
         bool ready = false;
         bool beepon = 1;
         bool dogpspassthrough = false;
+        
 
 
 
@@ -87,11 +88,11 @@ class MPCORE{
         };
         timings intervals[6] = {
             {50,1000,50,1000,10000}, // ground idle
-            {50,500,100, 1000,800}, // powered ascent
-            {50,500,100,1000,800}, // unpowered ascent
-            {50,500,100,1000,800}, // ballistic descent
-            {50,800,100,1000,800}, //ready to land
-            {1000,1500,100,1000,500} // landed
+            {50,500,100, 200,800}, // powered ascent
+            {50,500,100,333,800}, // unpowered ascent
+            {50,500,100,333,800}, // ballistic descent
+            {50,800,100,333,800}, //ready to land
+            {1000,1500,100,1500,500} // landed
         };
         timings prevtime;
         bool ledstate = false;

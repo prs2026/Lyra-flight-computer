@@ -222,7 +222,7 @@ uint32_t NAVCORE::sensorinit(){
     adxlstatus = adxl.init();
     barostatus ? _sysstate.r.errorflag || 0b10000 : _sysstate.r.errorflag;
     magclass.init();
-    gps.init();
+    //gps.init();
     
     return 0;
 }
@@ -252,7 +252,7 @@ void NAVCORE::getsensordata(){
         baro.readsensor(hitlteston,hitlindex);
         adxl.read(hitlteston,hitlindex);
         magclass.readsensor();
-        gps.read();
+        //gps.read();
     #endif // VERBOSETIMES
     
     if (useaccel == 1)
@@ -366,6 +366,8 @@ Quatstruct NAVCORE::intergrategyros(double timestep){
 Quatstruct NAVCORE::adjustwithaccel(float alpha){
     Quaterniond orientationquat = quatstructtoeigen(_sysstate.r.orientationquat);
     Vector3d accel = vectorfloatto3(_sysstate.r.imudata.accel);
+
+    
 
     Quaterniond accelquat;
 
