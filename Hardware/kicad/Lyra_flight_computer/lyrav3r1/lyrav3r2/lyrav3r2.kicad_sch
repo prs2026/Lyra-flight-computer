@@ -9938,7 +9938,7 @@
 	)
 	(wire
 		(pts
-			(xy 182.245 368.3) (xy 175.26 368.3)
+			(xy 182.245 355.6) (xy 175.26 355.6)
 		)
 		(stroke
 			(width 0)
@@ -9958,7 +9958,7 @@
 	)
 	(wire
 		(pts
-			(xy 191.135 360.68) (xy 175.26 360.68)
+			(xy 191.135 363.22) (xy 175.26 363.22)
 		)
 		(stroke
 			(width 0)
@@ -11338,7 +11338,7 @@
 	)
 	(wire
 		(pts
-			(xy 191.135 355.6) (xy 175.26 355.6)
+			(xy 191.135 370.84) (xy 175.26 370.84)
 		)
 		(stroke
 			(width 0)
@@ -13068,7 +13068,7 @@
 	)
 	(wire
 		(pts
-			(xy 182.88 363.22) (xy 175.26 363.22)
+			(xy 182.88 360.68) (xy 175.26 360.68)
 		)
 		(stroke
 			(width 0)
@@ -13278,7 +13278,7 @@
 	)
 	(wire
 		(pts
-			(xy 175.26 373.38) (xy 186.69 373.38)
+			(xy 175.26 368.3) (xy 186.69 368.3)
 		)
 		(stroke
 			(width 0)
@@ -14298,7 +14298,7 @@
 	)
 	(wire
 		(pts
-			(xy 193.04 370.84) (xy 175.26 370.84)
+			(xy 193.04 373.38) (xy 175.26 373.38)
 		)
 		(stroke
 			(width 0)
@@ -17756,7 +17756,7 @@
 		(uuid "2dac786d-4680-4489-a77d-e047a579821c")
 	)
 	(label "P2 CONT "
-		(at 191.135 360.68 180)
+		(at 191.135 363.22 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -17833,7 +17833,7 @@
 		(uuid "38fe606d-b15a-4a04-b8d5-c270be5dd893")
 	)
 	(label "P1 CONT "
-		(at 191.135 355.6 180)
+		(at 191.135 370.84 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -17855,7 +17855,7 @@
 		(uuid "3c2fbfa0-2e52-4059-bb87-98891729bc00")
 	)
 	(label "P4 CONT "
-		(at 193.04 370.84 180)
+		(at 193.04 373.38 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -18130,7 +18130,7 @@
 		(uuid "765ac994-c0b2-4f44-9e9e-d637ab3f1872")
 	)
 	(label "P2 EN "
-		(at 182.88 363.22 180)
+		(at 182.88 360.68 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -18460,7 +18460,7 @@
 		(uuid "b34f6946-f2ac-407b-8867-ace8478a9d44")
 	)
 	(label "P4 EN "
-		(at 186.69 373.38 180)
+		(at 186.69 368.3 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -18625,7 +18625,7 @@
 		(uuid "ce8f76b6-bbd8-427a-bea1-990c328f956e")
 	)
 	(label "P3 EN "
-		(at 182.245 368.3 180)
+		(at 182.245 355.6 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
