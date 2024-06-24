@@ -4256,6 +4256,151 @@
 				)
 			)
 		)
+		(symbol "Device:D_Schottky"
+			(pin_numbers hide)
+			(pin_names
+				(offset 1.016) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "D"
+				(at 0 2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "D_Schottky"
+				(at 0 -2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Schottky diode"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "diode Schottky"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "TO-???* *_Diode_* *SingleDiode* D_*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "D_Schottky_0_1"
+				(polyline
+					(pts
+						(xy 1.27 0) (xy -1.27 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 1.27) (xy 1.27 -1.27) (xy -1.27 0) (xy 1.27 1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.905 0.635) (xy -1.905 1.27) (xy -1.27 1.27) (xy -1.27 -1.27) (xy -0.635 -1.27) (xy -0.635 -0.635)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "D_Schottky_1_1"
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "K"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 		(symbol "Device:LED"
 			(pin_numbers hide)
 			(pin_names
@@ -9097,6 +9242,126 @@
 				)
 			)
 		)
+		(symbol "power:VBUS"
+			(power)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "#PWR"
+				(at 0 -3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Value" "VBUS"
+				(at 0 3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Power symbol creates a global label with name \"VBUS\""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "global power"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "VBUS_0_1"
+				(polyline
+					(pts
+						(xy -0.762 1.27) (xy 0 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.54) (xy 0.762 1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "VBUS_1_1"
+				(pin power_in line
+					(at 0 0 90)
+					(length 0) hide
+					(name "VBUS"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 	)
 	(junction
 		(at 92.71 92.71)
@@ -9115,12 +9380,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "09e84897-0cfb-4e29-a381-899819bb9966")
-	)
-	(junction
-		(at 542.29 355.6)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "0cda86ab-6530-421d-82c4-c430d26a7618")
 	)
 	(junction
 		(at 198.12 340.36)
@@ -9151,6 +9410,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "1ae0ca67-66ac-4aec-9e8b-e7b9fda29ee8")
+	)
+	(junction
+		(at 544.83 353.695)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "1bbec706-6d7b-4c17-8f6a-34b75ac1b082")
 	)
 	(junction
 		(at 146.05 281.94)
@@ -9231,6 +9496,12 @@
 		(uuid "3be340d4-8057-419a-998e-dc7d81381f92")
 	)
 	(junction
+		(at 507.365 344.17)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "3ff2b151-ffb2-4fc7-b122-afbd2d97c078")
+	)
+	(junction
 		(at 73.025 46.99)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -9265,6 +9536,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "53e654de-faf8-4389-b3a7-b88dee30f56d")
+	)
+	(junction
+		(at 507.365 353.695)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "554ccb87-987c-4928-a4a1-f80501ebf26f")
 	)
 	(junction
 		(at 57.785 383.54)
@@ -9735,10 +10012,6 @@
 	(no_connect
 		(at 220.98 55.88)
 		(uuid "ac1e57df-a4a8-4013-8adf-2c71c806a872")
-	)
-	(no_connect
-		(at 216.535 379.73)
-		(uuid "b01082ac-e3f5-4a2b-bd40-c994c24cd197")
 	)
 	(no_connect
 		(at 220.98 43.18)
@@ -10495,6 +10768,16 @@
 			(type default)
 		)
 		(uuid "2a2adfd5-c49d-4275-a2d5-751d1920532f")
+	)
+	(wire
+		(pts
+			(xy 500.38 344.17) (xy 507.365 344.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2b4e78eb-6d7c-4e4a-a56a-350b91d11c71")
 	)
 	(wire
 		(pts
@@ -11368,16 +11651,6 @@
 	)
 	(wire
 		(pts
-			(xy 535.94 355.6) (xy 542.29 355.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5a8d7384-e8ec-4fc8-9c78-6ece7ef70f51")
-	)
-	(wire
-		(pts
 			(xy 89.535 275.59) (xy 89.535 276.225)
 		)
 		(stroke
@@ -11455,6 +11728,16 @@
 			(type default)
 		)
 		(uuid "5d8b784e-860c-478c-be75-8872c98d46bc")
+	)
+	(wire
+		(pts
+			(xy 500.38 344.17) (xy 500.38 346.075)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5e396082-c5ab-48ec-9c78-2a8924beb92b")
 	)
 	(wire
 		(pts
@@ -11628,6 +11911,16 @@
 	)
 	(wire
 		(pts
+			(xy 507.365 352.425) (xy 507.365 353.695)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6511459e-aa4f-4108-9da2-3e60c3ee2acd")
+	)
+	(wire
+		(pts
 			(xy 477.52 213.36) (xy 477.52 218.44)
 		)
 		(stroke
@@ -11718,6 +12011,16 @@
 	)
 	(wire
 		(pts
+			(xy 507.365 353.695) (xy 528.32 353.695)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "69a87590-f8ee-4100-bbd0-77bc369c958d")
+	)
+	(wire
+		(pts
 			(xy 176.53 48.26) (xy 176.53 46.99)
 		)
 		(stroke
@@ -11755,6 +12058,16 @@
 			(type default)
 		)
 		(uuid "6b1f3a80-6a5d-43d3-baf7-9b8b008eda72")
+	)
+	(wire
+		(pts
+			(xy 538.48 353.695) (xy 544.83 353.695)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6bc3112d-f651-4725-8604-33827bebacb4")
 	)
 	(wire
 		(pts
@@ -11998,6 +12311,16 @@
 	)
 	(wire
 		(pts
+			(xy 544.83 353.695) (xy 558.165 353.695)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7c7e6510-a07d-4d7e-a9ab-217321ec7e38")
+	)
+	(wire
+		(pts
 			(xy 109.22 228.6) (xy 112.395 228.6)
 		)
 		(stroke
@@ -12105,16 +12428,6 @@
 			(type default)
 		)
 		(uuid "828261ec-d0ed-459a-aa05-394176082260")
-	)
-	(wire
-		(pts
-			(xy 505.46 355.6) (xy 525.78 355.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "829f94b3-6c5f-4743-be9d-611ff80cc4d6")
 	)
 	(wire
 		(pts
@@ -12828,6 +13141,16 @@
 	)
 	(wire
 		(pts
+			(xy 507.365 343.535) (xy 507.365 344.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "add51934-0ccf-40ac-bc09-03775a95fc70")
+	)
+	(wire
+		(pts
 			(xy 142.875 26.67) (xy 142.875 24.13)
 		)
 		(stroke
@@ -12845,16 +13168,6 @@
 			(type default)
 		)
 		(uuid "ae11623a-0d1a-4dab-a9d4-41c7d5de0d87")
-	)
-	(wire
-		(pts
-			(xy 542.29 355.6) (xy 555.625 355.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ae8ab3d8-a015-4aef-9786-927a90f2bbfa")
 	)
 	(wire
 		(pts
@@ -13015,6 +13328,16 @@
 			(type default)
 		)
 		(uuid "b695b1b1-b7e5-4460-9862-0ea4e83a8ecc")
+	)
+	(wire
+		(pts
+			(xy 481.965 353.695) (xy 495.3 353.695)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b939bdd1-fa21-4178-8743-b87d7e93a363")
 	)
 	(wire
 		(pts
@@ -13488,6 +13811,16 @@
 	)
 	(wire
 		(pts
+			(xy 216.535 379.73) (xy 220.98 379.73)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cff08681-4fd9-4f16-baa6-dbc1b11d91e7")
+	)
+	(wire
+		(pts
 			(xy 523.24 335.28) (xy 539.75 335.28)
 		)
 		(stroke
@@ -13508,6 +13841,16 @@
 	)
 	(wire
 		(pts
+			(xy 533.4 361.95) (xy 533.4 361.315)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d074785c-e40e-44b2-b9d7-a48643e9cd17")
+	)
+	(wire
+		(pts
 			(xy 156.21 300.99) (xy 157.48 300.99)
 		)
 		(stroke
@@ -13515,6 +13858,16 @@
 			(type default)
 		)
 		(uuid "d0a32272-6ba0-4a61-b942-a62289e4ae00")
+	)
+	(wire
+		(pts
+			(xy 507.365 344.17) (xy 507.365 344.805)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d1081fcd-b3ab-40fb-878e-15c52e467ade")
 	)
 	(wire
 		(pts
@@ -13635,16 +13988,6 @@
 			(type default)
 		)
 		(uuid "d8fdc59d-ab00-4740-beb0-aa1cf50b32e3")
-	)
-	(wire
-		(pts
-			(xy 530.86 363.855) (xy 530.86 363.22)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d9d2eaa2-e9ee-4ffc-9170-5dd60262a9f9")
 	)
 	(wire
 		(pts
@@ -13778,6 +14121,16 @@
 	)
 	(wire
 		(pts
+			(xy 505.46 353.695) (xy 507.365 353.695)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e2c49c54-29ea-4466-a3d8-e09f23327624")
+	)
+	(wire
+		(pts
 			(xy 215.9 332.74) (xy 215.9 340.36)
 		)
 		(stroke
@@ -13815,6 +14168,16 @@
 			(type default)
 		)
 		(uuid "e4901080-c366-47e4-88ff-f698d332ff36")
+	)
+	(wire
+		(pts
+			(xy 544.83 358.775) (xy 544.83 359.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e4bcc8a3-1ac6-4d38-a720-b3d02b61f3d5")
 	)
 	(wire
 		(pts
@@ -14145,16 +14508,6 @@
 			(type default)
 		)
 		(uuid "f7818c8c-f5e3-4785-a0a9-a0dbfdce3e49")
-	)
-	(wire
-		(pts
-			(xy 542.29 360.68) (xy 542.29 361.315)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f80869bb-4e28-4201-9be3-ae9328aba380")
 	)
 	(wire
 		(pts
@@ -17623,17 +17976,6 @@
 		)
 		(uuid "0c1aa266-bb42-403b-9508-d25ddb045645")
 	)
-	(label "BATT POSTSW"
-		(at 505.46 355.6 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "1ab60181-d287-4329-a9ab-667838c59e98")
-	)
 	(label "MCUTX"
 		(at 186.69 330.2 180)
 		(fields_autoplaced yes)
@@ -18426,6 +18768,17 @@
 		)
 		(uuid "afa52ec7-1d6b-43ab-9e15-d022740b2907")
 	)
+	(label "BATT POSTSW"
+		(at 481.965 353.695 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "afba9e0e-4940-4fec-aa78-9cc6147be8bc")
+	)
 	(label "ANT IN"
 		(at 50.8 223.52 180)
 		(fields_autoplaced yes)
@@ -19159,6 +19512,72 @@
 			(project "Lyra V2"
 				(path "/63622aab-8dfa-4523-a589-40aebeb23162"
 					(reference "C17")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 544.83 359.41 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "054495d0-7e61-4a4e-9622-e3d7bf583b75")
+		(property "Reference" "#PWR025"
+			(at 544.83 365.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 544.83 363.855 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 544.83 359.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 544.83 359.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 544.83 359.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "d17e6dfe-5f62-44d3-87cf-26959e1c6c25")
+		)
+		(instances
+			(project "lyrav3r2"
+				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
+					(reference "#PWR025")
 					(unit 1)
 				)
 			)
@@ -20342,6 +20761,73 @@
 			(project "lyrav3r2"
 				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
 					(reference "Q5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+12P")
+		(at 558.165 353.695 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "18129e54-749f-42dd-8cdb-3558653535cf")
+		(property "Reference" "#PWR076"
+			(at 554.355 353.695 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+BATT"
+			(at 561.34 353.695 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 558.165 353.695 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 558.165 353.695 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 558.165 353.695 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "0ff7ff9e-047e-4106-9863-38925b740ddc")
+		)
+		(instances
+			(project "lyrav3r2"
+				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
+					(reference "#PWR076")
 					(unit 1)
 				)
 			)
@@ -22205,85 +22691,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+12P")
-		(at 555.625 355.6 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "39be8558-25d0-42d7-8ea7-ae2a533dda29")
-		(property "Reference" "#PWR025"
-			(at 551.815 355.6 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+BATT"
-			(at 558.8 355.6 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 555.625 355.6 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 555.625 355.6 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 555.625 355.6 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "5c9984f0-72e6-4ace-b629-53f34cf1f452")
-		)
-		(instances
-			(project "lyrav3r2"
-				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
-					(reference "#PWR025")
-					(unit 1)
-				)
-			)
-			(project "Board2"
-				(path "/3ee99ce6-1aa5-40d1-bb2e-7887993edb74"
-					(reference "#PWR016")
-					(unit 1)
-				)
-			)
-			(project "Lyra V2"
-				(path "/63622aab-8dfa-4523-a589-40aebeb23162"
-					(reference "#PWR010")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:C_Small")
 		(at 146.05 278.765 0)
 		(unit 1)
@@ -23184,84 +23591,6 @@
 			(project "lyrav3r2"
 				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
 					(reference "#PWR040")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 530.86 363.855 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "4f44fdfb-1625-4fa7-a47c-53a0e99b9b50")
-		(property "Reference" "#PWR024"
-			(at 530.86 370.205 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 530.86 368.935 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 530.86 363.855 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 530.86 363.855 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 530.86 363.855 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "8257bc04-0c35-46ec-af42-b5490631c04e")
-		)
-		(instances
-			(project "lyrav3r2"
-				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
-					(reference "#PWR024")
-					(unit 1)
-				)
-			)
-			(project "Board2"
-				(path "/3ee99ce6-1aa5-40d1-bb2e-7887993edb74"
-					(reference "#PWR032")
-					(unit 1)
-				)
-			)
-			(project "Lyra V2"
-				(path "/63622aab-8dfa-4523-a589-40aebeb23162"
-					(reference "#PWR09")
 					(unit 1)
 				)
 			)
@@ -25490,84 +25819,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 542.29 361.315 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "6f03131d-d0a8-46fe-b895-de6544a0bdcb")
-		(property "Reference" "#PWR022"
-			(at 542.29 367.665 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 542.29 365.76 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 542.29 361.315 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 542.29 361.315 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 542.29 361.315 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "3bb7760b-8453-4b26-84dd-6b47261fad5b")
-		)
-		(instances
-			(project "lyrav3r2"
-				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
-					(reference "#PWR022")
-					(unit 1)
-				)
-			)
-			(project "Board2"
-				(path "/3ee99ce6-1aa5-40d1-bb2e-7887993edb74"
-					(reference "#PWR028")
-					(unit 1)
-				)
-			)
-			(project "Lyra V2"
-				(path "/63622aab-8dfa-4523-a589-40aebeb23162"
-					(reference "#PWR024")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_name "GND_5")
 		(lib_id "power:GND")
 		(at 233.68 39.37 0)
@@ -26097,6 +26348,85 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:C_Small")
+		(at 544.83 356.235 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "73bddca0-da78-4747-ad43-f3fe26b30f3c")
+		(property "Reference" "C7"
+			(at 547.37 355.6063 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10u"
+			(at 547.37 358.1463 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 544.83 356.235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 544.83 356.235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 544.83 356.235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C96446"
+			(at 544.83 356.235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "515e879c-831e-4a08-94b3-2f5cc36d77d0")
+		)
+		(pin "2"
+			(uuid "287f8177-462c-499f-8bca-1618a67e675a")
+		)
+		(instances
+			(project "lyrav3r2"
+				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
+					(reference "C7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R_Small")
 		(at 130.81 133.35 270)
 		(unit 1)
@@ -26315,6 +26645,89 @@
 			(project "lyrav3r2"
 				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
 					(reference "C5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Transistor_FET:AO3401A")
+		(at 533.4 356.235 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "78cd615b-e9bd-4f17-b1b3-41c71c31fb15")
+		(property "Reference" "Q3"
+			(at 533.4 347.98 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "AO3401A"
+			(at 533.4 350.52 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+			(at 535.305 351.155 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "http://www.aosmd.com/pdfs/datasheet/AO3401A.pdf"
+			(at 533.4 356.235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 533.4 356.235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C15127"
+			(at 533.4 356.235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "e2f73eca-216d-47ad-9da4-272e2cb8a5d9")
+		)
+		(pin "2"
+			(uuid "6b238cac-5998-48d5-ba00-4322103b09de")
+		)
+		(pin "3"
+			(uuid "0b38c9ec-34bd-494c-b4a9-c858d2ddb7d9")
+		)
+		(instances
+			(project "lyrav3r2"
+				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
+					(reference "Q3")
 					(unit 1)
 				)
 			)
@@ -27062,6 +27475,72 @@
 	)
 	(symbol
 		(lib_id "power:GND")
+		(at 533.4 361.95 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "8388bbb2-664e-44e6-8401-9b274c0a4b7b")
+		(property "Reference" "#PWR024"
+			(at 533.4 368.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 533.4 367.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 533.4 361.95 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 533.4 361.95 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 533.4 361.95 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "4e382629-3323-437d-9f6d-42a616bed24a")
+		)
+		(instances
+			(project "lyrav3r2"
+				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
+					(reference "#PWR024")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
 		(at 532.13 280.67 0)
 		(mirror y)
 		(unit 1)
@@ -27422,6 +27901,72 @@
 			(project "lyrav3r2"
 				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
 					(reference "L1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:VBUS")
+		(at 507.365 343.535 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "89775533-939a-45ae-9532-0128f8f4a535")
+		(property "Reference" "#PWR022"
+			(at 507.365 347.345 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "VBUS"
+			(at 507.365 338.455 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 507.365 343.535 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 507.365 343.535 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 507.365 343.535 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "3e53e19c-9944-4487-a23e-34b239050960")
+		)
+		(instances
+			(project "lyrav3r2"
+				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
+					(reference "#PWR022")
 					(unit 1)
 				)
 			)
@@ -29234,6 +29779,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:VBUS")
+		(at 220.98 379.73 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "ae85f5b0-4a24-4718-8f1b-4e81e9819975")
+		(property "Reference" "#PWR077"
+			(at 220.98 383.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "VBUS"
+			(at 220.98 374.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 220.98 379.73 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 220.98 379.73 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 220.98 379.73 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b869bbc8-4484-4896-bfb9-877661e7d325")
+		)
+		(instances
+			(project "lyrav3r2"
+				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
+					(reference "#PWR077")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 57.785 389.255 0)
 		(mirror y)
@@ -30208,6 +30819,85 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:D_Schottky")
+		(at 507.365 348.615 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "bd7c62a8-d0c4-42e8-96f9-7e4a6498c80c")
+		(property "Reference" "D1"
+			(at 510.54 347.6624 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "D_Schottky"
+			(at 510.54 350.2024 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-323F"
+			(at 507.365 348.615 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 507.365 348.615 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Schottky diode"
+			(at 507.365 348.615 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C191023"
+			(at 507.365 348.615 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "4ba53f10-de95-43a7-bcc3-e53d4e56bb77")
+		)
+		(pin "1"
+			(uuid "5454766b-0a56-44dd-b5dc-f4e57c5b5dac")
+		)
+		(instances
+			(project "lyrav3r2"
+				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
+					(reference "D1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R_Small")
 		(at 108.585 317.5 90)
 		(unit 1)
@@ -30591,7 +31281,7 @@
 				(hide yes)
 			)
 		)
-		(property "Part #" " 490-CPT-14146-80T "
+		(property "Part #" " CPE-163 "
 			(at 561.34 111.76 0)
 			(effects
 				(font
@@ -31018,97 +31708,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C_Small")
-		(at 542.29 358.14 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "ca414372-55af-4ac5-83b3-e056a60897b3")
-		(property "Reference" "C7"
-			(at 544.83 357.5113 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "10u"
-			(at 544.83 360.0513 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 542.29 358.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 542.29 358.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 542.29 358.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" "C96446"
-			(at 542.29 358.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "3213f0d4-97ac-4114-b394-77992ad5ae05")
-		)
-		(pin "2"
-			(uuid "297403b2-18dc-443a-8ad5-5ba684defa9e")
-		)
-		(instances
-			(project "lyrav3r2"
-				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
-					(reference "C7")
-					(unit 1)
-				)
-			)
-			(project "Board2"
-				(path "/3ee99ce6-1aa5-40d1-bb2e-7887993edb74"
-					(reference "C11")
-					(unit 1)
-				)
-			)
-			(project "Lyra V2"
-				(path "/63622aab-8dfa-4523-a589-40aebeb23162"
-					(reference "C6")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 156.21 34.29 0)
 		(unit 1)
@@ -31169,101 +31768,6 @@
 			(project "lyrav3r2"
 				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
 					(reference "#PWR030")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Transistor_FET:AO3401A")
-		(at 530.86 358.14 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "ce325fd3-bf95-434d-8db2-3f345459ad92")
-		(property "Reference" "Q1"
-			(at 530.86 349.885 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "AO3401A"
-			(at 530.86 352.425 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
-			(at 532.765 353.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "http://www.aosmd.com/pdfs/datasheet/AO3401A.pdf"
-			(at 530.86 358.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 530.86 358.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" "C15127"
-			(at 530.86 358.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "2818a79a-ecb2-4f2c-a641-b21736568f58")
-		)
-		(pin "2"
-			(uuid "ca3cba18-cd64-444a-a68c-64a6c8f76b40")
-		)
-		(pin "3"
-			(uuid "0d63a1de-a0d7-41ed-abb5-468670f0a2ab")
-		)
-		(instances
-			(project "lyrav3r2"
-				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
-					(reference "Q1")
-					(unit 1)
-				)
-			)
-			(project "Board2"
-				(path "/3ee99ce6-1aa5-40d1-bb2e-7887993edb74"
-					(reference "Q1")
-					(unit 1)
-				)
-			)
-			(project "Lyra V2"
-				(path "/63622aab-8dfa-4523-a589-40aebeb23162"
-					(reference "Q1")
 					(unit 1)
 				)
 			)
@@ -32298,6 +32802,89 @@
 			(project "Lyra V2"
 				(path "/63622aab-8dfa-4523-a589-40aebeb23162"
 					(reference "C27")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Transistor_FET:AO3401A")
+		(at 500.38 351.155 90)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "e5ef4a2e-2131-4d57-a83a-30e96a8fbddd")
+		(property "Reference" "Q1"
+			(at 500.38 357.505 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "AO3401A"
+			(at 500.38 360.045 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+			(at 502.285 356.235 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "http://www.aosmd.com/pdfs/datasheet/AO3401A.pdf"
+			(at 500.38 351.155 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 500.38 351.155 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C15127"
+			(at 500.38 351.155 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1a8636b0-2dfc-483d-b74c-6aac1c479b54")
+		)
+		(pin "2"
+			(uuid "e2264116-020e-4021-913d-4ed6fa7a6417")
+		)
+		(pin "3"
+			(uuid "b6f74c4c-8202-4031-8d6c-9dad8dc17ebb")
+		)
+		(instances
+			(project "lyrav3r2"
+				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
+					(reference "Q1")
 					(unit 1)
 				)
 			)
