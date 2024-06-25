@@ -4851,6 +4851,102 @@
 				)
 			)
 		)
+		(symbol "GND_1"
+			(power)
+			(pin_numbers hide)
+			(pin_names
+				(offset 0) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "#PWR"
+				(at 0 -6.35 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Value" "GND"
+				(at 0 -3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "global power"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "GND_1_0_1"
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 -1.27) (xy 1.27 -1.27) (xy 0 -2.54) (xy -1.27 -1.27) (xy 0 -1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "GND_1_1_1"
+				(pin power_in line
+					(at 0 0 270)
+					(length 0)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 		(symbol "GND_2"
 			(power)
 			(pin_numbers hide)
@@ -9544,12 +9640,6 @@
 		(uuid "554ccb87-987c-4928-a4a1-f80501ebf26f")
 	)
 	(junction
-		(at 57.785 383.54)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "56e00828-c5f7-4380-9065-b0f99552ee52")
-	)
-	(junction
 		(at 467.995 157.48)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -9590,6 +9680,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "6740d7c1-cff7-47ca-aabd-af115b4440f0")
+	)
+	(junction
+		(at 92.075 383.54)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "685b884f-e384-426c-bfd4-75b7f60217ff")
 	)
 	(junction
 		(at 41.91 166.37)
@@ -9728,12 +9824,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "9e418df7-1aa0-4a58-8195-8cc7d5f867a1")
-	)
-	(junction
-		(at 57.785 388.62)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "9e977019-d087-469c-9b60-4d4a27adede0")
 	)
 	(junction
 		(at 542.925 218.44)
@@ -10921,7 +11011,7 @@
 	)
 	(wire
 		(pts
-			(xy 92.71 383.54) (xy 83.82 383.54)
+			(xy 92.71 383.54) (xy 92.075 383.54)
 		)
 		(stroke
 			(width 0)
@@ -11651,6 +11741,16 @@
 	)
 	(wire
 		(pts
+			(xy 92.075 388.62) (xy 92.075 390.525)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5a30714e-b3ae-4392-b695-e36f8124f121")
+	)
+	(wire
+		(pts
 			(xy 89.535 275.59) (xy 89.535 276.225)
 		)
 		(stroke
@@ -11928,16 +12028,6 @@
 			(type default)
 		)
 		(uuid "65bf9d83-9a53-4290-b5c3-88eda9218c6d")
-	)
-	(wire
-		(pts
-			(xy 50.8 383.54) (xy 57.785 383.54)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6717d0ee-a2c8-4ae8-821c-4d7e0545bdc4")
 	)
 	(wire
 		(pts
@@ -12638,6 +12728,16 @@
 			(type default)
 		)
 		(uuid "8df3d277-0b48-4d31-9736-fe340c75e592")
+	)
+	(wire
+		(pts
+			(xy 92.075 383.54) (xy 83.82 383.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8ea83246-7c40-4f15-ae55-7aefca5f5e20")
 	)
 	(wire
 		(pts
@@ -14201,7 +14301,7 @@
 	)
 	(wire
 		(pts
-			(xy 57.785 383.54) (xy 63.5 383.54)
+			(xy 50.8 383.54) (xy 63.5 383.54)
 		)
 		(stroke
 			(width 0)
@@ -20045,6 +20145,73 @@
 			(project "Lyra V2"
 				(path "/63622aab-8dfa-4523-a589-40aebeb23162"
 					(reference "#PWR03")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_name "GND_1")
+		(lib_id "power:GND")
+		(at 92.075 390.525 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "0db21936-f6eb-4892-871e-73a7ab0d520b")
+		(property "Reference" "#PWR078"
+			(at 92.075 396.875 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 92.075 394.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 92.075 390.525 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 92.075 390.525 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 92.075 390.525 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "00a85a34-b8c3-44a3-8f87-fa8dca6e9abc")
+		)
+		(instances
+			(project "lyrav3r2"
+				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
+					(reference "#PWR078")
 					(unit 1)
 				)
 			)
@@ -31479,7 +31646,8 @@
 	)
 	(symbol
 		(lib_id "Device:C_Small")
-		(at 57.785 386.08 0)
+		(at 92.075 386.08 0)
+		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -31487,7 +31655,7 @@
 		(dnp no)
 		(uuid "c71ff20a-807b-4eda-9095-f20e6f217cc4")
 		(property "Reference" "C13"
-			(at 50.165 384.81 0)
+			(at 99.695 384.81 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -31496,7 +31664,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 50.165 387.35 0)
+			(at 99.695 387.35 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -31505,7 +31673,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
-			(at 57.785 386.08 0)
+			(at 92.075 386.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -31514,7 +31682,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 57.785 386.08 0)
+			(at 92.075 386.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -31523,7 +31691,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 57.785 386.08 0)
+			(at 92.075 386.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -31532,7 +31700,7 @@
 			)
 		)
 		(property "LCSC Part" "C1525"
-			(at 57.785 386.08 0)
+			(at 92.075 386.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
