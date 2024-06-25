@@ -10681,16 +10681,6 @@
 	)
 	(wire
 		(pts
-			(xy 447.675 196.85) (xy 458.47 196.85)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1e900435-d970-4c41-a402-b9359341f093")
-	)
-	(wire
-		(pts
 			(xy 34.29 97.79) (xy 38.735 97.79)
 		)
 		(stroke
@@ -10791,16 +10781,6 @@
 	)
 	(wire
 		(pts
-			(xy 527.05 196.85) (xy 531.495 196.85)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "25e85095-51d9-4d28-91d5-c28f434654d3")
-	)
-	(wire
-		(pts
 			(xy 128.27 275.59) (xy 136.525 275.59)
 		)
 		(stroke
@@ -10808,16 +10788,6 @@
 			(type default)
 		)
 		(uuid "2676e697-3480-4ae3-acf6-b7fcf03c8d3d")
-	)
-	(wire
-		(pts
-			(xy 524.51 157.48) (xy 529.59 157.48)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "268f51e9-5755-437b-8aff-bf128e5bb31b")
 	)
 	(wire
 		(pts
@@ -11021,7 +10991,7 @@
 	)
 	(wire
 		(pts
-			(xy 512.445 196.85) (xy 521.97 196.85)
+			(xy 512.445 196.85) (xy 531.495 196.85)
 		)
 		(stroke
 			(width 0)
@@ -12441,7 +12411,7 @@
 	)
 	(wire
 		(pts
-			(xy 463.55 157.48) (xy 467.995 157.48)
+			(xy 448.945 157.48) (xy 467.995 157.48)
 		)
 		(stroke
 			(width 0)
@@ -13171,7 +13141,7 @@
 	)
 	(wire
 		(pts
-			(xy 510.54 157.48) (xy 519.43 157.48)
+			(xy 510.54 157.48) (xy 529.59 157.48)
 		)
 		(stroke
 			(width 0)
@@ -13231,7 +13201,7 @@
 	)
 	(wire
 		(pts
-			(xy 463.55 196.85) (xy 466.725 196.85)
+			(xy 447.675 196.85) (xy 466.725 196.85)
 		)
 		(stroke
 			(width 0)
@@ -14348,16 +14318,6 @@
 			(type default)
 		)
 		(uuid "e91d3482-0117-493b-a871-8135ad9270c2")
-	)
-	(wire
-		(pts
-			(xy 448.945 157.48) (xy 458.47 157.48)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e9bb9ab0-f363-4979-8412-f1b370945290")
 	)
 	(wire
 		(pts
@@ -21479,83 +21439,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R_Small")
-		(at 461.01 157.48 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "2056a0b9-fda8-4f1e-a215-985c762f30f8")
-		(property "Reference" "R5"
-			(at 461.01 152.4 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "10"
-			(at 461.01 154.94 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 461.01 157.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 461.01 157.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 461.01 157.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" ""
-			(at 461.01 157.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "58a91f28-2198-4329-a824-dab6d0135289")
-		)
-		(pin "2"
-			(uuid "e43fe31e-5cfd-475e-9b86-4bcf5ebc22a4")
-		)
-		(instances
-			(project "lyrav3r2"
-				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
-					(reference "R5")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:C_Small")
 		(at 172.72 278.765 0)
 		(unit 1)
@@ -23840,7 +23723,7 @@
 		(fields_autoplaced yes)
 		(uuid "51856154-2b7a-479a-bfd1-fc98f3a30e07")
 		(property "Reference" "R27"
-			(at 481.965 170.1799 0)
+			(at 481.33 170.1799 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23848,8 +23731,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "50k"
-			(at 481.965 172.7199 0)
+		(property "Value" "51k"
+			(at 481.33 172.7199 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -26438,83 +26321,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R_Small")
-		(at 521.97 157.48 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "72dedaf9-a948-47b5-84e8-8760981745db")
-		(property "Reference" "R6"
-			(at 521.97 152.4 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "10"
-			(at 521.97 154.94 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 521.97 157.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 521.97 157.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 521.97 157.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" ""
-			(at 521.97 157.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "cc85f242-c2dc-453b-8c45-fab9534679df")
-		)
-		(pin "2"
-			(uuid "31d1821f-d6be-45e2-88c4-e7f592e83d85")
-		)
-		(instances
-			(project "lyrav3r2"
-				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
-					(reference "R6")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:C_Small")
 		(at 544.83 356.235 0)
 		(unit 1)
@@ -27413,7 +27219,7 @@
 		(fields_autoplaced yes)
 		(uuid "81b5ebeb-aa43-4b6b-bf63-0ca628b52b8f")
 		(property "Reference" "R25"
-			(at 545.465 170.1799 0)
+			(at 544.83 170.1799 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27421,8 +27227,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "50k"
-			(at 545.465 172.7199 0)
+		(property "Value" "51k"
+			(at 544.83 172.7199 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27485,83 +27291,6 @@
 			(project "lyrav3r2"
 				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
 					(reference "R25")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R_Small")
-		(at 461.01 196.85 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "8298ddda-324d-4cc9-b353-ea3d0940ff43")
-		(property "Reference" "R7"
-			(at 461.01 191.77 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "10"
-			(at 461.01 194.31 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 461.01 196.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 461.01 196.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 461.01 196.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" ""
-			(at 461.01 196.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "964b87e0-81aa-4dfc-a2c4-341bf4c19c7e")
-		)
-		(pin "2"
-			(uuid "5a13baef-d38b-4929-aa4c-dac5e2b97c08")
-		)
-		(instances
-			(project "lyrav3r2"
-				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
-					(reference "R7")
 					(unit 1)
 				)
 			)
@@ -30832,83 +30561,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R_Small")
-		(at 524.51 196.85 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "b993b7ac-a418-43f8-be79-a5d341b9adec")
-		(property "Reference" "R8"
-			(at 524.51 191.77 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "10"
-			(at 524.51 194.31 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 524.51 196.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 524.51 196.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 524.51 196.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" ""
-			(at 524.51 196.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "1e28fcf3-a956-42b5-9b5e-6e4d8be8a2e7")
-		)
-		(pin "2"
-			(uuid "3d26c5b2-fa16-4b19-b2f8-36a612417c77")
-		)
-		(instances
-			(project "lyrav3r2"
-				(path "/12cc3c39-e34e-4801-bd3f-38f875d59424"
-					(reference "R8")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:C_Small")
 		(at 146.685 231.14 90)
 		(unit 1)
@@ -31316,7 +30968,7 @@
 		(fields_autoplaced yes)
 		(uuid "c260a341-7e56-435c-ae70-718265768e66")
 		(property "Reference" "R23"
-			(at 545.465 209.5499 0)
+			(at 544.83 209.5499 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -31324,8 +30976,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "50k"
-			(at 545.465 212.0899 0)
+		(property "Value" "51k"
+			(at 544.83 212.0899 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -32335,7 +31987,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "50k"
+		(property "Value" "51k"
 			(at 480.06 212.0899 0)
 			(effects
 				(font
@@ -32423,7 +32075,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "50k"
+		(property "Value" "51k"
 			(at 481.33 269.2399 0)
 			(effects
 				(font
