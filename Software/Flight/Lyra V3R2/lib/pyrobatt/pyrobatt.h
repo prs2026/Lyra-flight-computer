@@ -37,7 +37,7 @@ PYROCHANNEL::PYROCHANNEL(int _identifier){
     CONT_PIN = contpins[identity];
     pinMode(EN_PIN,OUTPUT);
     digitalWrite(EN_PIN,LOW);
-    pinMode(CONT_PIN,INPUT_PULLUP);
+    pinMode(CONT_PIN,INPUT_PULLDOWN);
 }
 
 int PYROCHANNEL::state(){
@@ -71,7 +71,7 @@ void PYROCHANNEL::checkfire(){
 
 //return the continuity status of the channel.
 int PYROCHANNEL::getcont(){
-    continuity = !digitalRead(CONT_PIN);
+    continuity = digitalRead(CONT_PIN);
     return continuity;
 }
 
