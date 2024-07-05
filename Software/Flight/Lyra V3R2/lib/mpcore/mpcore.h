@@ -704,7 +704,7 @@ int MPCORE::checkforpyros(){
     {
         stagingstate = 7;
         _sysstate.r.pyrosfired = _sysstate.r.pyrosfired | 0b100;
-        P3.fire();
+        P4.fire();
     }
     }}}}}}
     else

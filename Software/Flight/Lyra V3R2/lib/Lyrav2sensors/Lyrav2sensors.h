@@ -143,15 +143,15 @@ void IMU::read(int oversampling, int hitltesting,int hitlindex){
         accelunit.readSensor();
         gyrounit.readSensor();
 
-        accel.x() += accelunit.getAccelY_mss();
+        accel.x() += accelunit.getAccelX_mss();
         accel.y() += accelunit.getAccelZ_mss();
-        accel.z() += accelunit.getAccelX_mss();
+        accel.z() += accelunit.getAccelY_mss();
         //Serial.printf("new accelmss z : %f \n",accel.z());
 
-        gyro.x() += gyrounit.getGyroY_rads();
+        gyro.x() += gyrounit.getGyroX_rads();
 
         gyro.y() += gyrounit.getGyroZ_rads();
-        gyro.z() += gyrounit.getGyroX_rads();
+        gyro.z() += gyrounit.getGyroY_rads();
 
         delayMicroseconds(1);
         gyro.x() < -73786 || gyro.x() > 73786 ? gyro.x() = data.gyro.x : gyro.x() = gyro.x();
@@ -356,8 +356,8 @@ int ADXL::read(int hitltest,int hitlindex)
     adxl375.getEvent(&event);
 
     _accel.x() = -event.acceleration.y;
-    _accel.y() = -event.acceleration.z;
-    _accel.z() = event.acceleration.x;
+    _accel.y() = event.acceleration.z;
+    _accel.z() = -event.acceleration.x;
 
     _accel = _accel - offsets;
 
