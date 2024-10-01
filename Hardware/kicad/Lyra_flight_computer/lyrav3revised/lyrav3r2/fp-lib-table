@@ -1,0 +1,8 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "lyrav2r2lib")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/Lyra_flight_computer/lyrav3r1/lyrav3r2/lyrav2r2lib.pretty")(options "")(descr ""))
+  (lib (name "easyeda2kicad")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/easyeda2kicad/easyeda2kicad.pretty")(options "")(descr ""))
+  (lib (name ".pretty")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/easyeda2kicad/.pretty")(options "")(descr ""))
+  (lib (name "SamacSys_Parts")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/SamacSys_Parts.pretty")(options "")(descr ""))
+  (lib (name "Oh_Fuck")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/Oh_Fuck.pretty")(options "")(descr ""))
+)
