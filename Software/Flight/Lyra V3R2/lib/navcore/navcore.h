@@ -119,7 +119,7 @@ class NAVCORE{
         int initi2c();
 
         uint32_t sensorinit();
-        void getsensordata();
+        void getsensordata(bool readgps);
 
         void KFrun();                                                         
         
@@ -227,7 +227,7 @@ uint32_t NAVCORE::sensorinit(){
     return 0;
 }
 
-void NAVCORE::getsensordata(){
+void NAVCORE::getsensordata(bool readgps){
     
     uint32_t hitlindex = 0;
 
@@ -252,7 +252,7 @@ void NAVCORE::getsensordata(){
         baro.readsensor(hitlteston,hitlindex);
         adxl.read(hitlteston,hitlindex);
         magclass.readsensor();
-        gps.read();
+        //if(readgps){ gps.read();}
     #endif // VERBOSETIMES
     
     if (useaccel == 1)
