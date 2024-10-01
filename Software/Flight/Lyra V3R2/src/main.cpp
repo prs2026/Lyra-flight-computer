@@ -6,6 +6,7 @@ MPCORE MP;
 
 bool dataismoved = false;
 
+uint32_t brkout1statustime = 0;
 
 void setup() { // main core setup
     MP.setuppins();
@@ -49,7 +50,7 @@ void setup1() { // nav core setup
     NAV.sensorinit();
     NAV.getpadoffset();
     NAV.KFinit();
-    NAV.getsensordata();
+    NAV.getsensordata(MP.sendtoteleplot);
     NAV.getpadoffset();
     gps.reset();
     NAV.ready = 1;
@@ -91,6 +92,8 @@ void loop() { // main core loop
     if (MP.sendserialon & millis() - MP.prevtime.serial >= MP.intervals[MP._sysstate.r.state].serial)
     {
         uint32_t prevserialmicros = micros();
+        Serial.printf(">brk1: %d \n",digitalRead(BRKOUT1));
+        Serial.printf(">brk1time: %d \n",brkout1statustime);
         port.senddata(MP._sysstate,NAV._sysstate);
         MP.prevtime.serial = millis();
         MP.sendserialon ? Serial.printf(">porttime: %d \n",micros() - prevserialmicros) : 1==1;
@@ -107,7 +110,15 @@ void loop() { // main core loop
     }
 
     if (millis()- MP.prevtime.beep >= MP.intervals[MP._sysstate.r.state].beep)
-    {
+    {   
+        if (!(MP._sysstate.r.uptime - brkout1statustime > 500))
+        {
+            MP.beep(5000);
+            delay(10);
+            MP.beep(5500);
+        }
+        
+
         if (MP._sysstate.r.state == 0)
         {
             MP.beepcont();
@@ -116,12 +127,19 @@ void loop() { // main core loop
         {
             MP.beep(MP.freqs[MP._sysstate.r.state]);
         }
-        
-        
+
         
         MP.prevtime.beep = millis();
         eventsfired += 10;
     }
+
+    if (digitalRead(BRKOUT1))
+    {
+        brkout1statustime = millis();
+    }
+    
+    
+
     
     
     if (Serial.available())
@@ -164,7 +182,7 @@ void loop1() { // nav core loop
     MP._sysstate.r.state == 0 ? NAV.useaccel = 1 : NAV.useaccel = 0;
     
     NAV.prevtime.getdata = micros();
-    NAV.getsensordata();
+    NAV.getsensordata(MP.sendtoteleplot);
     if (MP.sendserialon && MP.sendtoteleplot)
     {
             Serial.printf(">sensordatatime: %f \n",float(micros()-NAV.prevtime.getdata)/1000);

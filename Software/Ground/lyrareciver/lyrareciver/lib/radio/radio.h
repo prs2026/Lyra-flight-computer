@@ -48,6 +48,8 @@ int RADIO::init(){
     uint8_t payloadLength = 16;                                         // Initialize payloadLength to 15
     bool crcType = true;                                                // Set CRC enable
     Lora.setLoRaPacket(headerType, preambleLength, payloadLength, crcType,false);
+    Lora.setBandwidth(2400);
+    
     Lora.setSyncWord(0x3444);
     return 0;
 }

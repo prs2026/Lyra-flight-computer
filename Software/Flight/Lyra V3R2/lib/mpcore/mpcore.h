@@ -143,6 +143,7 @@ void MPCORE::setuppins(){
     pinMode(BUZZERPIN,OUTPUT);
     pinMode(BATT_SENSE,INPUT);
     pinMode(GPSRST,OUTPUT);
+    pinMode(BRKOUT1,INPUT);
 
     digitalWrite(GPSRST,HIGH);
     digitalWrite(LEDPIN, HIGH);
