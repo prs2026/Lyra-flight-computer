@@ -36,4 +36,10 @@ K
 F https://www.cuidevices.com/product/resource/digikeypdf/cpt-14146-80t.pdf
 $ENDCMP
 #
+$CMP TS0101F020P
+D SNAP ACTION, 300mA, 6VDC SPDT, On-(Off) Through Hole
+K
+F https://configured-product-images.s3.amazonaws.com/2D/specs/TS0101F020P.pdf
+$ENDCMP
+#
 #End Doc Library

@@ -469,7 +469,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "lyrav3r2.kicad_pro",
+    "filename": "LEO.kicad_pro",
     "version": 1
   },
   "net_settings": {
@@ -547,7 +547,9 @@
       "version": 3
     },
     "net_colors": null,
-    "netclass_assignments": null,
+    "netclass_assignments": {
+      "+1V1": "Power"
+    },
     "netclass_patterns": [
       {
         "netclass": "Default",
@@ -649,13 +651,13 @@
           "group_by": false,
           "label": "LCSC",
           "name": "LCSC",
-          "show": false
+          "show": true
         },
         {
           "group_by": false,
           "label": "LCSC  Part #",
           "name": "LCSC  Part #",
-          "show": false
+          "show": true
         },
         {
           "group_by": false,
@@ -685,7 +687,7 @@
           "group_by": false,
           "label": "Manufacturer_Name",
           "name": "Manufacturer_Name",
-          "show": false
+          "show": true
         },
         {
           "group_by": false,
