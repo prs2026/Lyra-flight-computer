@@ -46,4 +46,16 @@ int setled(int state);
 //scans the i2c bus, 
 int scani23c(bool printout);
 
+struct SENSEDATA{
+    uint32_t uptime;
+    uint8_t errorflag;
+    struct{
+    float altitude;
+    float pressure;
+    float temp;
+    }baro;
+    
+};
+
+
 #endif // OS

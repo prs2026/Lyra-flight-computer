@@ -24,7 +24,8 @@ void setup1() {
   }
 
   SCORE.I2Cinit(1);
-  Serial.println("Score init");
+  SCORE.startBaro();
+  Serial.printf("Score init: %d\n",SCORE.coredata.errorflag);
 }
 
 void loop() {
