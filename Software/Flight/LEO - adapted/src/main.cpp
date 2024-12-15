@@ -8,6 +8,8 @@ bool dataismoved = false;
 
 uint32_t brkout1statustime = 0;
 
+bool cameraon = false;
+
 void setup() { // main core setup
     MP.setuppins();
     MP.beep();
@@ -24,6 +26,9 @@ void setup() { // main core setup
     }
 
     MP._sysstate.r.uptime = millis();
+
+    //Camera init special
+    P1.timeout = 1.08e7;
 
 
     Serial.print("MP boot complete error code: ");
@@ -129,6 +134,10 @@ void loop() { // main core loop
         int i;
         Serial.printf("echo: %c dec: %d \n",buf,buf);
         MP.parsecommand(buf);
+    }
+
+    if (MP._sysstate.r.uptime > 10000 && cameraon == false){
+        P1.fire();
     }
 
     MP.prevtime.loop = micros();
