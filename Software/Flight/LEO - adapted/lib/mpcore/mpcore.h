@@ -446,118 +446,37 @@ int MPCORE::dumpdata(){
         if (readentry.r.MPstate.r.missiontime < preventry.r.MPstate.r.missiontime)
         {
             Serial.println("newfile");
-            Serial.println("index, checksum,uptime mp,uptime nav,missiontime,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, mag x, mag y, mag z, accelhighg x, accelhighg y, accelhighg z, gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z,quatadj w, quatadj x, quatadj y, quatadj z, altitude, presusre, verticalvel,filtered vvel, maxalt, altitudeagl, filtered alt, imutemp, barotemp,abs imu accel,abs adxl accel, pad altitude, baro max alt, mag raw x, mag raw y, mag raw z, cov x, cov y, cov z, sats, status, met, filtered accel ,state,battstate,pyros fired,pyros cont,pyros state, checksum2");
+            Serial.println("index, checksum,uptime mp,uptime nav,missiontime,  errorflag mp,errorflag NAV,  accel x, accel y, accel z, accelworld x, accelworld y, accelworld z, mag x, mag y, mag z, accelhighg x, accelhighg y, accelhighg z," 
+            "gyro x, gyro y, gyro z, euler x, euler y, euler z, quat w, quat x, quat y, quat z,quatadj w, quatadj x, quatadj y, quatadj z, altitude, presusre, verticalvel,filtered vvel, maxalt, altitudeagl, filtered alt, imutemp," 
+            "barotemp,abs imu accel,abs adxl accel, pad altitude, baro max alt, cov x, cov y, cov z, status, met, filtered accel ,state,battstate,pyros fired,pyros cont,pyros state, checksum2");
         }
         
-        Serial.printf(
-        "%d, 101,"// index checksum, /
-        "%d,%d,%d,"//uptimes, mission time /
-        "%d,%d,"//errorflag //
-        "%f,%f,%f," // accel /
-        "%f,%f,%f," // accel world /
-        "%f,%f,%f," // mag /
-        "%f,%f,%f," // high g accel /
-        "%f,%f,%f," // gyro /
-        "%f,%f,%f," // orientation euler" /
-        "%f,%f,%f,%f," // orientation quat" /
-        "%f,%f,%f,%f," // orientation quatadj" /
-        "%f,%f," //altitude, presusre /
-        "%f,%f," //verticalvel,filtered vvel, /
-        "%f,%f,%f," // max alt, altitudeagl, filtered alt /
-        "%f,%f," // temps, imu baro /
-        "%f,%f," // abs accel imu, abs accel adxl //
-        "%f,%f," // pad altitude, baro max alt //
-        "%f,%f,%f," // mag raw //
-        "%f,%f,%f," // filter covariences //
-        "%d," // num gps sats //
-        "%d,%d," // status? MET? //
-        "%f," // filtered accel /
-        "%d,%f,%d,%d,%d,%d\n", //state, battstate, pyros fired, pyrocont, pyrostate //
-        entrynum,
-        readentry.r.MPstate.r.uptime, 
-        readentry.r.navsysstate.r.uptime,
+        Serial.printf("%d, 101,",entrynum);
+        Serial.printf("%d,%d,%d,",readentry.r.MPstate.r.uptime,readentry.r.navsysstate.r.uptime,readentry.r.MPstate.r.missiontime);
+        Serial.printf("%d,%d,",readentry.r.MPstate.r.errorflag,readentry.r.navsysstate.r.errorflag);
+        Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.imudata.accel.x,readentry.r.navsysstate.r.imudata.accel.y,readentry.r.navsysstate.r.imudata.accel.z);
+        Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.accelworld.x,readentry.r.navsysstate.r.accelworld.y,readentry.r.navsysstate.r.accelworld.z);
+        Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.magdata.utesla.x, readentry.r.navsysstate.r.magdata.utesla.y, readentry.r.navsysstate.r.magdata.utesla.z);
+        Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.adxldata.accel.x, readentry.r.navsysstate.r.adxldata.accel.y, readentry.r.navsysstate.r.adxldata.accel.z);
+        Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.imudata.gyro.x*(180/M_PI),readentry.r.navsysstate.r.imudata.gyro.y*(180/M_PI), readentry.r.navsysstate.r.imudata.gyro.z*(180/M_PI));
+        Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.orientationeuler.x*(180/M_PI), readentry.r.navsysstate.r.orientationeuler.y*(180/M_PI), readentry.r.navsysstate.r.orientationeuler.z*(180/M_PI));
+        Serial.printf("%f,%f,%f,%f,",readentry.r.navsysstate.r.orientationquat.w, readentry.r.navsysstate.r.orientationquat.x,readentry.r.navsysstate.r.orientationquat.y, readentry.r.navsysstate.r.orientationquat.z);
+        Serial.printf("%f,%f,%f,%f,",readentry.r.navsysstate.r.orientationquatadj.w, readentry.r.navsysstate.r.orientationquatadj.x,readentry.r.navsysstate.r.orientationquatadj.y, readentry.r.navsysstate.r.orientationquatadj.z);
+        Serial.printf("%f,%f,",readentry.r.navsysstate.r.barodata.altitude, readentry.r.navsysstate.r.barodata.pressure);
+        Serial.printf("%f,%f,",readentry.r.navsysstate.r.barodata.verticalvel, readentry.r.navsysstate.r.filtered.vvel);
+        Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.barodata.maxrecordedalt, readentry.r.navsysstate.r.barodata.altitudeagl, readentry.r.navsysstate.r.filtered.alt);
+        Serial.printf("%f,%f,",readentry.r.navsysstate.r.barodata.verticalvel, readentry.r.navsysstate.r.filtered.vvel);
+        Serial.printf("%f,%f,",readentry.r.navsysstate.r.imudata.temp, readentry.r.navsysstate.r.barodata.temp);
+        Serial.printf("%f,%f,",readentry.r.navsysstate.r.imudata.absaccel,readentry.r.navsysstate.r.adxldata.absaccel);
+        Serial.printf("%f,%f,",readentry.r.navsysstate.r.barodata.padalt,readentry.r.navsysstate.r.barodata.maxrecordedalt);
+        Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.covariences.x, readentry.r.navsysstate.r.covariences.y,readentry.r.navsysstate.r.covariences.z);
+        Serial.printf("%d,%d,",readentry.r.MPstate.r.status,readentry.r.MPstate.r.MET);
+        Serial.printf("%f,",readentry.r.navsysstate.r.filtered.vertaccel);
+        Serial.printf("%d,%f,%d,%d,%d,%d\n",readentry.r.MPstate.r.state, readentry.r.MPstate.r.batterystate, readentry.r.MPstate.r.pyrosfired, readentry.r.MPstate.r.pyroscont, readentry.r.MPstate.r.pyrostate, 202);
 
-        readentry.r.MPstate.r.missiontime,
 
-        readentry.r.MPstate.r.errorflag, 
-        readentry.r.navsysstate.r.errorflag,
-
-        readentry.r.navsysstate.r.imudata.accel.x, 
-        readentry.r.navsysstate.r.imudata.accel.y, 
-        readentry.r.navsysstate.r.imudata.accel.z,
-
-        readentry.r.navsysstate.r.accelworld.x, 
-        readentry.r.navsysstate.r.accelworld.y, 
-        readentry.r.navsysstate.r.accelworld.z,
-
-        readentry.r.navsysstate.r.magdata.utesla.x, 
-        readentry.r.navsysstate.r.magdata.utesla.y, 
-        readentry.r.navsysstate.r.magdata.utesla.z,
-
-        readentry.r.navsysstate.r.adxldata.accel.x, 
-        readentry.r.navsysstate.r.adxldata.accel.y, 
-        readentry.r.navsysstate.r.adxldata.accel.z,
-
-        readentry.r.navsysstate.r.imudata.gyro.x*(180/M_PI),
-        readentry.r.navsysstate.r.imudata.gyro.y*(180/M_PI),
-        readentry.r.navsysstate.r.imudata.gyro.z*(180/M_PI),
-
-        readentry.r.navsysstate.r.orientationeuler.x*(180/M_PI), 
-        readentry.r.navsysstate.r.orientationeuler.y*(180/M_PI), 
-        readentry.r.navsysstate.r.orientationeuler.z*(180/M_PI),
-
-        readentry.r.navsysstate.r.orientationquat.w, 
-        readentry.r.navsysstate.r.orientationquat.x,
-        readentry.r.navsysstate.r.orientationquat.y, 
-        readentry.r.navsysstate.r.orientationquat.z,
-
-        readentry.r.navsysstate.r.orientationquatadj.w, 
-        readentry.r.navsysstate.r.orientationquatadj.x,
-        readentry.r.navsysstate.r.orientationquatadj.y, 
-        readentry.r.navsysstate.r.orientationquatadj.z,
-
-        readentry.r.navsysstate.r.barodata.altitude, 
-        readentry.r.navsysstate.r.barodata.pressure, 
-
-        readentry.r.navsysstate.r.barodata.verticalvel, 
-        readentry.r.navsysstate.r.filtered.vvel, 
-
-        readentry.r.navsysstate.r.barodata.maxrecordedalt, 
-        readentry.r.navsysstate.r.barodata.altitudeagl,
-        readentry.r.navsysstate.r.filtered.alt,
-
-        readentry.r.navsysstate.r.imudata.temp,
-        readentry.r.navsysstate.r.barodata.temp,
-
-        readentry.r.navsysstate.r.imudata.absaccel,
-        readentry.r.navsysstate.r.adxldata.absaccel,
-
-        readentry.r.navsysstate.r.barodata.padalt,
-        readentry.r.navsysstate.r.barodata.maxrecordedalt,
-
-        readentry.r.navsysstate.r.magdata.gauss.x, 
-        readentry.r.navsysstate.r.magdata.gauss.y, 
-        readentry.r.navsysstate.r.magdata.gauss.z,
-
-        readentry.r.navsysstate.r.covariences.x, 
-        readentry.r.navsysstate.r.covariences.y, 
-        readentry.r.navsysstate.r.covariences.z,
-
-        readentry.r.MPstate.r.status,
-        readentry.r.MPstate.r.MET,
-
-        readentry.r.navsysstate.r.filtered.vertaccel,
-
-        readentry.r.MPstate.r.state,
-        readentry.r.MPstate.r.batterystate,
-        readentry.r.MPstate.r.pyrosfired,
-        readentry.r.MPstate.r.pyroscont,
-        readentry.r.MPstate.r.pyrostate,
-        202
-        
-    );
-    entrynum++;
-    preventry = readentry;
+        entrynum++;
+        preventry = readentry;
     }
         
     Serial.println("done");
