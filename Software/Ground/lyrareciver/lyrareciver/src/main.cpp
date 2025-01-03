@@ -1,12 +1,12 @@
 #include <Arduino.h>
 #include <macros.h>
 #include <radio.h>
-#include <lcd.h>
+//#include <lcd.h>
 #include <sdcard.h>
 
 
 RADIO radio;
-LCDDISPLAY lcddisplay;
+//LCDDISPLAY lcddisplay;
 SDCARD sdcard;
 
 telepacket currentstate;
@@ -29,7 +29,7 @@ void setup() {
   sdcard.init();
   Serial.println("radio good");
   
-  lcddisplay.init();
+  //lcddisplay.init();
 
   ready = true;
 }

@@ -458,7 +458,7 @@ int MPCORE::dumpdata(){
         Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.accelworld.x,readentry.r.navsysstate.r.accelworld.y,readentry.r.navsysstate.r.accelworld.z);
         Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.magdata.utesla.x, readentry.r.navsysstate.r.magdata.utesla.y, readentry.r.navsysstate.r.magdata.utesla.z);
         Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.adxldata.accel.x, readentry.r.navsysstate.r.adxldata.accel.y, readentry.r.navsysstate.r.adxldata.accel.z);
-        Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.imudata.gyro.x*(180/M_PI),readentry.r.navsysstate.r.imudata.gyro.y*(180/M_PI), readentry.r.navsysstate.r.imudata.gyro.z*(180/M_PI));
+        Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.imudata.gyro.x*(180/M_PI),readentry.r.navsysstate.r.imudata.gyro.y*(180/M_PI), readentry.r.navsysstate.r.imudata.gyro.z*(180/M_PI))
         Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.orientationeuler.x*(180/M_PI), readentry.r.navsysstate.r.orientationeuler.y*(180/M_PI), readentry.r.navsysstate.r.orientationeuler.z*(180/M_PI));
         Serial.printf("%f,%f,%f,%f,",readentry.r.navsysstate.r.orientationquat.w, readentry.r.navsysstate.r.orientationquat.x,readentry.r.navsysstate.r.orientationquat.y, readentry.r.navsysstate.r.orientationquat.z);
         Serial.printf("%f,%f,%f,%f,",readentry.r.navsysstate.r.orientationquatadj.w, readentry.r.navsysstate.r.orientationquatadj.x,readentry.r.navsysstate.r.orientationquatadj.y, readentry.r.navsysstate.r.orientationquatadj.z);
