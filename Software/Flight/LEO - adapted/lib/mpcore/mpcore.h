@@ -465,7 +465,6 @@ int MPCORE::dumpdata(){
         Serial.printf("%f,%f,",readentry.r.navsysstate.r.barodata.altitude, readentry.r.navsysstate.r.barodata.pressure);
         Serial.printf("%f,%f,",readentry.r.navsysstate.r.barodata.verticalvel, readentry.r.navsysstate.r.filtered.vvel);
         Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.barodata.maxrecordedalt, readentry.r.navsysstate.r.barodata.altitudeagl, readentry.r.navsysstate.r.filtered.alt);
-        Serial.printf("%f,%f,",readentry.r.navsysstate.r.barodata.verticalvel, readentry.r.navsysstate.r.filtered.vvel);
         Serial.printf("%f,%f,",readentry.r.navsysstate.r.imudata.temp, readentry.r.navsysstate.r.barodata.temp);
         Serial.printf("%f,%f,",readentry.r.navsysstate.r.imudata.absaccel,readentry.r.navsysstate.r.adxldata.absaccel);
         Serial.printf("%f,%f,",readentry.r.navsysstate.r.barodata.padalt,readentry.r.navsysstate.r.barodata.maxrecordedalt);

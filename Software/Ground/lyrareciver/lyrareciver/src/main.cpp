@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <macros.h>
 #include <radio.h>
+<<<<<<< Updated upstream
 //#include <lcd.h>
 #include <sdcard.h>
 
@@ -8,6 +9,13 @@
 RADIO radio;
 //LCDDISPLAY lcddisplay;
 SDCARD sdcard;
+=======
+//#include <sdcard.h>
+
+
+RADIO radio;
+//SDCARD sdcard;
+>>>>>>> Stashed changes
 
 telepacket currentstate;
 
@@ -26,11 +34,14 @@ void setup() {
   delay(500);
   digitalWrite(LEDINDICATION,LOW);
   radio.init();
-  sdcard.init();
+  //sdcard.init();
   Serial.println("radio good");
+<<<<<<< Updated upstream
   
   //lcddisplay.init();
 
+=======
+>>>>>>> Stashed changes
   ready = true;
 }
 
@@ -46,7 +57,23 @@ void loop() {
   if (millis() - serialtime > 100)
   {
     serialtime = millis();
-    Serial.printf(">Data age: %f\n",float((millis()-packettime))/1000);
+    //Serial.printf(">Data age: %f\n",float((millis()-packettime))/1000);
+  }
+  
+  if (digitalRead(BUTTON1) && digitalRead(BUTTON2) && digitalRead(BUTTON3))
+  {
+    Serial.println("sending packet");
+    Lora.beginPacket();
+    int j = 0;
+    Lora.write('P');
+    Lora.write('A');
+    Lora.write('1');
+    if (!Lora.endPacket())
+    {
+        Serial.println("packet send fail");
+    }
+    Serial.printf("error code :%d \n",Lora.getError());
+    delay(1000);
   }
   
   
@@ -79,5 +106,6 @@ void loop1(){
     digitalWrite(LEDINDICATION,HIGH);
     delay(100);
     digitalWrite(LEDINDICATION,LOW);
+    Serial.print("recivedpacket");
   }
 }

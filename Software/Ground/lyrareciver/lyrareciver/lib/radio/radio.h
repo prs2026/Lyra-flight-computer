@@ -39,7 +39,7 @@ int RADIO::init(){
     }
     Serial.println("radio init ok");
     Lora.setFrequency(frequency);
-    Lora.setTxPower(17,SX126X_TX_POWER_SX1261);
+    Lora.setTxPower(22,SX126X_TX_POWER_SX1261);
     Lora.setRxGain(LORA_RX_GAIN_BOOSTED);
     Lora.setLoRaModulation(sf, bw, cr,false);
 
