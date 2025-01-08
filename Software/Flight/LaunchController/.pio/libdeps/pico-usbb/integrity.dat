@@ -1,0 +1,11 @@
+khoih-prog/RPI_PICO_TimerInterrupt@^1.3.1
+stevemarple/MicroNMEA@^2.0.6
+adafruit/Adafruit ADXL375@^1.1.2
+rlogiacco/CircularBuffer@^1.4.0
+adafruit/Adafruit LIS3MDL@^1.2.4
+hideakitai/ArduinoEigen@^0.2.3
+rfetick/Kalman@^1.1.0
+adafruit/Adafruit BMP3XX Library@^2.1.4
+tomstewart89/BasicLinearAlgebra@^3.2
+chandrawi/LoRaRF@^2.1.1
+stm32duino/STM32duino X-NUCLEO-GNSS1A1@^1.0.5
