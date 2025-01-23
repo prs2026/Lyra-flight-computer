@@ -2,6 +2,7 @@
 #include <macros.h>
 #include <radio.h>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 //#include <lcd.h>
 #include <sdcard.h>
 
@@ -9,6 +10,13 @@
 RADIO radio;
 //LCDDISPLAY lcddisplay;
 SDCARD sdcard;
+=======
+//#include <sdcard.h>
+
+
+RADIO radio;
+//SDCARD sdcard;
+>>>>>>> Stashed changes
 =======
 //#include <sdcard.h>
 
@@ -37,9 +45,12 @@ void setup() {
   //sdcard.init();
   Serial.println("radio good");
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   
   //lcddisplay.init();
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
   ready = true;
