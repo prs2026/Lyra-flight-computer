@@ -30,3 +30,9 @@ def calcC():
     for i in range(0,N):
         sumtotal = sumtotal + P_i_m
     return (1/N)*sumtotal
+
+a = calcA()
+B = calcB()
+c = calcC()
+
+f = a + B*c + 2*c*np.transpose(c)*c
