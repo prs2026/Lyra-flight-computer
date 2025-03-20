@@ -37,4 +37,4 @@ c = calcC()
 D = B + 2*c*np.transpose(c) + ((c*np.transpose(c))*I)
 
 f = a + B*c + 2*c*np.transpose(c)*c
-H = D-
+#H = D-
