@@ -1,8 +1,8 @@
 {
 	"InstallScripts" : 
 	[
-		"C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/build/cmake_install.cmake",
-		"C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/build/eigen-3.4.0/cmake_install.cmake"
+		"C:/Users/Esohn/Documents/GitHub/lyra flight comp new/Lyra-flight-computer/Hope/Firmware/CPP testing/build/cmake_install.cmake",
+		"C:/Users/Esohn/Documents/GitHub/lyra flight comp new/Lyra-flight-computer/Hope/Firmware/CPP testing/build/eigen-3.4.0/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

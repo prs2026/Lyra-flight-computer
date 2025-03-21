@@ -1,6 +1,6 @@
-C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/build/CMakeFiles/pleasehelp.dir
-C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/build/CMakeFiles/edit_cache.dir
-C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/build/CMakeFiles/rebuild_cache.dir
-C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/build/eigen-3.4.0/CMakeFiles/mylib.dir
-C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/build/eigen-3.4.0/CMakeFiles/edit_cache.dir
-C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/build/eigen-3.4.0/CMakeFiles/rebuild_cache.dir
+C:/Users/Esohn/Documents/GitHub/lyra flight comp new/Lyra-flight-computer/Hope/Firmware/CPP testing/build/CMakeFiles/pleasehelp.dir
+C:/Users/Esohn/Documents/GitHub/lyra flight comp new/Lyra-flight-computer/Hope/Firmware/CPP testing/build/CMakeFiles/edit_cache.dir
+C:/Users/Esohn/Documents/GitHub/lyra flight comp new/Lyra-flight-computer/Hope/Firmware/CPP testing/build/CMakeFiles/rebuild_cache.dir
+C:/Users/Esohn/Documents/GitHub/lyra flight comp new/Lyra-flight-computer/Hope/Firmware/CPP testing/build/eigen-3.4.0/CMakeFiles/mylib.dir
+C:/Users/Esohn/Documents/GitHub/lyra flight comp new/Lyra-flight-computer/Hope/Firmware/CPP testing/build/eigen-3.4.0/CMakeFiles/edit_cache.dir
+C:/Users/Esohn/Documents/GitHub/lyra flight comp new/Lyra-flight-computer/Hope/Firmware/CPP testing/build/eigen-3.4.0/CMakeFiles/rebuild_cache.dir
