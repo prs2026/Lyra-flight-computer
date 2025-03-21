@@ -1,0 +1,9 @@
+{
+    "cmake.sourceDirectory": "C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp",
+    "files.associations": {
+        "iostream": "cpp",
+        "cstdlib": "cpp",
+        "ostream": "cpp",
+        "cmath": "cpp"
+    }
+}

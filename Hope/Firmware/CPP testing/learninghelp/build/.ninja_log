@@ -1,0 +1,46 @@
+# ninja log v6
+26	765	7642420798760240	CMakeFiles/pleasehelp.dir/main.cpp.obj	5f41f85ad1e02271
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/doc/examples/cmake_install.cmake	1e28e5621c965d05
+46	396	7642433797764234	build.ninja	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/doc/cmake_install.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/unsupported/doc/snippets/cmake_install.cmake	1e28e5621c965d05
+46	396	7642433797694229	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/cmake_install.cmake	1e28e5621c965d05
+46	396	7642433797724224	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/cmake_install.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/cmake_install.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/doc/special_examples/cmake_install.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/doc/snippets/cmake_install.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/unsupported/test/CTestTestfile.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/test/cmake_install.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/failtest/cmake_install.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/blas/CTestTestfile.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/blas/cmake_install.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/lapack/cmake_install.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/unsupported/doc/examples/cmake_install.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/unsupported/cmake_install.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/unsupported/Eigen/cmake_install.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/unsupported/Eigen/CXX11/cmake_install.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/unsupported/doc/cmake_install.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/unsupported/test/cmake_install.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/demos/cmake_install.cmake	1e28e5621c965d05
+6981	8248	7642420868302515	pleasehelp.exe	8449089e117c7a6d
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/scripts/cmake_install.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/CTestTestfile.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/test/CTestTestfile.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/failtest/CTestTestfile.cmake	1e28e5621c965d05
+5368	6980	7642420852179676	eigen-3.4.0/libmylib.a	a3f9635397a15fa3
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/lapack/CTestTestfile.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/unsupported/Eigen/CXX11/CTestTestfile.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/unsupported/CTestTestfile.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/unsupported/Eigen/CTestTestfile.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/unsupported/doc/CTestTestfile.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/unsupported/doc/examples/CTestTestfile.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/unsupported/doc/snippets/CTestTestfile.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/demos/CTestTestfile.cmake	1e28e5621c965d05
+46	396	7642411795256785	C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/learninghelp/build/eigen-3.4.0/eigen-3.4.0/scripts/CTestTestfile.cmake	1e28e5621c965d05
+23	5368	7642420798725237	eigen-3.4.0/CMakeFiles/mylib.dir/lib.cpp.obj	d16084ab3aeec0a9
+10	797	7642433979724429	CMakeFiles/pleasehelp.dir/main.cpp.obj	5f41f85ad1e02271
+6	1002	7642433979689424	eigen-3.4.0/CMakeFiles/mylib.dir/lib.cpp.obj	d16084ab3aeec0a9
+1003	1092	7642433989651174	eigen-3.4.0/libmylib.a	a3f9635397a15fa3
+1092	1239	7642433990551336	pleasehelp.exe	8449089e117c7a6d
+23	786	7642434666881746	CMakeFiles/pleasehelp.dir/main.cpp.obj	5f41f85ad1e02271
+787	932	7642434674518095	pleasehelp.exe	8449089e117c7a6d

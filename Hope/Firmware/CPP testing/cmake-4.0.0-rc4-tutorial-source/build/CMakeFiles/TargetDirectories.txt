@@ -1,0 +1,3 @@
+C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/cmake-4.0.0-rc4-tutorial-source/build/CMakeFiles/godplease.dir
+C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/cmake-4.0.0-rc4-tutorial-source/build/CMakeFiles/edit_cache.dir
+C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hope/Firmware/CPP testing/cmake-4.0.0-rc4-tutorial-source/build/CMakeFiles/rebuild_cache.dir
