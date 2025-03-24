@@ -39,9 +39,9 @@
 //returns 0 
 int resetsx1280(){
     gpio_put(PIN_RST,0);
-    sleep_ms(10);
+    sleep_ms(100);
     gpio_put(PIN_RST,1);
-    sleep_ms(10);
+    sleep_ms(100);
     printf("resetting sx1280\n");
     return 0;
 }
@@ -52,13 +52,14 @@ int main()
     stdio_init_all();
 
     //wait so init messages can actually be seen on serial
-    sleep_ms(2000);
-    
-    // SPI initialisation. This will use SPI at 12.5kHz.
-    spi_init(SPI_PORT, 12500);
+    sleep_ms(5000);
+
     gpio_set_function(PIN_MISO, GPIO_FUNC_SPI);
     gpio_set_function(PIN_SCK,  GPIO_FUNC_SPI);
     gpio_set_function(PIN_MOSI, GPIO_FUNC_SPI);
+    // SPI initialisation. This will use SPI at 12.5kHz.
+    spi_init(SPI_PORT, 12500);
+    
     
     //gpio inits
     gpio_init(PIN_CS);
