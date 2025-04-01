@@ -3,8 +3,8 @@
 #include <RadioLib.h>
 
 
-//#define MODETX
-#define MODERX
+#define MODETX
+//#define MODERX
 
 
 #define PIN_MISO 28
@@ -53,7 +53,7 @@ void setup( ) {
   float bandwidth = 812.5; //kHz
   int spreading_factor = 9;
   int coding_rate = 7;
-  int output_power = 10; //dBm
+  int output_power = 13; //dBm
   int preamble_length = 12; //symbols
   // CRC = 1;
 
@@ -65,6 +65,12 @@ void setup( ) {
   } else {
     Serial.print(F("failed, code "));
     Serial.println(state);
+    while (true) { delay(10); }
+  }
+
+  // set output power to 13 dBm
+  if (radio.setOutputPower(13) == RADIOLIB_ERR_INVALID_OUTPUT_POWER) {
+    Serial.println(F("Selected output power is invalid for this module!"));
     while (true) { delay(10); }
   }
 
@@ -138,14 +144,15 @@ void loop() {
 
   // you can transmit C-string or Arduino string up to
   // 256 characters long
+  /*
   String str = "Hello World! #" + String(count++);
   int state = radio.transmit(str);
-
+  */
   // you can also transmit byte array up to 256 bytes long
-  /*
+  
     byte byteArr[] = {0x01, 0x23, 0x45, 0x56, 0x78, 0xAB, 0xCD, 0xEF};
     int state = radio.transmit(byteArr, 8);
-  */
+  
 
   if (state == RADIOLIB_ERR_NONE) {
     // the packet was successfully transmitted
