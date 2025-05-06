@@ -15,7 +15,7 @@
 //Radio pins
 #define PIN_DIO1 9
 #define PIN_DIO2 1
-#define PIN_DIO3 0
+#define PIN_DIO3 0 // jumpered to RST
 #define PIN_BUSY 10 // High when busy
 #define PIN_TXCOEN 11 // Active high
 #define PIN_RST 17 // active low
