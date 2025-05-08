@@ -363,7 +363,7 @@ int MPCORE::logdata(mpstate state, navpacket navstate){
     }
     
     // Serial.println("packet is: ");
-    // j = 0;
+    // j = 0;   
     // for (int i = 0; i < sizeof(logbuf); i++)
     // {
     //     Serial.printf("%x ",logbuf[j]);
