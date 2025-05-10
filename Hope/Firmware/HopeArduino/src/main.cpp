@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <SPI.h>
-#include <RadioLib.h>
+#include "sx1280lib.h"
 
 
 #define MODETX
@@ -20,6 +20,7 @@
 #define PIN_TXCOEN 11 // Active high
 #define PIN_RST 17 // active low
 
+
 #define PIN_LED 8
 
 #define BAUD_RATE 9600
@@ -29,148 +30,44 @@
 #define UART_TX_PIN 12
 #define UART_RX_PIN 13
 
-// SX1280 has the following connections:
-// NSS pin:   10
-// DIO1 pin:  2
-// NRST pin:  3
-// BUSY pin:  
-SPISettings spiSettings(2000000, MSBFIRST, SPI_MODE0);
-SX1280 radio = new Module(PIN_CS, PIN_BUSY, PIN_DIO3, PIN_BUSY, SPI1, spiSettings ); // pin_led is where the rst pin is actually connected
+
+// Arrays for passing data to and receiving data from sx1280 setup, rx, and tx functions
+uint8_t writeData[ 255 ];
+uint8_t readData[ 255 ];
+
+//uint8_t antselPin = 28; // Setting variable for DLP-RFS1280 antenna select pin
+
+uint32_t i = 0; // iterator
+
+sx1280radio SX1280(PIN_CS,PIN_BUSY,PIN_DIO3);
 
 
 void setup( ) {
-  delay(5000);
-  Serial.begin(115200);
+  delay(3000);
+  Serial.begin();
+  Serial.println("init");
+  pinMode( PIN_LED, OUTPUT);
 
-  SPI1.setCS(PIN_CS);
-  SPI1.setSCK(PIN_SCK);
-  SPI1.setTX(PIN_MOSI);
-  SPI1.setRX(PIN_MISO);
+  pinMode( PIN_TXCOEN, OUTPUT );
+  digitalWrite( PIN_TXCOEN, HIGH );
 
+  // bool setCS(pin_size_t pin); choosing to handle the CS pin in the library
+  SPI1.setSCK( PIN_SCK ); // bool setSCK(pin_size_t pin);
+  SPI1.setTX( PIN_MOSI );  // bool setTX(pin_size_t pin);
+  SPI1.setRX( PIN_MISO );  // bool setRX(pin_size_t pin);
   SPI1.begin();
 
-  float carrier_frequency = 2420; //MHz
-  float bandwidth = 812.5; //kHz
-  int spreading_factor = 9;
-  int coding_rate = 7;
-  int output_power = 13; //dBm
-  int preamble_length = 12; //symbols
-  // CRC = 1;
+  
 
-  // initialize SX1280 with default settings
-  Serial.print(F("[SX1280] Initializing ... "));
-  int state = radio.begin(carrier_frequency);
-  if (state == RADIOLIB_ERR_NONE) {
-    Serial.println(F("success!"));
-  } else {
-    Serial.print(F("failed, code "));
-    Serial.println(state);
-    while (true) { delay(10); }
-  }
-
-  // set output power to 13 dBm
-  if (radio.setOutputPower(13) == RADIOLIB_ERR_INVALID_OUTPUT_POWER) {
-    Serial.println(F("Selected output power is invalid for this module!"));
-    while (true) { delay(10); }
-  }
-
+  
 }
-
-// counter to keep track of transmitted packets
-int count = 0;
 
 void loop() {
+  Serial.println("loop");
+  digitalWrite( PIN_LED, HIGH );
+  delay( 50 );
+  digitalWrite( PIN_LED, LOW);
 
-  #if defined(MODERX)
-
-  Serial.print(F("[SX1280] Waiting for incoming transmission ... "));
-
-  // you can receive data as an Arduino String
-  String str;
-  int state = radio.receive(str);
-
-  // you can also receive data as byte array
-  /*
-    byte byteArr[8];
-    int state = radio.receive(byteArr, 8);
-  */
-
-  if (state == RADIOLIB_ERR_NONE) {
-    // packet was successfully received
-    Serial.println(F("success!"));
-
-    // print the data of the packet
-    Serial.print(F("[SX1280] Data:\t\t"));
-    Serial.println(str);
-
-    // print the RSSI (Received Signal Strength Indicator)
-    // of the last received packet
-    Serial.print(F("[SX1280] RSSI:\t\t"));
-    Serial.print(radio.getRSSI());
-    Serial.println(F(" dBm"));
-
-    // print the SNR (Signal-to-Noise Ratio)
-    // of the last received packet
-    Serial.print(F("[SX1280] SNR:\t\t"));
-    Serial.print(radio.getSNR());
-    Serial.println(F(" dB"));
-
-    // print the Frequency Error
-    // of the last received packet
-    Serial.print(F("[SX1280] Frequency Error:\t"));
-    Serial.print(radio.getFrequencyError());
-    Serial.println(F(" Hz"));
-
-  } else if (state == RADIOLIB_ERR_RX_TIMEOUT) {
-    // timeout occurred while waiting for a packet
-    Serial.println(F("timeout!"));
-
-  } else if (state == RADIOLIB_ERR_CRC_MISMATCH) {
-    // packet was received, but is malformed
-    Serial.println(F("CRC error!"));
-
-  } else {
-    // some other error occurred
-    Serial.print(F("failed, code "));
-    Serial.println(state);
-
-  }
-      
-    #endif // MODERX
-
-    #if defined(MODETX)
-
-    Serial.print(F("[SX1280] Transmitting packet ... "));
-
-  // you can transmit C-string or Arduino string up to
-  // 256 characters long
-  /*
-  String str = "Hello World! #" + String(count++);
-  int state = radio.transmit(str);
-  */
-  // you can also transmit byte array up to 256 bytes long
-  
-    byte byteArr[] = {0x01, 0x23, 0x45, 0x56, 0x78, 0xAB, 0xCD, 0xEF};
-    int state = radio.transmit(byteArr, 8);
-  
-
-  if (state == RADIOLIB_ERR_NONE) {
-    // the packet was successfully transmitted
-    Serial.println(F("success!"));
-
-  } else if (state == RADIOLIB_ERR_PACKET_TOO_LONG) {
-    // the supplied packet was longer than 256 bytes
-    Serial.println(F("too long!"));
-
-  } else {
-    // some other error occurred
-    Serial.print(F("failed, code "));
-    Serial.println(state);
-
-  }
-
-  // wait for a second before transmitting again
-  delay(1000);
-
-    #endif // MODETX
 }
+
+
