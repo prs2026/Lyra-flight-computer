@@ -6,7 +6,7 @@
 
 #define MODEFLIGHT
 
-#if !defined(MODELFIGHT)
+#if !defined(MODEFLIGHT)
 #define MODEGROUND
 
 #endif // MODELFIGHT
@@ -17,13 +17,15 @@
 
 sx1280radio radio;
 
-
+uint32_t lastpacketsent = 0;
 
 void setup( ) {
   delay(3000);
   Serial.begin();
   Serial.println("init");
   pinMode( PIN_LED, OUTPUT);
+  pinMode( PIN_DIO1, INPUT);
+  pinMode( PIN_DIO2, INPUT);
 
       pinMode( PIN_TXCOEN, OUTPUT );
     digitalWrite( PIN_TXCOEN, HIGH );
@@ -45,11 +47,18 @@ void loop() {
 
   #if defined(MODEFLIGHT)
   
-  if (Serial.available())
+  if (millis() - lastpacketsent > 2000)
   {
     packet testpacket;
+    testpacket.r.uptime = millis();
+    testpacket.r.command = 5;
+    testpacket.r.battvoltage = 80.0;
+    testpacket.r.checksum = 0xAB;
+    testpacket.r.lat = 24.5;
+    testpacket.r.lat = 117.5;
     radio.sendpacket(testpacket);
     Serial.read();
+    lastpacketsent = millis();
   }
   
   #endif // MODEFLIGHT
@@ -65,8 +74,19 @@ void loop() {
   // for( i = 0; i < 255; i++){
   //   *( readData + i ) = 0x00;
   // }
+  packet newpacket;
+  newpacket = radio.receivepacket();
 
-  radio.receivepacket();
+  if (newpacket.r.checksum == 0xAB)
+  {
+    Serial.printf("uptime: %d, command %d , battery: %f \n",newpacket.r.uptime,newpacket.r.command,newpacket.r.battvoltage);
+    Serial.printf(">uptime:%d\n",newpacket.r.uptime);
+    Serial.printf(">command:%d\n",newpacket.r.command);
+    Serial.printf(">battvoltage:%f\n",newpacket.r.battvoltage);
+  }
+  
+
+    
   
 
   #endif // MODERSX

@@ -25,15 +25,16 @@
 
 union packet
 {
-    struct r
+    struct
     {
         uint32_t uptime;
         float lat;
         float lon;
         float battvoltage;
-        uint8_t camstatus;
-    };
-    uint8_t data[sizeof(r)];
+        uint8_t command;
+        uint8_t checksum;
+    } r;
+    uint8_t data[sizeof(float)+sizeof(float)+sizeof(float)+sizeof(uint32_t)+sizeof(uint8_t)+sizeof(uint8_t)];
     
 };
 

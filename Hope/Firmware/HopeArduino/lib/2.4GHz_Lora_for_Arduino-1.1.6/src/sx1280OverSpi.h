@@ -278,7 +278,9 @@ class sx1280OverSpi{
     int rxflag = 0;
     sx1280OverSpi( uint8_t cssPin, 
                    uint8_t busyPin, 
-                   uint8_t resetPin );
+                   uint8_t resetPin,
+                   uint8_t DIO1Pin,
+                   uint8_t DIO2Pin  );
     void begin( );
     void sx1280Select( );
     void sx1280Deselect( );
@@ -308,7 +310,8 @@ class sx1280OverSpi{
                    uint8_t txIrq70, 
                    uint8_t txPeriodBase,
                    uint8_t txPeriodBaseCount158, 
-                   uint8_t txPeriodBaseCount70 );
+                   uint8_t txPeriodBaseCount70,
+                   uint8_t messageLength);
 
     void sx1280Rx( uint8_t rxIrq158, 
                    uint8_t rxIrq70, 
@@ -321,6 +324,8 @@ class sx1280OverSpi{
     uint8_t sx1280CssPin;   
     uint8_t sx1280BusyPin;
     uint8_t sx1280ResetPin;
+    uint8_t sx1280DIO1Pin;
+    uint8_t sx1280DIO2Pin;
 };
 
 #endif
