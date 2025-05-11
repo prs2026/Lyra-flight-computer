@@ -2,6 +2,7 @@
 #define SX1280LIB
 
 #include "Arduino.h"
+#include "basiclib.h"
 
 class sx1280radio
 {
@@ -9,10 +10,12 @@ private:
     uint8_t _CS_PIN;
     uint8_t _BUSY_PIN;
     uint8_t _RESET_PIN;
+
+        // Arrays for passing data to and receiving data from sx1280 setup, rx, and tx functions
+    uint8_t writeData[ 255 ];
+    uint8_t readData[ 255 ];
 public:
-    sx1280radio(uint8_t cssPin, 
-                uint8_t busyPin, 
-                uint8_t resetPin);
+    sx1280radio();
     ~sx1280radio();
         
 
@@ -22,9 +25,9 @@ public:
 
     int isbusy();
 
-    int sendcommand(uint8_t opcode,uint8_t data[],uint8_t len);
+    int sendpacket(packet packetToSend);
 
-
+    packet receivepacket();
 };
 
 

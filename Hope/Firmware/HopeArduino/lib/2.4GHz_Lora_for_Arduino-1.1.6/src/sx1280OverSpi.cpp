@@ -86,7 +86,7 @@ void sx1280OverSpi::sx1280Setup( uint8_t standbyMode,
             Because it wont receive the command */
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        Serial.println(F("Busy after reset"));
+        //Serial.println(F("Busy after reset"));
     }
 
     /* Setting sx1280 Standby mode */
@@ -100,7 +100,7 @@ void sx1280OverSpi::sx1280Setup( uint8_t standbyMode,
 
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        Serial.println(F("Busy after SETSTANDBY"));
+        //Serial.println(F("Busy after SETSTANDBY"));
     }
 
     /* Setting sx1280 Packet Type */
@@ -114,7 +114,7 @@ void sx1280OverSpi::sx1280Setup( uint8_t standbyMode,
 
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        Serial.println(F("Busy after SETPACKETTYPE"));
+        //Serial.println(F("Busy after SETPACKETTYPE"));
     }
 
     /* Setting RF Frequency */
@@ -130,7 +130,7 @@ void sx1280OverSpi::sx1280Setup( uint8_t standbyMode,
 
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        Serial.println(F("Busy after SETRFFREQUENCY"));
+        //Serial.println(F("Busy after SETRFFREQUENCY"));
     }
 
     /* Setting Tx and Rx Buffer Base Addresses
@@ -146,7 +146,7 @@ void sx1280OverSpi::sx1280Setup( uint8_t standbyMode,
 
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        Serial.println(F("Busy after SETBUFFERBASEADDRESS"));
+        //Serial.println(F("Busy after SETBUFFERBASEADDRESS"));
     }
 
     /* Setting the Modulation Params */
@@ -214,7 +214,7 @@ void sx1280OverSpi::sx1280Setup( uint8_t standbyMode,
 
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        Serial.println(F("Busy after SETMODULATIONPARAMS"));
+        //Serial.println(F("Busy after SETMODULATIONPARAMS"));
     }
 
     /* Setting Packet Params */
@@ -242,7 +242,7 @@ void sx1280OverSpi::sx1280Setup( uint8_t standbyMode,
 
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        Serial.println(F("Busy after SETPACKETPARAMS"));
+        //Serial.println(F("Busy after SETPACKETPARAMS"));
     }
 
     /* Testing connecting from pico to sx1280 by writing to and reading from buffer
@@ -312,7 +312,7 @@ void sx1280OverSpi::sx1280Tx( uint8_t power,
 
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        Serial.println(F("Busy after SETTXPARAMS"));
+        //Serial.println(F("Busy after SETTXPARAMS"));
     }
 
     /* Writing a message to the sx1280 Tx message buffer */
@@ -347,7 +347,7 @@ void sx1280OverSpi::sx1280Tx( uint8_t power,
 
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        Serial.println(F("Busy after tx WRITEBUFFER"));
+        //Serial.println(F("Busy after tx WRITEBUFFER"));
     }
 
     /* setting IRQ parameters for the outgoing message, looping SPI1 not DIO pins to check*/
@@ -368,7 +368,7 @@ void sx1280OverSpi::sx1280Tx( uint8_t power,
 
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        Serial.println(F("Busy after tx SETDIOIRQPARAMS"));
+        //Serial.println(F("Busy after tx SETDIOIRQPARAMS"));
     }
 
     /* Putting sx1280 in transmit mode to send the message in sx1280's message buffer 
@@ -385,7 +385,7 @@ void sx1280OverSpi::sx1280Tx( uint8_t power,
 
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        Serial.println(F("Busy after tx SETTX"));
+        //Serial.println(F("Busy after tx SETTX"));
     }
 
     /* Looping over GETIRQSTATUS using SPI1, till TxDone bit is high */
@@ -404,7 +404,7 @@ void sx1280OverSpi::sx1280Tx( uint8_t power,
  
         while( digitalRead( sx1280BusyPin ) == 1 ){
             delay( 10 );
-            Serial.println(F("Busy after tx GETIRQSTATUS"));
+            //Serial.println(F("Busy after tx GETIRQSTATUS"));
         }
 
         Serial.print(F("Outbound IRQ Check: 0x"));
@@ -442,7 +442,7 @@ void sx1280OverSpi::sx1280Tx( uint8_t power,
 
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        Serial.println(F("Busy after tx CLRIRQSTATUS"));
+        //Serial.println(F("Busy after tx CLRIRQSTATUS"));
     }
 
     /* Tx SETSANDBY */
@@ -456,7 +456,7 @@ void sx1280OverSpi::sx1280Tx( uint8_t power,
 
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        Serial.println(F("Busy after tx SETSTANDBY"));
+        //Serial.println(F("Busy after tx SETSTANDBY"));
     }
 }
 
@@ -467,7 +467,7 @@ void sx1280OverSpi::sx1280Rx( uint8_t rxIrq158,
                               uint8_t rxPeriodBase,
                               uint8_t rxPeriodBaseCount158, 
                               uint8_t rxPeriodBaseCount70,
-                              uint8_t inboundMessage[ 255 ] ){
+                              uint8_t inboundMessage[ 255 ]){
 
     /* Iterators */
     uint16_t i = 0;
@@ -496,7 +496,7 @@ void sx1280OverSpi::sx1280Rx( uint8_t rxIrq158,
 
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        Serial.println(F("Busy after rx SETDIOIRQPARAMS"));
+        //Serial.println(F("Busy after rx SETDIOIRQPARAMS"));
     }
 
     /* setting sx1280 to Rx mode
@@ -513,15 +513,15 @@ void sx1280OverSpi::sx1280Rx( uint8_t rxIrq158,
 
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        Serial.println(F("Busy after SETRX"));
+        //Serial.println(F("Busy after SETRX"));
     }
 
     /* Loop polling 25 times over rx mode
        Each loop has a 50 millisecond delay allowing other tasks to run */
     for( i = 0; i <= 25; i++ ){ 
 
-        Serial.print(F("Listening: "));
-        Serial.println( i, DEC );
+        //Serial.print(F("Listening: "));
+        //Serial.println( i, DEC );
         sizeOfMessageInBuffer = 0;
 
         /* Using GETIRQSTATUS to check if there is a new message in the rx buffer */
@@ -541,7 +541,7 @@ void sx1280OverSpi::sx1280Rx( uint8_t rxIrq158,
 
             while( digitalRead( sx1280BusyPin ) == 1 ){
                 delay( 10 );
-                Serial.println(F("Busy after rx GETIRQSTATUS"));
+                //Serial.println(F("Busy after rx GETIRQSTATUS"));
             }
 
             /* using GETPACKETSTATUS which returns rssiSync, and Signal to Noise Ratio ( SNR )
@@ -562,7 +562,7 @@ void sx1280OverSpi::sx1280Rx( uint8_t rxIrq158,
 
             while( digitalRead( sx1280BusyPin ) == 1 ){
                 delay( 10 );
-                Serial.println(F("Busy after rx GETPACKETSTATUS"));
+                //Serial.println(F("Busy after rx GETPACKETSTATUS"));
             }
 
             /* Clearing the IRQ register on the sx1280
@@ -578,7 +578,7 @@ void sx1280OverSpi::sx1280Rx( uint8_t rxIrq158,
 
             while( digitalRead( sx1280BusyPin ) == 1 ){
                 delay( 10 );
-                Serial.println(F("Busy after rx CLRIRQSTATUS"));
+                //Serial.println(F("Busy after rx CLRIRQSTATUS"));
             }
 
             /* Getting the length of the newly received message
@@ -598,7 +598,7 @@ void sx1280OverSpi::sx1280Rx( uint8_t rxIrq158,
 
             while( digitalRead( sx1280BusyPin ) == 1 ){
                 delay( 10 );
-                Serial.println(F("Busy after rx READREGISTER"));
+                //Serial.println(F("Busy after rx READREGISTER"));
             }
 
             /* Reading message buffer of sx1280
@@ -623,13 +623,14 @@ void sx1280OverSpi::sx1280Rx( uint8_t rxIrq158,
             /* Passing newly received message pointer to vSx1280Task */
             for( j = 0; j <= sizeOfMessageInBuffer; j++ ){
                 inboundMessage[ j ] = *( rxWriteData + j + 3 );
+                Serial.printf("%c / %x / %d @ %d \n",*( rxWriteData + j + 3 ),j);
             }
             zeroingAnArray( rxWriteData, /* Reassigning all array values to 0 */
                             258 );
-
+            rxflag = 1;
             while( digitalRead( sx1280BusyPin ) == 1 ){
                 delay( 10 );
-                Serial.println(F("Busy after rx READBUFFER"));
+                //Serial.println(F("Busy after rx READBUFFER"));
             }
         }
         delay( 50 ); 
@@ -646,6 +647,6 @@ void sx1280OverSpi::sx1280Rx( uint8_t rxIrq158,
 
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        Serial.println(F("Busy after rx SETSTANDBY"));
+        //Serial.println(F("Busy after rx SETSTANDBY"));
     }
 }

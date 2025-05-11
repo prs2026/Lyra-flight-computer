@@ -275,6 +275,7 @@
 class sx1280OverSpi{
 
   public:
+    int rxflag = 0;
     sx1280OverSpi( uint8_t cssPin, 
                    uint8_t busyPin, 
                    uint8_t resetPin );
@@ -314,7 +315,7 @@ class sx1280OverSpi{
                    uint8_t rxPeriodBase,
                    uint8_t rxPeriodBaseCount158, 
                    uint8_t rxPeriodBaseCount70,
-                   uint8_t *inboundMessage );
+                   uint8_t *inboundMessage);
 
   private:
     uint8_t sx1280CssPin;   

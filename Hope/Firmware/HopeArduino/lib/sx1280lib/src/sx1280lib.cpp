@@ -1,29 +1,36 @@
 #include "Arduino.h"
 #include "SPI.h"
 #include "sx1280lib.h"
+#include "sx1280OverSpi.h"
+#include "basiclib.h"
 
-sx1280radio::sx1280radio(uint8_t cssPin, 
-                    uint8_t busyPin, 
-                    uint8_t resetPin){
-        _CS_PIN = cssPin;
-        _BUSY_PIN = busyPin;
-        _RESET_PIN = resetPin;
-    }
+sx1280OverSpi sx1280_1( PIN_CS,   // uint8_t cssPin
+  PIN_BUSY,   // uint8_t busyPin
+  PIN_DIO3 ); // uint8_t resetPin 
+
+
+sx1280radio::sx1280radio(){
+        return;}
+
+
 
 int sx1280radio::initradio(){
-    pinMode( _CS_PIN, OUTPUT );
-    pinMode( _BUSY_PIN, OUTPUT );
-    pinMode( _RESET_PIN, INPUT );
 
-    digitalWrite(_CS_PIN, HIGH);
-    digitalWrite(_RESET_PIN, HIGH);
-    reset();
+    sx1280_1.begin();
 
-    while (isbusy())
-    {
-        delay(10);
-        Serial.println("busy at init");
-    }
+    sx1280_1.sx1280Setup( 0x00,          /* uint8_t standbyMode              */
+        0x01,          /* uint8_t packetType               */
+        0xB8,          /* uint8_t rfFrequency2316          */
+        0x9D,          /* uint8_t rfFrequency158           */
+        0x89,          /* uint8_t rfFrequency70            */
+        0x70,          /* uint8_t spreadingFactor          */
+        0x0A,          /* uint8_t bandwidth                */
+        0x01,          /* uint8_t codingRate               */
+        0x0C,          /* uint8_t preambleLength           */
+        0x00,          /* uint8_t headerType               */
+        0x20,          /* uint8_t cyclicalRedundancyCheck  */
+        0x40,          /* uint8_t chirpInvert              */
+        writeData );   /* uint8_t outboundMessage[ ]       */
     return 1;
 }
 
@@ -42,16 +49,66 @@ int sx1280radio::isbusy(){
     return digitalRead(_BUSY_PIN);
 }
 
-int sx1280radio::sendcommand(uint8_t opcode,uint8_t data[],uint8_t len)
-{
-    while (isbusy())
-    {
-        delay(10);
-        Serial.println("waiting to send command ");
+int sx1280radio::sendpacket(packet packetToSend){
+    uint32_t i = 0; // iterator
+
+    writeData[ 0 ] = 'h';
+    writeData[ 1 ] = 'i';  
+  
+  
+    writeData[ 2 ] = 0x00;  /* "\0" or NULL */
+    for( i = 3; i < 255; i++ ){
+      writeData[ i ] = 0x00;
     }
+
+    sx1280_1.sx1280Setup( 0x00,          /* uint8_t standbyMode              */
+                          0x01,          /* uint8_t packetType               */
+                          0xB8,          /* uint8_t rfFrequency2316          */
+                          0x9D,          /* uint8_t rfFrequency158           */
+                          0x89,          /* uint8_t rfFrequency70            */
+                          0x70,          /* uint8_t spreadingFactor          */
+                          0x0A,          /* uint8_t bandwidth                */
+                          0x01,          /* uint8_t codingRate               */
+                          0x0C,          /* uint8_t preambleLength           */
+                          0x00,          /* uint8_t headerType               */
+                          0x20,          /* uint8_t cyclicalRedundancyCheck  */
+                          0x40,          /* uint8_t chirpInvert              */
+                          writeData );   /* uint8_t outboundMessage[ ]       */
+
+    sx1280_1.sx1280Tx( 0x1F,         /* uint8_t power                    */
+                        0xE0,         /* uint8_t rampTime                 */
+                        writeData,    /* uint8_t outboundMessage[ ]       */
+                        0x40,         /* uint8_t txIrq158                 */
+                        0x01,         /* uint8_t txIrq70                  */
+                        0x02,         /* uint8_t txPeriodBase             */
+                        0x01,         /* uint8_t txPeriodBaseCount158     */
+                        0xF4 );       /* uint8_t txPeriodBaseCount70      */
+    return 0;
+}
+
+packet sx1280radio::receivepacket(){
+    sx1280_1.sx1280Rx( 0x40,         /* uint8_t rxIrq158                 */
+    0x7E,         /* uint8_t rxIrq70                  */
+    0x02,         /* uint8_t rxPeriodBase             */
+    0xFF,         /* uint8_t rxPeriodBaseCount158     */
+    0xFF,         /* uint8_t rxPeriodBaseCount70      */
+    readData );   /* uint8_t inboundMessage[ ]        */
+
+  if (sx1280_1.rxflag == 1)
+  {
+    Serial.println("Packet Recieved");
+
+    for (int i = 0; i < 5; i++)
+    {
+      Serial.printf("%d ",readData[i]);
+    }
+    Serial.println("");
     
-    uint8_t received[len];
-    digitalWrite(_CS_PIN,0);
-    received = SPI1.transfer(data,len);
-    digitalWrite(_CS_PIN,1);
+
+    sx1280_1.zeroingAnArray(readData,sizeof(readData));
+
+    sx1280_1.rxflag = 0;
+  }
+  packet _testpacket;
+  return _testpacket; 
 }
