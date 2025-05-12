@@ -22,6 +22,7 @@
 #define UART_TX_PIN 12
 #define UART_RX_PIN 13
 
+#define PIN_BATTSENSE A3
 
 union packet
 {
@@ -38,6 +39,8 @@ union packet
     
 };
 
+int parsecommand(uint8_t command);
 
+float getbatteryvoltage();
 
 #endif // BASICLIB

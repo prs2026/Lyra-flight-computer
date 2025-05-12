@@ -286,6 +286,7 @@ class sx1280OverSpi{
     void sx1280Deselect( );
     void sx1280Reset( );
 
+
     void zeroingAnArray( uint8_t arrayToZero[], 
                          uint16_t arrayLength );
 
@@ -319,6 +320,8 @@ class sx1280OverSpi{
                    uint8_t rxPeriodBaseCount158, 
                    uint8_t rxPeriodBaseCount70,
                    uint8_t *inboundMessage);
+    
+    void sx1280SetRanging(uint8_t address,uint8_t role);
 
   private:
     uint8_t sx1280CssPin;   

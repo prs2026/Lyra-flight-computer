@@ -98,6 +98,7 @@ int sx1280radio::sendpacket(packet packetToSend){
     return 0;
 }
 
+
 packet sx1280radio::receivepacket(){
     packet recievedPacket;
 
@@ -123,5 +124,10 @@ packet sx1280radio::receivepacket(){
 
     sx1280_1.rxflag = 0;
   }
+  else
+  {
+    recievedPacket.r.checksum = 0xff;
+  }
+  
   return recievedPacket; 
 }
