@@ -323,6 +323,12 @@ class sx1280OverSpi{
     
     void sx1280SetRanging(uint8_t address,uint8_t role);
 
+    uint32_t sx1280RangeRequest();
+
+    void sx1280StartListeningRanging();
+
+    void sx1280setStandby(uint8_t mode);
+
   private:
     uint8_t sx1280CssPin;   
     uint8_t sx1280BusyPin;
