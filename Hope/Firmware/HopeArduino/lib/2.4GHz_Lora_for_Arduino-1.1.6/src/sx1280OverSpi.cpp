@@ -987,8 +987,8 @@ u_int32_t sx1280OverSpi::sx1280RangeRequest(){
 
     sx1280setStandby(0x01); // set standby xosc
     
-    /* getting value from the RANGINGRESULTREGISTER @ 961-963*/
-    *( txWriteData ) = 0x19; 
+    /* getting value from the clock register @ 961-963*/
+    *( txWriteData ) = READREGISTER; 
     *( txWriteData + 1 ) = 0x09;
     *( txWriteData + 2 ) = 0x7F;
     *( txWriteData + 3 ) = 0x00;
@@ -1003,9 +1003,19 @@ u_int32_t sx1280OverSpi::sx1280RangeRequest(){
         delay( 10 );
         //Serial.println(F("Busy after rx READREGISTER"));
     }
+    //set the value to clock register
+    *( txWriteData ) = WRITEREGISTER;
+    *( txWriteData + 1 ) = 0x09;
+    *( txWriteData + 2 ) = 0x7F;
+    *( txWriteData + 3 ) = readvalue| 1<<1;
+    sx1280Select();
+    SPI1.transfer( txWriteData, 4*sizeof( uint8_t ) );
+    sx1280Deselect();
+    zeroingAnArray( txWriteData, /* Reassigning all array values to 0 */
+                    10 );
 
-    
 
+                    
 
     /* getting value from the RANGINGRESULTREGISTER @ 961-963*/
     *( txWriteData ) = 0x19; 
