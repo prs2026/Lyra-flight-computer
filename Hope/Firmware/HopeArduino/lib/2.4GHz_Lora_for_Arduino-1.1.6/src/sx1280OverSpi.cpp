@@ -923,7 +923,7 @@ u_int32_t sx1280OverSpi::sx1280RangeRequest(){
 
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        //Serial.println(F("Busy after tx CLRIRQSTATUS"));
+        Serial.println(F("Busy after tx CLRIRQSTATUS"));
     }
     
 
@@ -941,7 +941,7 @@ u_int32_t sx1280OverSpi::sx1280RangeRequest(){
 
     while( digitalRead( sx1280BusyPin ) == 1 ){
         delay( 10 );
-        //Serial.println(F("Busy after tx SETTX"));
+        Serial.println(F("Busy after tx SETTX"));
     }
 
      /* Looping over GETIRQSTATUS using SPI1, till TxDone bit is high */
@@ -960,13 +960,11 @@ u_int32_t sx1280OverSpi::sx1280RangeRequest(){
  
         while( digitalRead( sx1280BusyPin ) == 1 ){
             delay( 10 );
-            //Serial.println(F("Busy after tx GETIRQSTATUS"));
+            Serial.println(F("Busy after tx GETIRQSTATUS"));
         }
 
-        Serial.print(F("Outbound IRQ Check: 0x"));
-        Serial.print( *( txWriteData + 3 ), HEX );
-        Serial.print(F(" "));
-        Serial.println( i, DEC );
+        Serial.printf("IRQ register: %x %x %x at %d\n",*( txWriteData + 1 ),*( txWriteData + 2 ),*( txWriteData + 3 ),i);
+           
 
         /* Checking bits [7:0] to see if the TxDone bit in the IRQ register is high
            Doing bitwise 'and' operation with 0x01 to mask the rest of the bits in 
@@ -974,10 +972,7 @@ u_int32_t sx1280OverSpi::sx1280RangeRequest(){
             Bits [15:8] would be in  *( readData + 4 ) */
         if( *( txWriteData + 4 ) != 0x00 ){ /* GETIRQSTATUS TxDone == 1 */
 
-            Serial.print(F("Outbound IRQ: 0x"));
-            Serial.print( *( txWriteData + 3 ), HEX);
-            Serial.print(F(" "));
-            Serial.println( i, DEC );
+           Serial.printf("IRQ register: %x %x %x at %d\n",*( txWriteData + 1 ),*( txWriteData + 2 ),*( txWriteData + 3 ),i);
             break;
         }
 
@@ -1038,10 +1033,12 @@ u_int32_t sx1280OverSpi::sx1280RangeRequest(){
         //Serial.println(F("Busy after rx READREGISTER"));
     }
 
+    sx1280setStandby(0x00);
+
+    float distance = rangingresult*150/(pow(2,12*1.6));
 
 
-
-    return 0;
+    return distance;
 }
 
 void sx1280OverSpi::sx1280StartListeningRanging(){
@@ -1085,7 +1082,7 @@ void sx1280OverSpi::sx1280StartListeningRanging(){
     return;
 
 }
-
+// 0x00 is STBY RC, 0x01 is STBR_XOSC
 void sx1280OverSpi::sx1280setStandby(uint8_t mode){
     uint8_t rxWriteData[ 258 ] = { 0 };
 

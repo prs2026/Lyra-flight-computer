@@ -43,4 +43,6 @@ int parsecommand(uint8_t command);
 
 float getbatteryvoltage();
 
+
+
 #endif // BASICLIB
