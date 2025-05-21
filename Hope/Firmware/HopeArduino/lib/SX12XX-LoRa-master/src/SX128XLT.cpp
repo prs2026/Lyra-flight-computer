@@ -15,7 +15,7 @@
 #define LTUNUSED(v) (void) (v)       //add LTUNUSED(variable); to avoid compiler warnings 
 #define USE_SPI_TRANSACTION
 
-#define SX128XDEBUG                //enable debug messages
+//#define SX128XDEBUG                //enable debug messages
 //#define RANGINGDEBUG               //enable debug messages for ranging
 //#define SX128XDEBUGRXTX            //enable debug messages for RX TX switching
 #define SX128XDEBUGPINS            //enable pin allocation debug messages
@@ -3370,7 +3370,7 @@ bool SX128XLT::transmitRanging(uint32_t address, uint16_t timeout, int8_t txpowe
   {
     return true;
   }
-
+  Serial.println("waiting");
   while (!digitalRead(_TXDonePin));                         //Wait for DIO1 to go high
 
   setMode(MODE_STDBY_RC);                                   //ensure we leave function with TX off

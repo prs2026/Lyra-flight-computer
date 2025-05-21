@@ -76,7 +76,7 @@ int sx1280radio::initradio(){
 
   Serial.println(F("3_LoRa_TransmitterIRQ Starting"));
 
-  if (LT.begin(NSS, NRESET, RFBUSY, LORA_DEVICE))
+  if (LT.begin(NSS, NRESET, RFBUSY, PIN_DIO1,LORA_DEVICE))
   {
     Serial.println(F("LoRa Device found"));
     delay(1000);
@@ -232,11 +232,11 @@ float sx1280radio::pingrange(){
 
     LT.transmitRanging(RangingAddress, TXtimeoutmS, RangingTXPower, WAIT_TX);
 
-    Serial.println(F("Rangingafter1"));
+    //Serial.println(F("Rangingafter1"));
 
     IrqStatus = LT.readIrqStatus();
 
-    Serial.println(F("Rangingafter3"));
+    //Serial.println(F("Rangingafter3"));
 
     if (IrqStatus & IRQ_RANGING_MASTER_RESULT_VALID)
     {
