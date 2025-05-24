@@ -3,16 +3,17 @@
 
 #include "basiclib.h"
 #include "sx1280lib.h"
+#include <gpslib.h>
 
-#define MODEFLIGHT
+//#define MODEFLIGHT
 
 #if !defined(MODEFLIGHT)
 #define MODEGROUND
 
-#endif // MODELFIGHT
+#endif // MODE FLIGHT
 
 sx1280radio radio;
-
+gpsinput gps;
 
 
 void setup( ) {
@@ -25,6 +26,11 @@ void setup( ) {
   digitalWrite( PIN_TXCOEN, HIGH );
 
   radio.initradio();
+
+  Serial1.setRX(UART_RX_PIN);
+  Serial1.setTX(UART_TX_PIN);
+
+  Serial1.begin(9600);
 
   
 
@@ -47,7 +53,7 @@ void setup( ) {
 void loop() {
   //Serial.println("loop");
   digitalWrite( PIN_LED, HIGH );
-  delay( 500 );
+  //delay( 500 );
   digitalWrite( PIN_LED, LOW);
  
   #if defined(MODEFLIGHT)
@@ -63,10 +69,11 @@ void loop() {
   #if defined(MODEGROUND)
 
   radio.listenforpings();
-  
+
+    gps.checkformessages();
+
   //radio.receivepacket();
 
   #endif // MODERSX
 }
-
 

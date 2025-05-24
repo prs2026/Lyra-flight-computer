@@ -261,8 +261,8 @@ float sx1280radio::pingrange(){
 
       Serial.print(F(",Distance,"));
       Serial.print(distance, 1);
-      Serial.print(F(",RSSIReg,"));
-      Serial.print(LT.readRegister(REG_RANGING_RSSI));
+      //Serial.print(F(",RSSIReg,"));
+      //Serial.print(LT.readRegister(REG_RANGING_RSSI));
       RangingRSSI = LT.getRangingRSSI();
       Serial.print(F(",RSSI,"));
       Serial.print(RangingRSSI);
@@ -323,7 +323,7 @@ void sx1280radio::listenforpings(){
 
   if (millis() >= endwaitmS)
   {
-    Serial.println("Error - Ranging Receive Timeout!!");
+    //Serial.println("Error - Ranging Receive Timeout!!");
     //led_Flash(2, 100);                                             //single flash to indicate timeout
   }
   else
@@ -334,18 +334,18 @@ void sx1280radio::listenforpings(){
     if (IrqStatus & IRQ_RANGING_SLAVE_RESPONSE_DONE)
     {
       response_sent++;
-      Serial.print(response_sent);
-      Serial.print(" Response sent");
+      //Serial.print(response_sent);
+      //Serial.print(" Response sent");
     }
     else
     {
-      Serial.print("Slave error,");
-      Serial.print(",Irq,");
-      Serial.print(IrqStatus, HEX);
-      LT.printIrqStatus();
+      //Serial.print("Slave error,");
+      //Serial.print(",Irq,");
+      //Serial.print(IrqStatus, HEX);
+      //LT.printIrqStatus();
     }
     //digitalWrite(LED1, LOW);
-    Serial.println();
+    //Serial.println();
   }
   return;
 }
@@ -362,7 +362,7 @@ void sx1280radio::setuptorange(int role){
   LT.printOperatingSettings();                           //reads and prints the configured operating settings, useful check
   Serial.println();
   Serial.println();
-  LT.printRegisters(0x900, 0x9FF);                       //print contents of device registers, normally 0x900 to 0x9FF
+  //LT.printRegisters(0x900, 0x9FF);                       //print contents of device registers, normally 0x900 to 0x9FF
   Serial.println();
   Serial.println();
 }
