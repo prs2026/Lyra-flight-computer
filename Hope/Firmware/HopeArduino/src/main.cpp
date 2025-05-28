@@ -15,6 +15,9 @@
 sx1280radio radio;
 gpsinput gps;
 
+const uint32_t checkinterval = 500;
+uint32_t checktime;
+
 
 void setup( ) {
   delay(3000);
@@ -45,6 +48,7 @@ void setup( ) {
   #if defined(MODEGROUND)
 
   radio.setuptorange(0x00);
+  radio.settolisten();
   
   #endif // MODEGROUND
 
@@ -68,9 +72,15 @@ void loop() {
   
   #if defined(MODEGROUND)
 
-  radio.listenforpings();
+  if(millis() - checktime > checkinterval){
 
-    gps.checkformessages();
+    checktime = millis();
+    radio.checkforping();
+  }
+
+  
+
+  gps.checkformessages();
 
   //radio.receivepacket();
 

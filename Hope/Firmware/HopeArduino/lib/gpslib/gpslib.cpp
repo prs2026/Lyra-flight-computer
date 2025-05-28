@@ -17,22 +17,35 @@ int gpsinput::checkformessages(){
     while (Serial1.available())
     { 
         char byte = Serial1.read();
-        Serial.print(byte);
-        
-        // if (byte == '\n')
-        // {   
-        //     break;
-        // }
+        //Serial.print(byte);
         gpsparser.encode(byte);
+
         delay(2);
     }
 
-    Serial1.flush();
+    if (gpsparser.time.isUpdated())
+    {
+        Serial.printf("time hour/minute/second %d,%d,%d \n",gpsparser.time.hour(),gpsparser.time.minute(),gpsparser.time.second());
+    }
+    if (gpsparser.location.isUpdated())
+    {
+        Serial.printf("lat %d, lon %d \n",gpsparser.location.lat(),gpsparser.location.lng());
+    
+    }
+    if (gpsparser.satellites.isUpdated())
+    {
+        Serial.printf("sats in view %d\n",gpsparser.satellites.value());
+    }
+
     
     return 0;
 }
 
     // //
-    // Serial.printf("time is valid? %d hour/minute/second %d,%d,%d \n",gpsparser.time.isUpdated(),gpsparser.time.hour(),gpsparser.time.minute(),gpsparser.time.second());
-    // Serial.printf("pos is valid? %d lat %d, lon %d \n",gpsparser.location.isUpdated(),gpsparser.location.lat(),gpsparser.location.lng());
-    // Serial.printf("sats in view? %d updated? %d\n",gpsparser.satellites.value(),gpsparser.satellites.isUpdated());
+
+            
+        // if (byte == '\n')
+        // {   
+        //     break;
+        // }
+        //

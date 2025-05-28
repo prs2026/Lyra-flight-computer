@@ -314,20 +314,20 @@ float sx1280radio::pingrange(){
   return 1;
 }
 
-void sx1280radio::listenforpings(){
-  LT.receiveRanging(RangingAddress, 0, TXpower, NO_WAIT);
+void sx1280radio::checkforping(){
+  // LT.receiveRanging(RangingAddress, 0, TXpower, NO_WAIT);
 
-  endwaitmS = millis() + rangingRXTimeoutmS;
+  // endwaitmS = millis() + rangingRXTimeoutmS;
 
-  while (!digitalRead(DIO1) && (millis() <= endwaitmS));          //wait for Ranging valid or timeout
+  // while (!digitalRead(DIO1) && (millis() <= endwaitmS));          //wait for Ranging valid or timeout
 
-  if (millis() >= endwaitmS)
-  {
-    //Serial.println("Error - Ranging Receive Timeout!!");
-    //led_Flash(2, 100);                                             //single flash to indicate timeout
-  }
-  else
-  {
+  // if (millis() >= endwaitmS)
+  // {
+  //   //Serial.println("Error - Ranging Receive Timeout!!");
+  //   //led_Flash(2, 100);                                             //single flash to indicate timeout
+  // }
+  // else
+  // {
     IrqStatus = LT.readIrqStatus();
     //digitalWrite(LED1, HIGH);
 
@@ -346,7 +346,7 @@ void sx1280radio::listenforpings(){
     }
     //digitalWrite(LED1, LOW);
     //Serial.println();
-  }
+  //}
   return;
 }
 
@@ -357,12 +357,17 @@ void sx1280radio::setuptorange(int role){
   //LT.setRangingCalibration(Calibration);               //override automatic lookup of calibration value from library table
 
   Serial.println();
-  LT.printModemSettings();                               //reads and prints the configured LoRa settings, useful check
+  //LT.printModemSettings();                               //reads and prints the configured LoRa settings, useful check
   Serial.println();
-  LT.printOperatingSettings();                           //reads and prints the configured operating settings, useful check
+  //LT.printOperatingSettings();                           //reads and prints the configured operating settings, useful check
   Serial.println();
   Serial.println();
   //LT.printRegisters(0x900, 0x9FF);                       //print contents of device registers, normally 0x900 to 0x9FF
   Serial.println();
   Serial.println();
+}
+// 0x01 = masters 0x00 = slave
+void sx1280radio::settolisten(){
+  LT.receiveRanging(RangingAddress, 0xFFFF, TXpower, NO_WAIT);
+  return;
 }

@@ -33,7 +33,8 @@ public:
     void setuptorange(int role);
 
     float pingrange();
-    void listenforpings();
+    void checkforping();
+    void settolisten();
 };
 
 //LoRa Modem Parameters
@@ -55,7 +56,7 @@ const uint16_t  rangeingcount = 5;               //number of times ranging is cq
 
 const int8_t TXpower = 10;                       //Transmit power used
 
-const uint16_t  rangingRXTimeoutmS = 500;     //ranging RX timeout in mS
+const uint16_t  rangingRXTimeoutmS = 100;     //ranging RX timeout in mS
 
 
 #endif // SX1280LIB
