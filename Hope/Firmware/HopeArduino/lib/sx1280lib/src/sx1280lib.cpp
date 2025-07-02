@@ -116,104 +116,56 @@ int sx1280radio::sendpacket(packet packetToSend){
   Serial.print(F(" dBm "));
   Serial.print(F(" Packet> \n"));
   
-  Serial.flush();
+  Serial.flush();                                 //replace null character at buffer end so its visible on receiver
 
-  TXPacketL = sizeof(buff);                                    //set TXPacketL to length of array
-  buff[TXPacketL - 1] = '*';                                   //replace null character at buffer end so its visible on receiver
-
-  LT.printASCIIPacket(buff, TXPacketL);                           //print the buffer (the sent packet) as ASCII
-
-  if (LT.transmitIRQ(buff, TXPacketL, 10000, TXpower, WAIT_TX))   //will return packet length sent if OK, otherwise 0 if transmit error
+  if (LT.transmit((uint8_t *) &packetToSend, sizeof(packetToSend), 0, TXpower, WAIT_TX))  //will return packet length sent if OK, otherwise 0
   {
-    TXPacketCount++;
-        //if here packet has been sent OK
-    Serial.print(F("  BytesSent,"));
-    Serial.print(TXPacketL);                             //print transmitted packet length
-    Serial.print(F("  PacketsSent,"));
-    Serial.print(TXPacketCount);       
-    }
+  }
   else
   {
-     //if here there was an error transmitting packet
-    uint16_t IRQStatus;
-    IRQStatus = LT.readIrqStatus();                      //read the the interrupt register
-    Serial.print(F(" SendError,"));
-    Serial.print(F("Length,"));
-    Serial.print(TXPacketL);                             //print transmitted packet length
-    Serial.print(F(",IRQreg,"));
-    Serial.print(IRQStatus, HEX);                        //print IRQ status
-    LT.printIrqStatus();                                            //transmit packet returned 0, there was an error
+    Serial.print(F("Send Error - IRQreg,"));
+    Serial.print(LT.readIrqStatus(), HEX);
   }
     return 0;
 }
 
 
 packet sx1280radio::receivepacket(){
-  RXPacketL = LT.receiveIRQ(RXBUFFER, RXBUFFER_SIZE, 60000, WAIT_RX); //wait for a packet to arrive with 60seconds (60000mS) timeout
 
-  PacketRSSI = LT.readPacketRSSI();              //read the received packets RSSI value
-  PacketSNR = LT.readPacketSNR();                //read the received packets SNR value
+  packet recievedpacket;
 
-  if (RXPacketL == 0)                            //if the LT.receive() function detects an error RXpacketL is 0
+  RXPacketL = LT.receive( (uint8_t *) &recievedpacket, sizeof(recievedpacket), 0, WAIT_RX); //wait for a packet to arrive with no timeout                     //something has happened, what I wonder ?
+
+  PacketRSSI = LT.readPacketRSSI();
+  PacketSNR = LT.readPacketSNR();
+
+  if (RXPacketL == 0)
   {
-      uint16_t IRQStatus;
-    IRQStatus = LT.readIrqStatus();                   //read the LoRa device IRQ status register
+    uint16_t IRQStatus;
+    IRQStatus = LT.readIrqStatus();
 
-    printElapsedTime();                               //print elapsed time to Serial Monitor
-
-    if (IRQStatus & IRQ_RX_TIMEOUT)                   //check for an RX timeout
+    if (IRQStatus & IRQ_RX_TIMEOUT)
     {
-      Serial.print(F(" RXTimeout"));
+      Serial.print(F("RXTimeout"));
     }
     else
     {
       errors++;
-      Serial.print(F(" PacketError"));
-      Serial.print(F(",RSSI,"));
-      Serial.print(PacketRSSI);
-      Serial.print(F("dBm,SNR,"));
-      Serial.print(PacketSNR);
-      Serial.print(F("dB,Length,"));
-      Serial.print(LT.readRXPacketL());               //get the real packet length
-      Serial.print(F(",Packets,"));
-      Serial.print(RXpacketCount);
-      Serial.print(F(",Errors,"));
-      Serial.print(errors);
-      Serial.print(F(",IRQreg,"));
+      Serial.print(F("PacketError"));
+      Serial.print(F("IRQreg,"));
       Serial.print(IRQStatus, HEX);
-      LT.printIrqStatus();                            //print the names of the IRQ registers set
     }
   }
   else
   {
-    uint16_t IRQStatus;
-
     RXpacketCount++;
-    IRQStatus = LT.readIrqStatus();                  //read the LoRa device IRQ status register
-    printElapsedTime();                              //print elapsed time to Serial Monitor
-
-    Serial.print(F("  "));
-    LT.printASCIIPacket(RXBUFFER, RXPacketL);        //print the packet as ASCII characters
-
-    Serial.print(F(",RSSI,"));
-    Serial.print(PacketRSSI);
-    Serial.print(F("dBm,SNR,"));
-    Serial.print(PacketSNR);
-    Serial.print(F("dB,Length,"));
-    Serial.print(RXPacketL);
-    Serial.print(F(",Packets,"));
     Serial.print(RXpacketCount);
-    Serial.print(F(",Errors,"));
-    Serial.print(errors);
-    Serial.print(F(",IRQreg,"));
-    Serial.print(IRQStatus, HEX);
-    
-  }
+    Serial.print(F("  "));
+    }
 
-  Serial.println();
-  packet testpacket;
+    Serial.println();
   
-  return testpacket; 
+  return recievedpacket; 
 }
 
 
@@ -221,14 +173,16 @@ float sx1280radio::pingrange(){
   uint8_t index;
   distance_sum = 0;
   range_result_sum = 0;
-  rangeing_results = 0;                           //count of valid results in each loop
+  rangeing_results = 0;  
+  rangeing_errors = 0;
+  rangeings_valid  = 0;                    //count of valid results in each loop
 
   for (index = 1; index <= rangeingcount; index++)
   {
 
     startrangingmS = millis();
 
-    Serial.println(F("Start Ranging"));
+    //Serial.println(F("Start Ranging"));
 
     LT.transmitRanging(RangingAddress, TXtimeoutmS, RangingTXPower, WAIT_TX);
 
@@ -243,10 +197,10 @@ float sx1280radio::pingrange(){
       rangeing_results++;
       rangeings_valid++;
       //digitalWrite(LED1, HIGH);
-      Serial.print(F("Valid"));
+      //Serial.print(F("Valid"));
       range_result = LT.getRangingResultRegValue(RANGING_RESULT_RAW);
-      Serial.print(F(",Register,"));
-      Serial.print(range_result);
+      // Serial.print(F(",Register,"));
+      // Serial.print(range_result);
 
       if (range_result > 800000)
       {
@@ -259,15 +213,21 @@ float sx1280radio::pingrange(){
       distance = LT.getRangingDistance(RANGING_RESULT_RAW, range_result, distanceskewfactor);
       distance_sum = distance_sum + distance;
 
-      Serial.print(F(",Distance,"));
+      Serial.print(F("\n>Distance:"));
       Serial.print(distance, 1);
       //Serial.print(F(",RSSIReg,"));
       //Serial.print(LT.readRegister(REG_RANGING_RSSI));
       RangingRSSI = LT.getRangingRSSI();
-      Serial.print(F(",RSSI,"));
+      Serial.print(F("\n>RSSI:"));
       Serial.print(RangingRSSI);
-      Serial.print(F("dBm"));
+      //Serial.print(F("dBm"));
       //digitalWrite(LED1, LOW);
+
+      // Serial.print("\nE");
+      // Serial.print(distance);
+      // Serial.print(",");
+      // Serial.print(RangingRSSI);
+      // Serial.print("\n");
     }
     else
     {
@@ -293,25 +253,25 @@ float sx1280radio::pingrange(){
         distance_average = (distance_sum / rangeing_results);
       }
 
-      Serial.print(F(",TotalValid,"));
+      Serial.print(F("\n>TotalValid:"));
       Serial.print(rangeings_valid);
-      Serial.print(F(",TotalErrors,"));
+      Serial.print(F("\n>TotalErrors:"));
       Serial.print(rangeing_errors);
-      Serial.print(F(",AverageRAWResult,"));
+      Serial.print(F("\n>AverageRAWResult:"));
       Serial.print(range_result_average);
-      Serial.print(F(",AverageDistance,"));
+      Serial.print(F("\n>AverageDistance:"));
       Serial.print(distance_average, 1);
 
 #ifdef ENABLEDISPLAY
       display_screen1();
 #endif
 
-      delay(2000);
+      //delay(2000);
 
     }
     Serial.println();
   }
-  return 1;
+  return distance_average;
 }
 
 void sx1280radio::checkforping(){

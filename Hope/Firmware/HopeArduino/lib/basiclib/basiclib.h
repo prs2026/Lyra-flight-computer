@@ -24,19 +24,13 @@
 
 #define PIN_BATTSENSE A3
 
-union packet
+struct packet
 {
-    struct
-    {
-        uint32_t uptime;
-        float lat;
-        float lon;
-        float battvoltage;
-        uint8_t command;
-        uint8_t checksum;
-    } r;
-    uint8_t data[sizeof(float)+sizeof(float)+sizeof(float)+sizeof(uint32_t)+sizeof(uint8_t)+sizeof(uint8_t)];
-    
+    uint32_t uptime;
+    float lat;
+    float lon;
+    float battvoltage;
+    uint8_t command;
 };
 
 int parsecommand(uint8_t command);
