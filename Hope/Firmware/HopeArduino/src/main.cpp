@@ -5,7 +5,7 @@
 #include "sx1280lib.h"
 #include <gpslib.h>
 
-//#define MODEFLIGHT
+#define MODEFLIGHT
 
 #if !defined(MODEFLIGHT)
 #define MODEGROUND
@@ -17,6 +17,11 @@ gpsinput gps;
 
 const uint32_t checkinterval = 500;
 uint32_t checktime;
+
+const uint32_t sendpacketinterval = 2000;
+uint32_t sendpackettime;
+
+uint8_t camstatus;
 
 
 void setup( ) {
@@ -34,7 +39,7 @@ void setup( ) {
   Serial1.setTX(UART_TX_PIN);
 
   Serial1.begin(9600);
-
+ 
   
 
   #if defined(MODEFLIGHT)
@@ -56,13 +61,17 @@ void setup( ) {
 
 void loop() {
   //Serial.println("loop");
-  digitalWrite( PIN_LED, HIGH );
-  //delay( 500 );
-  digitalWrite( PIN_LED, LOW);
+  // digitalWrite( PIN_LED, HIGH );
+  // //delay( 500 );
+  // digitalWrite( PIN_LED, LOW);
  
   #if defined(MODEFLIGHT)
 
   packet testtest;
+
+  testtest.uptime = millis();
+  testtest.battvoltage = 4;
+  testtest.command = camstatus;
   
   //radio.sendpacket(testtest);
 
@@ -80,9 +89,13 @@ void loop() {
 
   
 
-  gps.checkformessages();
+  //gps.checkformessages();
 
-  //radio.receivepacket();
+  // packet newpacket = radio.receivepacket();
+
+  // Serial.printf(">uptime: %d",newpacket.uptime);
+  // Serial.printf(">battvolts: %f",newpacket.battvoltage);
+  // Serial.printf(">status: %d",newpacket.command);
 
   #endif // MODERSX
 }
