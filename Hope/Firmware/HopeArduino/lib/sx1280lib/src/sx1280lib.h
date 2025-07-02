@@ -35,6 +35,8 @@ public:
     float pingrange();
     void checkforping();
     void settolisten();
+
+    void broadcastlocation();
 };
 
 //LoRa Modem Parameters

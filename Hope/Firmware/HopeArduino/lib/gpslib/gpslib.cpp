@@ -17,10 +17,9 @@ int gpsinput::checkformessages(){
     while (Serial1.available())
     { 
         char byte = Serial1.read();
-        //Serial.print(byte);
+        //Serial.print(byte); // for raw logging
         gpsparser.encode(byte);
 
-        delay(2);
     }
 
     if (gpsparser.time.isUpdated())
@@ -29,7 +28,7 @@ int gpsinput::checkformessages(){
     }
     if (gpsparser.location.isUpdated())
     {
-        Serial.printf("lat %d, lon %d \n",gpsparser.location.lat(),gpsparser.location.lng());
+        Serial.printf("lat %f, lon %f \n",gpsparser.location.lat(),gpsparser.location.lng());
     
     }
     if (gpsparser.satellites.isUpdated())

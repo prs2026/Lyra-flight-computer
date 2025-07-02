@@ -371,3 +371,9 @@ void sx1280radio::settolisten(){
   LT.receiveRanging(RangingAddress, 0xFFFF, TXpower, NO_WAIT);
   return;
 }
+
+
+void sx1280radio::broadcastlocation(){
+  
+  return;
+}

@@ -6,12 +6,14 @@
 #include <gpslib.h>
 
 //#define MODEFLIGHT
+#define MODESTATION
 
 #if !defined(MODEFLIGHT)
+#if !defined(MODESTATION)
 #define MODEGROUND
 
 #endif // MODE FLIGHT
-
+#endif // MODE STATION
 sx1280radio radio;
 gpsinput gps;
 
@@ -55,11 +57,6 @@ void setup( ) {
 }
 
 void loop() {
-  //Serial.println("loop");
-  digitalWrite( PIN_LED, HIGH );
-  //delay( 500 );
-  digitalWrite( PIN_LED, LOW);
- 
   #if defined(MODEFLIGHT)
 
   packet testtest;
@@ -78,12 +75,18 @@ void loop() {
     radio.checkforping();
   }
 
-  
-
   gps.checkformessages();
 
-  //radio.receivepacket();
+  
+  #endif // MODEGROUND
 
-  #endif // MODERSX
+  #if defined(MODESTATION)
+  
+  radio.receivepacket();
+  
+  #endif // MODESTATION
+  
+
+  
 }
 
