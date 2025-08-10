@@ -1485,6 +1485,8 @@ uint8_t SX128XLT::transmit(uint8_t *txbuffer, uint8_t size, uint16_t timeout, in
   SPI1.beginTransaction(SPISettings(LTspeedMaximum, LTdataOrder, LTdataMode));
 #endif
 
+  Serial.println(F("opint1"));
+
   digitalWrite(_NSS, LOW);
   SPI1.transfer(RADIO_WRITE_BUFFER);
   SPI1.transfer(0);
@@ -1501,6 +1503,8 @@ uint8_t SX128XLT::transmit(uint8_t *txbuffer, uint8_t size, uint16_t timeout, in
   SPI1.endTransaction();
 #endif
 
+  Serial.println(F("point2"));
+
   _TXPacketL = size;
   setPayloadLength(_TXPacketL);
   setTxParams(txpower, RAMP_TIME);
@@ -1512,10 +1516,12 @@ uint8_t SX128XLT::transmit(uint8_t *txbuffer, uint8_t size, uint16_t timeout, in
     return _TXPacketL;
   }
 
+  
+
   while (!digitalRead(_TXDonePin));                    //Wait for DIO1 to go high
 
   setMode(MODE_STDBY_RC);                              //ensure we leave function with TX off
-
+  Serial.println(F("point3"));
   if (readIrqStatus() & IRQ_RX_TX_TIMEOUT )            //check for timeout
   {
     return 0;

@@ -111,21 +111,48 @@ int sx1280radio::isbusy(){
 }
 
 int sx1280radio::sendpacket(packet packetToSend){
-    Serial.print(F("  "));
   Serial.print(TXpower);                                       //print the transmit power defined
-  Serial.print(F(" dBm "));
-  Serial.print(F(" Packet> \n"));
-  
-  Serial.flush();                                 //replace null character at buffer end so its visible on receiver
+  Serial.print(F("dBm "));
+  Serial.print(F("Packet> "));
+  Serial.flush();
 
-  if (LT.transmit((uint8_t *) &packetToSend, sizeof(packetToSend), 0, TXpower, WAIT_TX))  //will return packet length sent if OK, otherwise 0
+  TXPacketL = sizeof(buff);                                    //set TXPacketL to length of array
+  buff[TXPacketL - 1] = '*';                                   //replace null character at buffer end so its visible on reciver
+
+  LT.printASCIIPacket(buff, TXPacketL);                        //print the buffer (the sent packet) as ASCII
+
+                                       //start transmit timer
+  if (LT.transmit(buff, TXPacketL, 300, TXpower, 0))   //will return packet length sent if OK, otherwise 0 if transmit, timeout 10 seconds
   {
+                                  //packet sent, note end time
+    TXPacketCount++;
+    //if here packet has been sent OK
+  uint16_t localCRC;
+
+  Serial.print(F("  BytesSent,"));
+  Serial.print(TXPacketL);                         //print transmitted packet length
+  localCRC = LT.CRCCCITT(buff, TXPacketL, 0xFFFF);
+  Serial.print(F("  CRC,"));
+  Serial.print(localCRC, HEX);                     //print CRC of sent packet
+  Serial.print(F("  TransmitTime,"));                   //print transmit time of packet
+  Serial.print(F("mS"));
+  Serial.print(F("  PacketsSent,"));
+  Serial.print(TXPacketCount);  
   }
   else
   {
-    Serial.print(F("Send Error - IRQreg,"));
-    Serial.print(LT.readIrqStatus(), HEX);
+    //if here there was an error transmitting packet
+  uint16_t IRQStatus;
+  IRQStatus = LT.readIrqStatus();                  //read the the interrupt register
+  Serial.print(F(" SendError,"));
+  Serial.print(F("Length,"));
+  Serial.print(TXPacketL);                         //print transmitted packet length
+  Serial.print(F(",IRQreg,"));
+  Serial.print(IRQStatus, HEX);                    //print IRQ status
+  LT.printIrqStatus();                                   //transmit packet returned 0, there was an error
   }
+
+  Serial.println();
     return 0;
 }
 
@@ -134,36 +161,72 @@ packet sx1280radio::receivepacket(){
 
   packet recievedpacket;
 
-  RXPacketL = LT.receive( (uint8_t *) &recievedpacket, sizeof(recievedpacket), 0, WAIT_RX); //wait for a packet to arrive with no timeout                     //something has happened, what I wonder ?
+  RXPacketL = LT.receive(RXBUFFER, RXBUFFER_SIZE, 1000, 0); //wait for a packet to arrive with 60seconds (60000mS) timeout
 
-  PacketRSSI = LT.readPacketRSSI();
-  PacketSNR = LT.readPacketSNR();
 
-  if (RXPacketL == 0)
+  PacketRSSI = LT.readPacketRSSI();              //read the recived RSSI value
+  PacketSNR = LT.readPacketSNR();                //read the received SNR value
+
+  if (RXPacketL == 0)                            //if the LT.receive() function detects an error, RXpacketL == 0
   {
-    uint16_t IRQStatus;
-    IRQStatus = LT.readIrqStatus();
+    uint16_t IRQStatus, localCRC;
 
-    if (IRQStatus & IRQ_RX_TIMEOUT)
+    IRQStatus = LT.readIrqStatus();                  //read the LoRa device IRQ status register
+
+    RXpacketCount++;
+
+    printElapsedTime();                              //print elapsed time to Serial Monitor
+    Serial.print(F("  "));
+    LT.printASCIIPacket(RXBUFFER, RXPacketL);        //print the packet as ASCII characters
+
+    localCRC = LT.CRCCCITT(RXBUFFER, RXPacketL, 0xFFFF);  //calculate the CRC, this is the external CRC calculation of the RXBUFFER
+    Serial.print(F(",CRC,"));                        //contents, not the LoRa device internal CRC
+    Serial.print(localCRC, HEX);
+    Serial.print(F(",RSSI,"));
+    Serial.print(PacketRSSI);
+    Serial.print(F("dBm,SNR,"));
+    Serial.print(PacketSNR);
+    Serial.print(F("dB,Length,"));
+    Serial.print(RXPacketL);
+    Serial.print(F(",Packets,"));
+    Serial.print(RXpacketCount);
+    Serial.print(F(",Errors,"));
+    Serial.print(errors);
+    Serial.print(F(",IRQreg,"));
+    Serial.print(IRQStatus, HEX);
+  }
+  
+  else
+  {
+      uint16_t IRQStatus;
+    IRQStatus = LT.readIrqStatus();                   //read the LoRa device IRQ status register
+
+    printElapsedTime();                               //print elapsed time to Serial Monitor
+
+    if (IRQStatus & IRQ_RX_TIMEOUT)                   //check for an RX timeout
     {
-      Serial.print(F("RXTimeout"));
+      Serial.print(F(" RXTimeout"));
     }
     else
     {
       errors++;
-      Serial.print(F("PacketError"));
-      Serial.print(F("IRQreg,"));
+      Serial.print(F(" PacketError"));
+      Serial.print(F(",RSSI,"));
+      Serial.print(PacketRSSI);
+      Serial.print(F("dBm,SNR,"));
+      Serial.print(PacketSNR);
+      Serial.print(F("dB,Length,"));
+      Serial.print(LT.readRXPacketL());               //get the real packet length
+      Serial.print(F(",Packets,"));
+      Serial.print(RXpacketCount);
+      Serial.print(F(",Errors,"));
+      Serial.print(errors);
+      Serial.print(F(",IRQreg,"));
       Serial.print(IRQStatus, HEX);
+      LT.printIrqStatus();                            //print the names of the IRQ registers set
     }
   }
-  else
-  {
-    RXpacketCount++;
-    Serial.print(RXpacketCount);
-    Serial.print(F("  "));
-    }
 
-    Serial.println();
   
   return recievedpacket; 
 }

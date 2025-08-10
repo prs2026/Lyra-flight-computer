@@ -45,6 +45,7 @@ void setup( ) {
   
 
   #if defined(MODEFLIGHT)
+  Serial.print("flightuni");
   radio.setuptorange(0x01);
   
   pinMode(UART_TX_PIN,OUTPUT);
@@ -54,8 +55,15 @@ void setup( ) {
   
   #if defined(MODEGROUND)
 
+  Serial.print("pingstation");
+
   radio.setuptorange(0x00);
   radio.settolisten();
+  
+  #endif // MODEGROUND
+  #if defined(MODESTATION)
+
+  Serial.print("groundstation");
   
   #endif // MODEGROUND
 
@@ -70,7 +78,7 @@ void loop() {
   testtest.battvoltage = 4;
   testtest.command = camstatus;
   
-  //radio.sendpacket(testtest);
+  radio.sendpacket(testtest);
 
   radio.pingrange();
   
@@ -87,17 +95,16 @@ void loop() {
   
 
   //gps.checkformessages();
-
-  // packet newpacket = radio.receivepacket();
-
-  // Serial.printf(">uptime: %d",newpacket.uptime);
-  // Serial.printf(">battvolts: %f",newpacket.battvoltage);
-  // Serial.printf(">status: %d",newpacket.command);
+  
+  #endif // MODEGROUND
 
   #if defined(MODESTATION)
   
-  radio.receivepacket();
-  
+  packet newpacket = radio.receivepacket();
+
+  Serial.printf("\n>uptime: %d",newpacket.uptime);
+  Serial.printf("\n>battvolts: %f",newpacket.battvoltage);
+  Serial.printf("\n>status: %d",newpacket.command);
   #endif // MODESTATION
   
 

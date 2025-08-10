@@ -31,7 +31,7 @@ struct packet
     float lon;
     float battvoltage;
     uint8_t command;
-};
+}  __attribute__((packed, aligned(1)));
 
 int parsecommand(uint8_t command);
 
