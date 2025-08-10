@@ -14215,8 +14215,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "d7011964-7321-4d25-9372-816e84a26164")
-		(property "Reference" "U1"
-			(at 338.1091 52.705 0)
+		(property "Reference" "U3"
+			(at 338.1091 53.34 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14225,7 +14225,7 @@
 			)
 		)
 		(property "Value" "MAX31865xTP"
-			(at 338.1091 55.245 0)
+			(at 338.1091 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14336,7 +14336,7 @@
 		(instances
 			(project "it sure is getting hot in here"
 				(path "/3bd0164c-2575-48ce-96af-9cdaca468833"
-					(reference "U1")
+					(reference "U3")
 					(unit 1)
 				)
 			)
@@ -15308,7 +15308,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "ff0f67c5-ec94-4843-9348-1737fac31f54")
-		(property "Reference" "U3"
+		(property "Reference" "U1"
 			(at 338.7441 114.3 0)
 			(effects
 				(font
@@ -15429,7 +15429,7 @@
 		(instances
 			(project "it sure is getting hot in here"
 				(path "/3bd0164c-2575-48ce-96af-9cdaca468833"
-					(reference "U3")
+					(reference "U1")
 					(unit 1)
 				)
 			)
