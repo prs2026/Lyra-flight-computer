@@ -1,4 +1,4 @@
-23161002144558776
+23166214340263796
 .pretty
 4 pads 2.54mm spacign
 
@@ -94863,6 +94863,27 @@ XSON-8_L4.0-W4.0-P0.80-TL-EP
 0
 9
 9
+easyeda2kicad2
+CONN-TH_2P-P2.00_PH-2AK
+
+
+0
+2
+2
+easyeda2kicad2
+WIRELM-SMD_16P-L16.0-W16.0-P2.00_LORA1280-TCXO
+
+
+0
+16
+16
+easyeda2kicad2
+X2QFN-10_L2.0-W1.5-P0.50-BL
+
+
+0
+10
+10
 footprints
 0900FM15D0039E_JOT
 
