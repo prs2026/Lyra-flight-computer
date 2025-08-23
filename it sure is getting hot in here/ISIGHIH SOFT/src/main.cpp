@@ -27,18 +27,6 @@ void setup() { // main core setup
 
     MP._sysstate.r.uptime = millis();
 
-    //Camera init special
-    P1.timeout = 1.08e7;
-
-
-    // Serial.print("MP boot complete error code: ");
-    // Serial.println(MP._sysstate.r.errorflag);
-    
-    // Serial.print("NAV boot complete, error code :");
-    // Serial.println(NAV._sysstate.r.errorflag);
-
-    // MP.beep(4000,200);
-    // MP.beep(4500,200);
     Serial.println("mpcore out of setup");
     
 }
@@ -52,10 +40,7 @@ void setup1() { // nav core setup
     Serial.println("\n\nnav init start");
     NAV.initi2c();
     NAV.sensorinit();
-    NAV.getpadoffset();
-    NAV.KFinit();
     NAV.getsensordata(MP.sendtoteleplot);
-    NAV.getpadoffset();
     NAV.ready = 1;
 }
 
@@ -79,6 +64,7 @@ void loop() { // main core loop
         }
         else
         {
+            Serial.print("WRITINGTOTHINGS\n");
             MP.logdata(MP._sysstate,NAV._sysstate);
         }
         NAV.newdata = 0;
@@ -94,8 +80,6 @@ void loop() { // main core loop
 
     if (MP.sendserialon & millis() - MP.prevtime.serial >= MP.intervals[MP._sysstate.r.state].serial){
         uint32_t prevserialmicros = micros();
-        Serial.printf(">brk1: %d \n",digitalRead(BRKOUT1));
-        Serial.printf(">brk1time: %d \n",brkout1statustime);
         port.senddata(MP._sysstate,NAV._sysstate);
         MP.prevtime.serial = millis();
         MP.sendserialon ? Serial.printf(">porttime: %d \n",micros() - prevserialmicros) : 1==1;
@@ -136,9 +120,9 @@ void loop() { // main core loop
         MP.parsecommand(buf);
     }
 
-    if (MP._sysstate.r.uptime > 10000 && cameraon == false){
-        P1.fire();
-    }
+    // if (MP._sysstate.r.uptime > 10000 && cameraon == false){
+    //     P1.fire();
+    // }
 
     MP.prevtime.loop = micros();
     MP._sysstate.r.state >= 1 ? MP.missionelasped = millis() - MP.liftofftime : MP.missionelasped = 0, MP.landedtime = millis();
@@ -152,6 +136,7 @@ void loop() { // main core loop
 
 void loop1() { // nav core loop
     MP._sysstate.r.state == 0 ? NAV.useaccel = 1 : NAV.useaccel = 0;
+    Serial.printf("\n>NAVspot: %d \n", 1);
     
     NAV.prevtime.getdata = micros();
     NAV.getsensordata(MP.sendtoteleplot);
@@ -163,22 +148,7 @@ void loop1() { // nav core loop
             
             NAV.prevtime.predictkf = micros();
     }
-    NAV.KFrun();
-    //Serial.printf(">kfpredicttime: %f \n",float(micros()-NAV.prevtime.predictkf)/1000);
-    //Serial.print("nav 2\n");
-    if (millis() - NAV.prevtime.kfupdate >= 100)
-    {
-        NAV.prevtime.updatekf = micros();
-        if (NAV.useaccel == 1)
-    {
-        NAV._sysstate.r.orientationquat = NAV.adjustwithaccel(0.1);
-    }
-        NAV.prevtime.kfupdate = millis();
-        
-        //Serial.printf(">kfupdatetime: %f \n",float(micros()-NAV.prevtime.updatekf)/1000);
-    }
-
-    //Serial.print("nav 3\n");
+    Serial.printf("\n>NAVspot: %d \n", 2);
     
     if (MP.sendserialon & millis() - MP.prevtime.serial >= MP.intervals[MP._sysstate.r.state].serial)
     {
@@ -188,4 +158,5 @@ void loop1() { // nav core loop
     }
     NAV.prevtime.looptime = micros();
     NAV._sysstate.r.uptime = millis();
+    Serial.printf("\n>NAVspot: %d \n", 3);
 }

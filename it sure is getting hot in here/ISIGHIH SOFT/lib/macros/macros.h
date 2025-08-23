@@ -10,6 +10,8 @@
 
 // sensor libs
 #include <BMI088.h>
+#include <Adafruit_MAX31865.h>
+
 
 //comms libs
 #include "SPI.h"
@@ -41,29 +43,17 @@ using Eigen::AngleAxisd;
 // pin for buzzer
 #define BUZZERPIN 0
 
-// pyro enable pins
-#define P1_EN 15
-#define P2_EN 14
-#define P3_EN 9
-#define P4_EN 8
-
-// pyro cont pins
-#define P1_CONT 12
-#define P2_CONT 14
-#define P3_CONT 13
-#define P4_CONT 11
 // battery sense pin
 #define BATT_SENSE 26
 // i2c0 lines
 #define SDA 0
 #define SCL 1
 
-//pins broken out to pads
-#define BRKOUT1 25 //      SPI1 CSn  UART1 RX  I2C0 SCL
-#define BRKOUT2 27 // ADC1 SPI1 TX   UART1 RTS  I2C1 SCL
-#define BRKOUT3 28 // ADC2 SPI1 RX   UART0 TX   I2C0 SDA
-#define BRKOUT4 29 // ADC3 SPI1 CSN  UART0 RX   I2C0 SCL
-
+#define SCLK 18 
+#define MOSI 19
+#define MISO 16
+#define MAX1CS 25
+#define MAX2CS 13 
 // i2c0 is being used
 
 // size of the buf to log to before launch is detected
@@ -108,15 +98,6 @@ struct IMUdata{
 };
 
 
-//struct to hold various position related things so as to not bog down the main nav state struct
-struct position{
-    float vertaccel; //
-    float alt;//
-    float vvel;//
-    float maxalt;//
-};
-
-
 // union to hold all data for the nav core that needs to be shared
 union navpacket
 {
@@ -125,12 +106,8 @@ union navpacket
         uint16_t errorflag;//
         uint32_t uptime; //
         IMUdata imudata; //
-        Vector3float accelworld; //
-        Vector3float orientationeuler; //
-        Quatstruct orientationquat; //
-        Quatstruct orientationquatadj; //
-        position filtered; //
-        Vector3float covariences; //
+        float temp1;
+        float temp2;
     } r;
 };
 

@@ -14,6 +14,14 @@ Bmi088Accel accelunit(Wire,0x18);
 /* gyrounit object */
 Bmi088Gyro gyrounit(Wire,0x68);
 
+Adafruit_MAX31865 thermo = Adafruit_MAX31865(MAX1CS);
+Adafruit_MAX31865 thermo2 = Adafruit_MAX31865(MAX2CS);
+
+#define RREF 400.0
+#define RNOMINAL 100
+
+
+
 //gps defines
 #define DEFAULT_DEVICE_ADDRESS 0x3A
 #define DEFAULT_DEVICE_PORT 0xFF
@@ -246,6 +254,133 @@ IMUdata IMU::readraw(int oversampling, int interval){
 
 /*--------------------------------------------------------------------------------------*/
 
+class MAX31865
+{
+private:
+    
+public:
+    MAX31865();
+    ~MAX31865();
+    int init();
+    float read1(int printon);
+    float read2(int printon);
+};
+
+MAX31865::MAX31865()
+{
+}
+
+MAX31865::~MAX31865()
+{
+}
+
+
+int MAX31865::init(){
+    SPI.setRX(MISO);
+    SPI.setTX(MOSI);
+    SPI.setSCK(SCLK);
+    int status = thermo.begin(MAX31865_2WIRE);
+    Serial.printf("thermo1 status %d",status);
+    status = thermo2.begin(MAX31865_2WIRE);
+    Serial.printf("thermo2 status %d",status);
+
+    thermo.autoConvert(true);
+    thermo2.autoConvert(true);
+    return status;
+}
+
+
+float MAX31865::read1(int printon){
+    //uint16_t rtd = thermo.readRTD();
+
+    if (printon)
+    {
+        //Serial.print("RTD value: "); Serial.println(rtd);
+    // float ratio = rtd;
+    // ratio /= 32768;
+    // Serial.print("Ratio = "); Serial.println(ratio,8);
+    // Serial.print("Resistance = "); Serial.println(RREF*ratio,8);
+    // Serial.print("Temperature = "); Serial.println(thermo.temperature(RNOMINAL, RREF));
+
+    // Check and print any faults
+    uint8_t fault = thermo.readFault();
+    if (fault) {
+        Serial.print("Fault 0x"); Serial.println(fault, HEX);
+        if (fault & MAX31865_FAULT_HIGHTHRESH) {
+        Serial.println("RTD High Threshold"); 
+        }
+        if (fault & MAX31865_FAULT_LOWTHRESH) {
+        Serial.println("RTD Low Threshold"); 
+        }
+        if (fault & MAX31865_FAULT_REFINLOW) {
+        Serial.println("REFIN- > 0.85 x Bias"); 
+        }
+        if (fault & MAX31865_FAULT_REFINHIGH) {
+        Serial.println("REFIN- < 0.85 x Bias - FORCE- open"); 
+        }
+        if (fault & MAX31865_FAULT_RTDINLOW) {
+        Serial.println("RTDIN- < 0.85 x Bias - FORCE- open"); 
+        }
+        if (fault & MAX31865_FAULT_OVUV) {
+        Serial.println("Under/Over voltage"); 
+        }
+        thermo.clearFault();
+    }
+    Serial.println();
+    }
+    
+    
+    return thermo.temperature(RNOMINAL, RREF);
+}
+
+float MAX31865::read2(int printon){
+    //uint16_t rtd = thermo2.readRTD();
+
+    if (printon)
+    {
+        //Serial.print("RTD value: "); Serial.println(rtd);
+    // float ratio = rtd;
+    // ratio /= 32768;
+    // Serial.print("Ratio = "); Serial.println(ratio,8);
+    // Serial.print("Resistance = "); Serial.println(RREF*ratio,8);
+    // Serial.print("Temperature = "); Serial.println(thermo2.temperature(RNOMINAL, RREF));
+
+    // Check and print any faults
+    uint8_t fault = thermo2.readFault();
+    if (fault) {
+        Serial.print("Fault 0x"); Serial.println(fault, HEX);
+        if (fault & MAX31865_FAULT_HIGHTHRESH) {
+        Serial.println("RTD High Threshold"); 
+        }
+        if (fault & MAX31865_FAULT_LOWTHRESH) {
+        Serial.println("RTD Low Threshold"); 
+        }
+        if (fault & MAX31865_FAULT_REFINLOW) {
+        Serial.println("REFIN- > 0.85 x Bias"); 
+        }
+        if (fault & MAX31865_FAULT_REFINHIGH) {
+        Serial.println("REFIN- < 0.85 x Bias - FORCE- open"); 
+        }
+        if (fault & MAX31865_FAULT_RTDINLOW) {
+        Serial.println("RTDIN- < 0.85 x Bias - FORCE- open"); 
+        }
+        if (fault & MAX31865_FAULT_OVUV) {
+        Serial.println("Under/Over voltage"); 
+        }
+        thermo2.clearFault();
+    }
+    Serial.println();
+    }
+    
+
+    
+    return thermo2.temperature(RNOMINAL, RREF);
+}
+
+
+
+/*--------------------------------------------------------------------------------------*/
+
 //class to store all code to interface with the high G accel 
 class SERIALPORT{
 public:
@@ -292,46 +427,14 @@ int SERIALPORT::senddata(mpstate state,navpacket navstate){
             Serial.printf(">accel x: %f \n",navstate.r.imudata.accel.x );
             Serial.printf(">accel y: %f \n",navstate.r.imudata.accel.y);
             Serial.printf(">accel z: %f \n",navstate.r.imudata.accel.z);
-            // Serial.printf(">mag x: %f \n",navstate.r.magdata.utesla.x );
-            // Serial.printf(">mag y: %f \n",navstate.r.magdata.utesla.y);
-            // Serial.printf(">mag z: %f \n",navstate.r.magdata.utesla.z);
-            // Serial.printf(">accelabs: %f \n",navstate.r.imudata.absaccel);
-            // Serial.printf(">highaccel x: %f \n",navstate.r.adxldata.accel.x );
-            // Serial.printf(">highaccel y: %f \n",navstate.r.adxldata.accel.y);
-            // Serial.printf(">highaccel z: %f \n",navstate.r.adxldata.accel.z);
-            // Serial.printf(">highaccelabs: %f \n",navstate.r.adxldata.absaccel);
-            Serial.printf(">accelworld x: %f \n",navstate.r.accelworld.x);
-            Serial.printf(">accelworld y: %f \n",navstate.r.accelworld.y);
-            Serial.printf(">accelworld z: %f \n"  ,navstate.r.accelworld.z);
             Serial.printf(">gyro x: %f \n",navstate.r.imudata.gyro.x*(180/M_PI) );
             Serial.printf(">gyro y: %f \n",navstate.r.imudata.gyro.y*(180/M_PI));
             Serial.printf(">gyro z: %f \n",navstate.r.imudata.gyro.z*(180/M_PI));
-            // Serial.printf(">altitude: %f \n" ,navstate.r.barodata.altitude);
-            // Serial.printf(">verticalvel: %f \n",navstate.r.barodata.verticalvel);
-            // Serial.printf(">filtered vvel: %f \n",navstate.r.filtered.vvel);
-            // Serial.printf(">filtered accel: %f \n",navstate.r.filtered.vertaccel);
-            // Serial.printf(">orientation pitch: %f \n",navstate.r.orientationeuler.x*(180/M_PI));
-            // Serial.printf(">orientation yaw: %f \n",navstate.r.orientationeuler.y*(180/M_PI));
-            // Serial.printf(">orientation roll: %f \n",navstate.r.orientationeuler.z*(180/M_PI));
-            // Serial.printf(">maxrecorded alt: %f \n",navstate.r.filtered.maxalt);
-            // Serial.printf(">filtered alt: %f \n",navstate.r.filtered.alt);
             Serial.printf(">state : %d \n",state.r.state);
-            // Serial.printf(">altitudeagl : %f \n",navstate.r.barodata.altitudeagl);
-            // Serial.printf(">battery vol : %f \n",state.r.batterystate);
-            // Serial.printf(">baro temp : %f \n",navstate.r.barodata.temp);
-            // Serial.printf(">pyro cont : %d \n",state.r.pyroscont);
-            // Serial.printf(">pyros fired : %d \n",state.r.pyrosfired);
-            // Serial.printf(">pyro state: %d \n",state.r.pyrostate);
-            // Serial.printf(">covarience x: %f \n",navstate.r.covariences.x );
-            // Serial.printf(">covarience y: %f \n",navstate.r.covariences.y);
-            // Serial.printf(">covarience z: %f \n",navstate.r.covariences.z);
+            Serial.printf(">temp1: %f \n",navstate.r.temp1);
+            Serial.printf(">temp2: %f \n",navstate.r.temp2);
             return 0;
         }
-        else
-        {
-            Serial.printf("%f,%f,%f \n",navstate.r.orientationeuler.x,navstate.r.orientationeuler.y,navstate.r.orientationeuler.z);
-        }
-        
         
 
         return 0;

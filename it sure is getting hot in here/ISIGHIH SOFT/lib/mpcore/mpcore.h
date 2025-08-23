@@ -2,7 +2,7 @@
 #define MPCOREHEADER
 
 #include <navcore.h>
-#include <pyrobatt.h>
+//#include <pyrobatt.h>
 #include <RPi_Pico_TimerInterrupt.h>
 
 //fs::File logtofile;
@@ -10,10 +10,10 @@
 NAVCORE NAV;
 SERIALPORT port;
 
-PYROCHANNEL P1(1);
-PYROCHANNEL P2(2);
-PYROCHANNEL P3(3);
-PYROCHANNEL P4(4);
+// PYROCHANNEL P1(1);
+// PYROCHANNEL P2(2);
+// PYROCHANNEL P3(3);
+// PYROCHANNEL P4(4);
 
 RPI_PICO_Timer PyroTimer0(0);
 
@@ -23,10 +23,10 @@ bool checkfirepyros(struct repeating_timer *t)
 { 
   (void) t;
 
-    P1.checkfire();
-    P2.checkfire();
-    P3.checkfire();
-    P4.checkfire();
+    // P1.checkfire();
+    // P2.checkfire();
+    // P3.checkfire();
+    // P4.checkfire();
 
     //Serial.println("checking pyros");
 
@@ -122,7 +122,6 @@ class MPCORE{
 
         int changestate();
         int parsecommand(char input);
-        int sendtelemetry();
         int checkforpyros();
 
         float readbattvoltage();
@@ -140,7 +139,6 @@ void MPCORE::setuppins(){
     pinMode(LEDPIN,OUTPUT);
     pinMode(BUZZERPIN,OUTPUT);
     pinMode(BATT_SENSE,INPUT);
-    pinMode(BRKOUT1,INPUT);
 
     digitalWrite(LEDPIN, HIGH);
     
@@ -293,10 +291,10 @@ int MPCORE::initperipherials(){
 
     flashtest();
 
-    P1.timeout = 500;
-    P2.timeout = 500;
-    P3.timeout = 500;
-    P4.timeout = 500;
+    // P1.timeout = 500;
+    // P2.timeout = 500;
+    // P3.timeout = 500;
+    // P4.timeout = 500;
 
     return 0;
 }
@@ -327,9 +325,10 @@ int MPCORE::movebuftofile(){
         
         logpacket datatolog = logbuf.pop();
         datatolog.r.MPstate.r.missiontime = datatolog.r.MPstate.r.uptime - liftofftime;
+        
         logdata(datatolog.r.MPstate,datatolog.r.navsysstate);
     }
-    
+    Serial.print("MOVEDONE\n");
     //logfile.close();
 
     
@@ -337,7 +336,7 @@ int MPCORE::movebuftofile(){
 }
 
 int MPCORE::logdata(mpstate state, navpacket navstate){
-
+    Serial.println("Writing");
     NAV.event ? state.r.status = state.r.status | 0b1 : state.r.status = state.r.status;
     uint32_t openingtime = micros();
     state.r.batterystate = readbattvoltage();
@@ -370,7 +369,7 @@ int MPCORE::logdata(mpstate state, navpacket navstate){
     // }
     // Serial.println("");
 
-    //Serial.println("Writing to page #" + String(first_empty_page, DEC));
+    Serial.println("Writing to page #" + String(first_empty_page, DEC));
     rp2040.idleOtherCore();
     uint32_t ints = save_and_disable_interrupts();
     flash_range_program(FLASH_TARGET_OFFSET + (first_empty_page*FLASH_PAGE_SIZE), (uint8_t *)logbuf, FLASH_PAGE_SIZE);
@@ -378,7 +377,7 @@ int MPCORE::logdata(mpstate state, navpacket navstate){
     rp2040.resumeOtherCore();
     
     first_empty_page++;
-    
+    Serial.print("DONEWRITING\n");
     return 0;
 }
 
@@ -454,18 +453,10 @@ int MPCORE::dumpdata(){
         Serial.printf("%d,%d,%d,",readentry.r.MPstate.r.uptime,readentry.r.navsysstate.r.uptime,readentry.r.MPstate.r.missiontime);
         Serial.printf("%d,%d,",readentry.r.MPstate.r.errorflag,readentry.r.navsysstate.r.errorflag);
         Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.imudata.accel.x,readentry.r.navsysstate.r.imudata.accel.y,readentry.r.navsysstate.r.imudata.accel.z);
-        Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.accelworld.x,readentry.r.navsysstate.r.accelworld.y,readentry.r.navsysstate.r.accelworld.z);
         Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.imudata.gyro.x*(180/M_PI),readentry.r.navsysstate.r.imudata.gyro.y*(180/M_PI), readentry.r.navsysstate.r.imudata.gyro.z*(180/M_PI));
-        Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.orientationeuler.x*(180/M_PI), readentry.r.navsysstate.r.orientationeuler.y*(180/M_PI), readentry.r.navsysstate.r.orientationeuler.z*(180/M_PI));
-        Serial.printf("%f,%f,%f,%f,",readentry.r.navsysstate.r.orientationquat.w, readentry.r.navsysstate.r.orientationquat.x,readentry.r.navsysstate.r.orientationquat.y, readentry.r.navsysstate.r.orientationquat.z);
-        Serial.printf("%f,%f,%f,%f,",readentry.r.navsysstate.r.orientationquatadj.w, readentry.r.navsysstate.r.orientationquatadj.x,readentry.r.navsysstate.r.orientationquatadj.y, readentry.r.navsysstate.r.orientationquatadj.z);
-        Serial.printf("%f,", readentry.r.navsysstate.r.filtered.vvel);
-        Serial.printf("%f", readentry.r.navsysstate.r.filtered.alt);
         Serial.printf("%f,%f,",readentry.r.navsysstate.r.imudata.temp);
         Serial.printf("%f,",readentry.r.navsysstate.r.imudata.absaccel);
-        Serial.printf("%f,%f,%f,",readentry.r.navsysstate.r.covariences.x, readentry.r.navsysstate.r.covariences.y,readentry.r.navsysstate.r.covariences.z);
         Serial.printf("%d,%d,",readentry.r.MPstate.r.status,readentry.r.MPstate.r.MET);
-        Serial.printf("%f,",readentry.r.navsysstate.r.filtered.vertaccel);
         Serial.printf("%d,%f,%d\n",readentry.r.MPstate.r.state, readentry.r.MPstate.r.batterystate, 202);
 
 
@@ -485,7 +476,7 @@ int MPCORE::changestate(){
     if (_sysstate.r.state == 0) // detect liftoff
     {
         
-        NAV._sysstate.r.filtered.alt > 8 && _sysstate.r.uptime > 500 ? detectiontime = detectiontime : detectiontime = millis();
+        NAV._sysstate.r.imudata.absaccel > 30 && _sysstate.r.uptime > 500 ? detectiontime = detectiontime : detectiontime = millis();
         if (millis() - detectiontime >= 400)
         {
             _sysstate.r.state = 1;
@@ -495,45 +486,6 @@ int MPCORE::changestate(){
             movebuftofile();
         }
         
-    }
-
-    else if (_sysstate.r.state == 1) // detect burnout
-    {
-
-        NAV._sysstate.r.accelworld.z < 8 ? detectiontime = detectiontime : detectiontime = millis();
-        
-        if (millis() - detectiontime >= 200)
-        {
-            _sysstate.r.state = 2;
-            detectiontime = millis();
-            Serial.println("burnout");
-            burnouttime = millis();
-        }
-    }
-
-    else if (_sysstate.r.state == 2) // detect appogee
-    {
-        NAV._sysstate.r.filtered.alt < NAV._sysstate.r.filtered.maxalt *0.99 && NAV._sysstate.r.filtered.vvel < 50 ?  detectiontime = detectiontime : detectiontime = millis();
-
-        if (millis() - detectiontime >= 300)
-        {
-            _sysstate.r.state = 3;
-            detectiontime = millis();
-            Serial.println("appogee");
-        }
-    }
-
-    else if (_sysstate.r.state == 3) // detect chute opening
-    {
-        
-
-        accelmag > 7 ? detectiontime = detectiontime : detectiontime = millis();
-        if (millis() - detectiontime >= 500)
-        {
-            _sysstate.r.state = 4;
-            detectiontime = millis();
-            Serial.println("chutes out");
-        }
     }
 
     else if (_sysstate.r.state == 4) // detect landing
@@ -664,6 +616,11 @@ int MPCORE::parsecommand(char input){
             movebuftofile();
         return 0;
     }
+    if (input == 'L'){
+        Serial.println("put into landed mode");
+        _sysstate.r.state = 5;
+        return 0;
+    }
 
     else if (input == 'a' && (_sysstate.r.state < 4 || _sysstate.r.state >= 6 )){
         _sysstate.r.state = 0;
@@ -726,7 +683,7 @@ int MPCORE::parsecommand(char input){
         break;
     
     case 'o':
-        NAV.getpadoffset();
+        //NAV.getpadoffset();
         break;
     
     case 'P':
@@ -739,22 +696,22 @@ int MPCORE::parsecommand(char input){
         Serial.println(channel);
         switch (channel)
         {
-        case '1':
+        // case '1':
 
-            P1.fire();
-            break;
+        //     P1.fire();
+        //     break;
         
-        case '2':
-            P2.fire();
-            break;
+        // case '2':
+        //     P2.fire();
+        //     break;
         
-        case '3':
-            P3.fire();
-            break;
+        // case '3':
+        //     P3.fire();
+        //     break;
         
-        case '4':
-            P4.fire();
-            break;
+        // case '4':
+        //     P4.fire();
+        //     break;
         
         default:
             break;
@@ -786,17 +743,17 @@ int MPCORE::parsecommand(char input){
         }
         break;
 
-    case 'i':
-    NAV.getcalibrationdata();
-    break;
+    // case 'i':
+    // NAV.getcalibrationdata();
+    // break;
 
-    case 'y':
-    NAV.dumpoffsets();
-    break;
+    // case 'y':
+    // NAV.dumpoffsets();
+    // break;
 
-    case 'c':
-    calibrateimus();
-    break;
+    // case 'c':
+    // calibrateimus();
+    // break;
 
     case 'g':
     dogpspassthrough = !dogpspassthrough;

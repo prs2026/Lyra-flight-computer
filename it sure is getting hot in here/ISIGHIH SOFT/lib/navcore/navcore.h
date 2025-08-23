@@ -21,10 +21,11 @@
 #define m2 0.0005 //vel
 #define m3 0.1 //accel
 
-KALMAN<Nstate,Nobs> K; // your Kalman filter
-BLA::Matrix<Nobs> obs; // observation vector
+// KALMAN<Nstate,Nobs> K; // your Kalman filter
+// BLA::Matrix<Nobs> obs; // observation vector
 
 IMU imu;
+MAX31865 tempsens;
 
 class NAVCORE{
 
@@ -135,40 +136,22 @@ class NAVCORE{
         void dumpoffsets();
 };
 
-void NAVCORE::KFinit(){
-    _sysstate.r.filtered.alt = 0;
-    _sysstate.r.filtered.vvel = 0;
-    _sysstate.r.filtered.vertaccel = 0;
+// void NAVCORE::KFinit(){
+//     _sysstate.r.filtered.alt = 0;
+//     _sysstate.r.filtered.vvel = 0;
+//     _sysstate.r.filtered.vertaccel = 0;
     
-    prevsysstate = _sysstate;
-    prevtime.kfupdate = micros();
-    _sysstate.r.orientationquat = adjustwithaccel(0);
-}
+//     prevsysstate = _sysstate;
+//     prevtime.kfupdate = micros();
+//     _sysstate.r.orientationquat = adjustwithaccel(0);
+// }
 
 NAVCORE::NAVCORE(){
-    _sysstate.r.orientationquat = {1,0,0,0};
     _sysstate.r.errorflag = 0;
-    _sysstate.r.filtered.maxalt = 0;
     Vector3d axis;
     axis << 1,0,0;
     Quaterniond tempquat(AngleAxisd(0.5*PI,axis));
     vectoradj = tempquat;
-
- //evolution matrix
-    K.F = { 1.0,0.0,0.0,
-            0.0,1.0,0.0,
-            0.0,0.0,1.0};
-    // measurement matrix
-    K.H = { 1.0, 0.0,
-            0.0, 0.0,
-            0.0, 1.0};
-    //measurement covariance matrix.
-    K.R = {n1*n1,   0.0,
-            0.0, n2*n2};
-    // model covariance matrix. 
-    K.Q = {m1*m1, 0.0,  0.0,
-           0.0, m2*m2, 0.0,
-           0.0, 0.0, m3*m3};
 
     state = 0;
 }
@@ -213,12 +196,16 @@ uint32_t NAVCORE::sensorinit(){
     imustatus = imu.init();;
     imustatus == 1 ? _sysstate.r.errorflag || 0b10 : _sysstate.r.errorflag;
     imustatus == 2 ? _sysstate.r.errorflag || 0b100 : _sysstate.r.errorflag;
-    
+    tempsens.init();
+    tempsens.read1(1);
+    tempsens.init();
+    tempsens.read2(1);
     return 0;
 }
 
 void NAVCORE::getsensordata(bool readgps){
-    
+    thermo.autoConvert(true);
+    thermo2.autoConvert(true);
     uint32_t hitlindex = 0;
 
     if (hitlteston)
@@ -240,6 +227,8 @@ void NAVCORE::getsensordata(bool readgps){
     #if !defined(VERBOSETIMES)
         imu.read(5,hitlteston,hitlindex);
         //if(readgps){ gps.read();}
+        _sysstate.r.temp1 = tempsens.read1(0);
+        _sysstate.r.temp2 = tempsens.read2(0);
     #endif // VERBOSETIMES
     
     if (useaccel == 1)
@@ -268,234 +257,6 @@ void NAVCORE::getsensordata(bool readgps){
 
     _sysstate.r.imudata = imu.data;
     
-    return;
-}
-
-void NAVCORE::KFrun(){
-    navpacket extrapolatedsysstate = _sysstate;
-
-    double timestep = (micros() - kfpredicttime)/1e6;
-
-    Quaterniond adjquat = quatstructtoeigen(quatadj).normalized();
-
-    if (_sysstate.r.filtered.vvel >= 200)
-    {
-        K.R = {n12*n12,   0.0,
-                0.0, n2*n2};
-    }
-    else if (state >= 3)
-    {
-        K.R = {n1*n1,   0.0,
-                0.0, n22*n22};
-    }
-    else
-    {
-        K.R = {n1*n1,   0.0,
-                0.0, n2*n2};
-    }
-
-    obs(1) = _sysstate.r.accelworld.z;
-
-    K.F = {1.0,timestep,0.5*pow(timestep,2),
-           0.0, 1.0,timestep,
-           0.0, 0.0, 1.0};
-
-    K.update(obs);
-
-    BLA::Matrix<3> newstate = K.getxcopy();
-
-    extrapolatedsysstate.r.covariences.x = K.P(0,0);
-    extrapolatedsysstate.r.covariences.y = K.P(1,1);
-    extrapolatedsysstate.r.covariences.z = K.P(2,2);
-
-    extrapolatedsysstate.r.filtered.alt = newstate(0); 
-    extrapolatedsysstate.r.filtered.vvel = newstate(1); 
-    extrapolatedsysstate.r.filtered.vertaccel = newstate(2);
-    
-
-    extrapolatedsysstate.r.orientationquat = intergrategyros(timestep);
-    extrapolatedsysstate.r.orientationquatadj = eigentoquatstruct(adjquat* (quatstructtoeigen(extrapolatedsysstate.r.orientationquat).normalized() * adjquat.inverse()));
-    
-    extrapolatedsysstate.r.accelworld = getworldaccel(extrapolatedsysstate);
-    extrapolatedsysstate.r.orientationeuler = quat2euler(extrapolatedsysstate.r.orientationquatadj);
-
-
-
-    //Serial.printf(">extrap var: %f\n",extrapolatedsysstate.r.confidence.alt);
-
-    kfpredicttime = micros();
-    _sysstate = extrapolatedsysstate;
-    _sysstate.r.filtered.alt > _sysstate.r.filtered.maxalt ? _sysstate.r.filtered.maxalt = _sysstate.r.filtered.alt : _sysstate.r.filtered.alt;
-    // _data.altitudeagl > data.maxrecordedalt ? data.maxrecordedalt = _data.altitudeagl : data.maxrecordedalt = data.maxrecordedalt;
-
-}                                                         
-
-Quatstruct NAVCORE::intergrategyros(double timestep){
-    Quaterniond orientationquat = quatstructtoeigen(_sysstate.r.orientationquat);
-    Vector3d gyro = vectorfloatto3(_sysstate.r.imudata.gyro);
-    
-    Quaterniond qdelta(AngleAxisd(timestep*gyro.norm(), gyro.normalized()));
-
-    orientationquat = orientationquat * qdelta;
-
-    return eigentoquatstruct(orientationquat.normalized());
-}
-
-
-Quatstruct NAVCORE::adjustwithaccel(float alpha){
-    Quaterniond orientationquat = quatstructtoeigen(_sysstate.r.orientationquat);
-    Vector3d accel = vectorfloatto3(_sysstate.r.imudata.accel);
-
-    Quaterniond accelquat;
-
-    accelquat.x() = accel.x();
-    accelquat.y() = accel.y();
-    accelquat.z() = accel.z();
-
-    accelquat = orientationquat * accelquat * orientationquat.inverse();
-
-    accel.x() = accelquat.x();
-    accel.y() = accelquat.y();
-    accel.z() = accelquat.z();
-    
-
-    Vector3d accelnorm(accel.normalized());
-
-    float phi = acos(accelnorm.y());
-
-    Vector3d naxis(accelnorm.cross(Vector3d(0,1,0)));
-
-    naxis = naxis.normalized();
-
-
-    Quaterniond accelrotquat(AngleAxisd((1-alpha)*phi,naxis));
-
-    orientationquat = accelrotquat * orientationquat;
-    //Serial.println(">adjustingwithaccel: 1");
-
-    return eigentoquatstruct(orientationquat.normalized());
-}
-
-
-Vector3float NAVCORE::getworldaccel(navpacket _state){
-    Vector3d accelvec = vectorfloatto3(_state.r.imudata.accel);
-
-    Quaterniond orientationquat3 = quatstructtoeigen(_state.r.orientationquatadj);//.inverse();
-
-    Quaterniond accelquat2;
-
-    accelquat2.x() = accelvec.x();
-    accelquat2.y() = accelvec.y();
-    accelquat2.z() = accelvec.z();
-
-    accelquat2 = orientationquat3 * (accelquat2 * orientationquat3.inverse());
-
-    accelquat2 = vectoradj * (accelquat2 * vectoradj.inverse());
-
-    accelvec.x() = accelquat2.x();
-    accelvec.y() = accelquat2.y();
-    accelvec.z() = accelquat2.z();   
-    
-
-    
-    Vector3d grav;
-    grav << 0,0,9.801;
-    Vector3d _accelworld = accelvec-grav;
-
-    return vector3tofloat(_accelworld);
-
-};
-
-void NAVCORE::getpadoffset(){
-    _sysstate.r.filtered.maxalt = 0;
-}
-
-void NAVCORE::getcalibrationdata(){
-    Serial.println("calibrating accels");
-    IMUdata imucalidata = imu.readraw(50,1000);
-    double lowestval,highestval = 0;
-    int index = 0;
-
-    if (imucalidata.accel.x < lowestval)
-    {
-        lowestval = imucalidata.accel.x;
-        index = -1;
-    }
-    if (imucalidata.accel.y < lowestval)
-    {
-        lowestval = imucalidata.accel.y;
-        index = -2;
-    }
-    if (imucalidata.accel.z < lowestval)
-    {
-        lowestval = imucalidata.accel.z;
-        index = -3;
-    }
-
-    if (imucalidata.accel.x > highestval)
-    {
-        lowestval = imucalidata.accel.x;
-        index = 1;
-    }
-        if (imucalidata.accel.y > highestval)
-    {
-        lowestval = imucalidata.accel.y;
-        index = 2;
-    }
-        if (imucalidata.accel.z > highestval)
-    {
-        lowestval = imucalidata.accel.z;
-        index = 3;
-    }
-    
-    switch (index)
-    {
-    case -1:
-        imu.calibrationneg.x() = imucalidata.accel.x;
-        break;
-    
-    case -2:
-        imu.calibrationneg.y() = imucalidata.accel.y;
-        break;
-    
-    case -3:
-        imu.calibrationneg.z() = imucalidata.accel.z;
-        break;
-    
-    case 1:
-        imu.calibrationpos.x() = imucalidata.accel.x;
-        break;
-    
-    case 2:
-        imu.calibrationpos.y() = imucalidata.accel.y;
-        break;
-    
-    case 3:
-        imu.calibrationpos.z() = imucalidata.accel.z;
-        break;
-
-    
-    
-    default:
-        break;
-    }
-    
-    return;
-}
-
-void NAVCORE::calcnewoffsets(){
-    Vector3d imubcal,adxlbcal;
-    Matrix3d imuacal;
-
-    imubcal << (imu.calibrationneg + imu.calibrationpos)/2;
-    adxlbcal << (imu.calibrationneg + imu.calibrationpos)/2;
-
-    imu.bcal = imubcal;
-    return;
-}
-
-void NAVCORE::dumpoffsets(){
-    Serial.printf("BMI: %f,%f,%f \n ADXL: %f,%f,%f",imu.bcal.x(),imu.bcal.y(),imu.bcal.z());
     return;
 }
 
