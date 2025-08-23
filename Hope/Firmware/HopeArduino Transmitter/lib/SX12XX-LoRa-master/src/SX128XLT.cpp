@@ -15,11 +15,11 @@
 #define LTUNUSED(v) (void) (v)       //add LTUNUSED(variable); to avoid compiler warnings 
 #define USE_SPI_TRANSACTION
 
-//#define SX128XDEBUG                //enable debug messages
+#define SX128XDEBUG                //enable debug messages
 //#define RANGINGDEBUG               //enable debug messages for ranging
 //#define SX128XDEBUGRXTX            //enable debug messages for RX TX switching
 //#define SX128XDEBUGPINS            //enable pin allocation debug messages
-//#define SX128XDEBUGRELIABLE        //enable for debugging reliable and data transfer (DT) packets
+#define SX128XDEBUGRELIABLE        //enable for debugging reliable and data transfer (DT) packets
 //#define USEPAYLOADLENGTHREGISTER   //enable autoamtic setting of Payload length with register write
 //#define DETECTRELIABLERRORS        //enable to improve error detect reliable errors such as incorrect packet size etc
 #define REVISEDCHECKBUSY             //change to checkBusy() made November 2021 to improve speed, comment this #define out to use previous code.
@@ -1518,7 +1518,9 @@ uint8_t SX128XLT::transmit(uint8_t *txbuffer, uint8_t size, uint16_t timeout, in
 
   
 
-  while (!digitalRead(_TXDonePin));                    //Wait for DIO1 to go high
+  while (!digitalRead(_TXDonePin)){
+    Serial.println(F("waiting"));
+  }                    //Wait for DIO1 to go high
 
   setMode(MODE_STDBY_RC);                              //ensure we leave function with TX off
   //Serial.println(F("point3"));
@@ -3569,8 +3571,9 @@ uint8_t SX128XLT::transmitReliable(uint8_t *txbuffer, uint8_t size, uint16_t net
     payloadcrc = CRCCCITT(txbuffer, size, 0xFFFF);
     //payloadcrc = CRCCCITT(txbuffer, size, 0xFFFF) + 1;
   }
-
+  Serial.println(F("waiting for busy"));
   checkBusy();
+  Serial.println(F("waited for busy"));
 
 #ifdef USE_SPI_TRANSACTION
   SPI1.beginTransaction(SPISettings(LTspeedMaximum, LTdataOrder, LTdataMode));
@@ -3602,7 +3605,7 @@ uint8_t SX128XLT::transmitReliable(uint8_t *txbuffer, uint8_t size, uint16_t net
   setTxParams(txpower, RAMP_TIME);
   setDioIrqParams(IRQ_RADIO_ALL, (IRQ_TX_DONE + IRQ_RX_TX_TIMEOUT), 0, 0);   //set for IRQ on TX done and timeout on DIO1
   setTx(txtimeout);
-
+  Serial.println(F("waiting"));
   if (!wait)
   {
     return _TXPacketL;
@@ -3616,7 +3619,7 @@ uint8_t SX128XLT::transmitReliable(uint8_t *txbuffer, uint8_t size, uint16_t net
   {
     return 0;
   }
-
+  Serial.println(F("done"));
   return _TXPacketL;
 }
 

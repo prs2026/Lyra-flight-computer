@@ -336,48 +336,40 @@ int MPCORE::movebuftofile(){
 }
 
 int MPCORE::logdata(mpstate state, navpacket navstate){
-    Serial.println("Writing");
+    //Serial.println("Writing");
+    rp2040.idleOtherCore();
+    //Serial.printf("\n>MPspot: %d \n", 0);
     NAV.event ? state.r.status = state.r.status | 0b1 : state.r.status = state.r.status;
     uint32_t openingtime = micros();
     state.r.batterystate = readbattvoltage();
  
     logpacket datatolog = preplogentry(state,navstate);
-
+    //Serial.printf("\n>MPspot: %d \n", 1);
+    //delay(50);
     datatolog.r.MPstate.r.missiontime = datatolog.r.MPstate.r.uptime - liftofftime;
     uint8_t logbuf[FLASH_PAGE_SIZE] = {};
+
+    
     int j = 0;
-    // Serial.println("datapacket is: ");
-    // for (int i = 0; i < sizeof(logbuf); i++)
-    // {
-    //     Serial.printf("%x ",datatolog.data[j]);
-    //     j++;
-    // }
-    // Serial.println("");
-    // j = 0;
     for (int i = 0; i < sizeof(datatolog.data); i++)
     {
         logbuf[j] = datatolog.data[j];
         j++;
     }
+    //Serial.printf("\n>MPspot: %d \n", 2);
+    //delay(50);
+    //Serial.printf("\n>MPspot: %d \n", 3);
+    //delay(50);
+    //Serial.println("Writing to page #" + String(first_empty_page, DEC));
     
-    // Serial.println("packet is: ");
-    // j = 0;   
-    // for (int i = 0; i < sizeof(logbuf); i++)
-    // {
-    //     Serial.printf("%x ",logbuf[j]);
-    //     j++;
-    // }
-    // Serial.println("");
-
-    Serial.println("Writing to page #" + String(first_empty_page, DEC));
-    rp2040.idleOtherCore();
     uint32_t ints = save_and_disable_interrupts();
     flash_range_program(FLASH_TARGET_OFFSET + (first_empty_page*FLASH_PAGE_SIZE), (uint8_t *)logbuf, FLASH_PAGE_SIZE);
     restore_interrupts (ints);
     rp2040.resumeOtherCore();
-    
+    //Serial.printf("\n>MPspot: %d \n", 4);
+    //delay(50);
     first_empty_page++;
-    Serial.print("DONEWRITING\n");
+    //Serial.print("DONEWRITING\n");
     return 0;
 }
 
@@ -476,7 +468,7 @@ int MPCORE::changestate(){
     if (_sysstate.r.state == 0) // detect liftoff
     {
         
-        NAV._sysstate.r.imudata.absaccel > 30 && _sysstate.r.uptime > 500 ? detectiontime = detectiontime : detectiontime = millis();
+        NAV._sysstate.r.imudata.absaccel > 50 && _sysstate.r.uptime > 500 ? detectiontime = detectiontime : detectiontime = millis();
         if (millis() - detectiontime >= 400)
         {
             _sysstate.r.state = 1;
@@ -484,6 +476,7 @@ int MPCORE::changestate(){
             Serial.println("liftoff");
             liftofftime = millis();
             movebuftofile();
+            Serial.println("liftedoff");
         }
         
     }
@@ -508,7 +501,7 @@ int MPCORE::changestate(){
         }
     }
 
-    if (_sysstate.r.state > 1 && _sysstate.r.state != 5 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 0.5)
+    if (_sysstate.r.state >= 1 && _sysstate.r.state != 5 && accelvec.norm() < 20 &&  accelvec.norm() > 5  && gyrovec.norm() < 30)
     {
         landingdetectiontime = landingdetectiontime;
     }

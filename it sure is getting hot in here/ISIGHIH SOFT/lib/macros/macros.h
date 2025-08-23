@@ -38,7 +38,7 @@ using Eigen::Quaterniond;
 using Eigen::AngleAxisd;
 
 // led pins
-#define LEDPIN 7
+#define LEDPIN 8
 
 // pin for buzzer
 #define BUZZERPIN 0

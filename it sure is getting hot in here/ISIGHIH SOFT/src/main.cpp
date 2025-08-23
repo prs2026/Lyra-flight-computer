@@ -48,7 +48,7 @@ void loop() { // main core loop
     int eventsfired = 0;
     MP.changestate();
     //MP.checkforpyros();
-
+    //Serial.printf(">loops: 1 \n");
     // if (millis() - MP.prevtime.logdata >= MP.intervals[MP._sysstate.r.state].logdata){
     //     if (MP.sendserialon && MP.sendtoteleplot)
     //     {
@@ -58,26 +58,27 @@ void loop() { // main core loop
     
     if (millis() - MP.prevtime.logdata >= MP.intervals[MP._sysstate.r.state].logdata && NAV.newdata){
         uint32_t prevlogmicros = micros();
+        //Serial.print(">Writing somewhere: 1 \n");
         if (MP._sysstate.r.state == 0 || MP._sysstate.r.state == 5)
         {
             MP.logtobuf();
         }
         else
         {
-            Serial.print("WRITINGTOTHINGS\n");
             MP.logdata(MP._sysstate,NAV._sysstate);
         }
-        NAV.newdata = 0;
+        //NAV.newdata = 0;
         // if (MP.sendserialon && MP.sendtoteleplot)
         // {
         //     Serial.printf(">lograte: %f \n",1000/float((millis()-MP.prevtime.logdata)));
         // }
+        //Serial.print(">Writing somewhere: 2 \n");
         MP.prevtime.logdata = millis();
-        eventsfired += 2;
+        //eventsfired += 2;
         //MP.sendserialon ? Serial.printf(">loggingtime: %d \n",micros() - prevlogmicros) : 1==1;
     }
 
-
+    //
     if (MP.sendserialon & millis() - MP.prevtime.serial >= MP.intervals[MP._sysstate.r.state].serial){
         uint32_t prevserialmicros = micros();
         port.senddata(MP._sysstate,NAV._sysstate);
@@ -90,27 +91,6 @@ void loop() { // main core loop
         MP.ledstate ? MP.setled(1) : MP.setled(0);
         MP.ledstate =! MP.ledstate;
         MP.prevtime.led = millis();
-    }
-
-    if (millis()- MP.prevtime.beep >= MP.intervals[MP._sysstate.r.state].beep){   
-        if (!(MP._sysstate.r.uptime - brkout1statustime > 500))
-        {
-            MP.beep(5000);
-            delay(10);
-            MP.beep(5500);
-        }
-
-        if (MP._sysstate.r.state == 0)
-        {
-            //MP.beepcont();
-        }
-        else
-        {
-            MP.beep(MP.freqs[MP._sysstate.r.state]);
-        }
-        
-        MP.prevtime.beep = millis();
-        eventsfired += 10;
     }
 
     if (Serial.available()){
@@ -130,13 +110,16 @@ void loop() { // main core loop
     NAV.state = MP._sysstate.r.state;
 
     MP._sysstate.r.uptime = millis();
-    //Serial.printf("loops");
+    //Serial.printf(">loops: 2 \n");
+
+
+
 }
 
 
 void loop1() { // nav core loop
     MP._sysstate.r.state == 0 ? NAV.useaccel = 1 : NAV.useaccel = 0;
-    Serial.printf("\n>NAVspot: %d \n", 1);
+    //Serial.printf("\n>NAVspot: %d \n", 1);
     
     NAV.prevtime.getdata = micros();
     NAV.getsensordata(MP.sendtoteleplot);
@@ -148,7 +131,7 @@ void loop1() { // nav core loop
             
             NAV.prevtime.predictkf = micros();
     }
-    Serial.printf("\n>NAVspot: %d \n", 2);
+    //Serial.printf("\n>NAVspot: %d \n", 2);
     
     if (MP.sendserialon & millis() - MP.prevtime.serial >= MP.intervals[MP._sysstate.r.state].serial)
     {
@@ -158,5 +141,5 @@ void loop1() { // nav core loop
     }
     NAV.prevtime.looptime = micros();
     NAV._sysstate.r.uptime = millis();
-    Serial.printf("\n>NAVspot: %d \n", 3);
+    //Serial.printf("\n>NAVspot: %d \n", 3);
 }

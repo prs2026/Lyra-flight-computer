@@ -204,10 +204,8 @@ uint32_t NAVCORE::sensorinit(){
 }
 
 void NAVCORE::getsensordata(bool readgps){
-    thermo.autoConvert(true);
-    thermo2.autoConvert(true);
     uint32_t hitlindex = 0;
-
+    //Serial.printf("\n>NAVspot: %f \n", 1.5);
     if (hitlteston)
     {
         //Serial.println("hitltesting");
@@ -226,11 +224,13 @@ void NAVCORE::getsensordata(bool readgps){
     
     #if !defined(VERBOSETIMES)
         imu.read(5,hitlteston,hitlindex);
+        //Serial.printf("\n>NAVspot: %f \n", 1.55);
         //if(readgps){ gps.read();}
         _sysstate.r.temp1 = tempsens.read1(0);
         _sysstate.r.temp2 = tempsens.read2(0);
+        //Serial.printf("\n>NAVspot: %f \n", 1.6);
     #endif // VERBOSETIMES
-    
+    //Serial.printf("\n>NAVspot: %f \n", 1.75);
     if (useaccel == 1)
     {
         accumz += imu.data.accel.z;
@@ -256,7 +256,7 @@ void NAVCORE::getsensordata(bool readgps){
     
 
     _sysstate.r.imudata = imu.data;
-    
+    //Serial.printf("\n>NAVspot: %f \n", 1.875);
     return;
 }
 

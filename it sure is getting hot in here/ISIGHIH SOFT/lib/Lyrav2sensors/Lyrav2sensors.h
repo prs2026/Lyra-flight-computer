@@ -120,6 +120,8 @@ void IMU::read(int oversampling, int hitltesting,int hitlindex){
     accel << 0,0,0;
     gyro << 0,0,0;
 
+    // Serial.printf("\n>NAVspot: %f \n", 1.51);
+    rp2040.idleOtherCore();
     if (hitltesting)
     {
         //time,baro_altitude,accl_z,accl_y,accl_x,gps_altitude,gyro_roll,gyro_pitch,gyro_yaw
@@ -162,6 +164,8 @@ void IMU::read(int oversampling, int hitltesting,int hitlindex){
         accel.z() < -7378 || accel.z() > 7378 ? accel.z() = data.accel.x : accel.z() = accel.z();
         
     }
+    rp2040.resumeOtherCore();
+    //Serial.printf("\n>NAVspot: %f \n", 1.52);
     
     
     accel.x() /= oversampling;
@@ -197,6 +201,8 @@ void IMU::read(int oversampling, int hitltesting,int hitlindex){
     
     data = _data;
     prevdata = _data;
+
+    //Serial.printf("\n>NAVspot: %f \n", 1.53);
     
     return;
 }

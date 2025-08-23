@@ -1,189 +1,214 @@
 /*******************************************************************************************************
-  Programs for Arduino - Copyright of the author Stuart Robinson - 28/12/21
+  Programs for Arduino - Copyright of the author Stuart Robinson - 06/02/20
 
   This program is supplied as is, it is up to the user of the program to decide if the program is
   suitable for the intended purpose and free from errors.
 *******************************************************************************************************/
 
+
 /*******************************************************************************************************
-  Program Operation - This the transmitter part of a Serial bridge. This tranmitter receives data on
-  the defined serial port and puts that serial data into a LoRa packet which is then transmitted. A
-  matching reciever picks up the packet and displays it on the remote Arduinos serial port.
+  Program Operation - This is a simple LoRa test transmitter. A packet containing ASCII text is sent
+  according to the frequency and LoRa settings specified in the 'Settings.h' file. The pins to access
+  the lora device need to be defined in the 'Settings.h' file also.
 
-  The purpose of the bridge is to allow the serial output of a device, anothor Arduino or sensor for
-  instance, to be remotely monitored, without the need for a long serial cable.
+  The details of the packet sent and any errors are shown on the Serial Monitor, together with the transmit
+  power used, the packet length and the CRC of the packet. The matching receive program, '4_LoRa_Receive'
+  can be used to check the packets are being sent correctly, the frequency and LoRa settings (in Settings.h)
+  must be the same for the Transmit and Receive program. Sample Serial Monitor output;
 
-  Serial monitor baud rate should be set at 9600.
+  10dBm Packet> {packet contents*}  BytesSent,23  CRC,DAAB  TransmitTime,54mS  PacketsSent,1
+
+  Serial monitor baud rate is set at 9600
 *******************************************************************************************************/
 
-#include <SPI.h>                                //the LoRa device is SPI based so load the SPI library                                         
-#include <SX128XLT.h>                           //include the appropriate library  
+#include <Arduino.h>
+#include <SPI.h>                                               //the SX128X device is SPI based so load the SPI library                                         
+#include <SX128XLT.h>                                          //include the appropriate library  
 #include <basiclib.h>
-SX128XLT LoRa;                                  //create a library class instance called LoRa
+//*******  Setup hardware pin definitions here ! ***************
 
-#define NSS PIN_CS                                  //select pin on LoRa device
-#define NRESET PIN_DIO3                               //reset pin on LoRa device
-#define RFBUSY PIN_BUSY                                //busy pin on LoRa device 
-#define DIO1 PIN_DIO1                                  //DIO1 pin on LoRa device, used for sensing RX and TX done  
-#define LED1 PIN_LED                                     //indicator LED
-#define LORA_DEVICE DEVICE_SX1280               //we need to define the LoRa device we are using
-#define TXpower 10                              //LoRa transmit power in dBm
+//These are the pin definitions for one of my own boards, the Easy Pro Mini,
+//be sure to change the definitions to match your own setup.
 
-uint8_t TXPacketL;                              //length of transmitted packet
-uint8_t RXPacketL;                              //length of received acknowledge
-uint16_t PayloadCRC;
-uint16_t MessageID;                             //MessageID identifies each message, 2 bytes at front of packet
-uint8_t receivedBytes;                          //count of serial bytes received
-uint8_t Attempts;                               //number of times to send packet waiting for acknowledge
-uint32_t startuS;                               //used for timeout for serial input
-const uint8_t MaxMessageSize = 251;             //max size of array to send with received serial
-uint8_t Message[MaxMessageSize];                //array for received serial data
+#define NSS PIN_CS
+#define RFBUSY PIN_BUSY
+#define NRESET PIN_DIO3
+#define LED1 PIN_LED
+#define DIO1 PIN_DIO1
+#define RX_EN -1                                //pin for RX enable, used on some SX1280 devices, set to -1 if not used
+#define TX_EN -1                                //pin for TX enable, used on some SX1280 devices, set to -1 if not used  
+#define BUZZER -1                               //pin for BUZZER, set to -1 if not used 
 
-const uint32_t Frequency = 2445000000;          //frequency of transmissions
-const uint32_t Offset = 0;                      //offset frequency for calibration purposes
-const uint8_t Bandwidth = LORA_BW_1600;         //LoRa bandwidth
-const uint8_t SpreadingFactor = LORA_SF5;       //LoRa spreading factor
-const uint8_t CodeRate = LORA_CR_4_5;           //LoRa coding rate
-const uint16_t NetworkID = 0x3210;              //a unique identifier to go out with packet = 0x3210;
 
-uint32_t SerialTimeoutuS;                       //Timeout in uS before assuming message to send is complete
-const uint32_t TimeoutCharacters = 10;          //number of characters at specified baud rate that are a serial timeout
-const uint8_t MaxAttempts = 4;                  //Maximum attempts to send message and receive acknowledge
-const uint32_t ACKtimeoutmS = 50;               //Acknowledge timeout in mS
-const uint32_t TXtimeoutmS = 1000;              //transmit timeout in mS.
+#define LORA_DEVICE DEVICE_SX1280                //we need to define the device we are using  
 
-#define SerialInput Serial                      //assign serial port for reading data
-#define DebugSerial Serial                      //assign serial port for debug output 
-#define SerialInputBaud 9600                    //baud rate for the serial 
+//LoRa Modem Parameters
+const uint32_t Frequency = 2445000000;           //frequency of transmissions
+const int32_t Offset = 0;                        //offset frequency for calibration purposes
+const uint8_t Bandwidth = LORA_BW_0400;          //LoRa bandwidth
+const uint8_t SpreadingFactor = LORA_SF7;        //LoRa spreading factor
+const uint8_t CodeRate = LORA_CR_4_5;            //LoRa coding rate
 
-//#define DEBUG                                 //enable define to see debug information
-#define SENDREADY                               //enable define to see Ready control message at start
+const int8_t TXpower = 10;                       //Power for transmissions in dBm
 
+const uint16_t packet_delay = 1000;              //mS delay between packets
+
+
+
+SX128XLT LT;                                                   //create a library class instance called LT
+
+uint8_t TXPacketL;
+uint32_t TXPacketCount, startmS, endmS;
+
+uint8_t buff[] = "Hello World 1234567890";
+
+void packet_is_OK()
+{
+  //if here packet has been sent OK
+  uint16_t localCRC;
+
+  Serial.print(F("  BytesSent,"));
+  Serial.print(TXPacketL);                         //print transmitted packet length
+  localCRC = LT.CRCCCITT(buff, TXPacketL, 0xFFFF);
+  Serial.print(F("  CRC,"));
+  Serial.print(localCRC, HEX);                     //print CRC of sent packet
+  Serial.print(F("  TransmitTime,"));
+  Serial.print(endmS - startmS);                   //print transmit time of packet
+  Serial.print(F("mS"));
+  Serial.print(F("  PacketsSent,"));
+  Serial.print(TXPacketCount);                     //print total of packets sent OK
+}
+
+void packet_is_Error()
+{
+  //if here there was an error transmitting packet
+  uint16_t IRQStatus;
+  IRQStatus = LT.readIrqStatus();                  //read the the interrupt register
+  Serial.print(F(" SendError,"));
+  Serial.print(F("Length,"));
+  Serial.print(TXPacketL);                         //print transmitted packet length
+  Serial.print(F(",IRQreg,"));
+  Serial.print(IRQStatus, HEX);                    //print IRQ status
+  LT.printIrqStatus();                             //prints the text of which IRQs set
+}
 
 void loop()
 {
-#ifdef DEBUG
-  DebugSerial.println(F("> "));
-#endif
+  Serial.print(TXpower);                                       //print the transmit power defined
+  Serial.print(F("dBm "));
+  Serial.print(F("Packet> "));
+  Serial.flush();
 
-  Message[0] = lowByte(MessageID);
-  Message[1] = highByte(MessageID);
-  MessageID++;                                  //ready for next message
+  TXPacketL = sizeof(buff);                                    //set TXPacketL to length of array
+  buff[TXPacketL - 1] = '*';                                   //replace null character at buffer end so its visible on reciver
 
-  receivedBytes = 2;
-
-  while (SerialInput.available() == 0);         //wait for serial data to be available
+  LT.printASCIIPacket(buff, TXPacketL);                        //print the buffer (the sent packet) as ASCII
 
   digitalWrite(LED1, HIGH);
-  startuS = micros();
-
-  while (((uint32_t) (micros() - startuS) < SerialTimeoutuS))
+  startmS =  millis();                                         //start transmit timer
+  if (LT.transmit(buff, TXPacketL, 10000, TXpower, WAIT_TX))   //will return packet length sent if OK, otherwise 0 if transmit, timeout 10 seconds
   {
-    if (SerialInput.available() > 0)
-    {
-      if (receivedBytes >= MaxMessageSize)
-      {
-        break;
-      }
-      Message[receivedBytes] = SerialInput.read();
-      startuS = micros();                        //restart timeout
-      receivedBytes++;
-    }
-  };
-
-  //the only exits from the serial collection loop above are if there is a timeout, or the maximum
-  //message size is reached.
-
-  Attempts = 0;
-
-  do
-  {
-#ifdef DEBUG
-    uint8_t index;
-    DebugSerial.print(receivedBytes);
-    DebugSerial.print(F(" "));
-    DebugSerial.print(MessageID);
-    DebugSerial.print(F(" > "));                                   //flag on monitor for transmitting
-
-    for (index = 2; index < receivedBytes; index++)
-    {
-      DebugSerial.write(Message[index]);
-    }
-    DebugSerial.println();
-#endif
-
-    TXPacketL = LoRa.transmitReliable(Message, receivedBytes, NetworkID, TXtimeoutmS, TXpower, WAIT_TX);
-    PayloadCRC = LoRa.readUint16SXBuffer(TXPacketL - 2);           //need the payload CRC to check for valid ACK
-    RXPacketL = LoRa.waitReliableACK(NetworkID, PayloadCRC, ACKtimeoutmS);
-    Attempts++;
+    endmS = millis();                                          //packet sent, note end time
+    TXPacketCount++;
+    packet_is_OK();
   }
-  while ((RXPacketL == 0) && (Attempts <= MaxAttempts));
-
-#ifdef DEBUG
-  if (RXPacketL == 0)
+  else
   {
-    Serial.println(F("NA>"));
+    packet_is_Error();                                 //transmit packet returned 0, there was an error
   }
-#endif
+
+  digitalWrite(LED1, LOW);
+  Serial.println();
+  delay(packet_delay);                                 //have a delay between packets
+}
+
+
+
+
+
+
+
+
+void led_Flash(uint16_t flashes, uint16_t delaymS)
+{
+  uint16_t index;
+  for (index = 1; index <= flashes; index++)
+  {
+    digitalWrite(LED1, HIGH);
+    delay(delaymS);
+    digitalWrite(LED1, LOW);
+    delay(delaymS);
+  }
 }
 
 
 void setup()
 {
-  pinMode(LED1, OUTPUT);
+  delay(5000);
 
-  DebugSerial.begin(9600);
-  SerialInput.begin(SerialInputBaud);
 
-#ifdef DEBUG
-  DebugSerial.println();
-  Serial.println(F(__FILE__));
-  DebugSerial.println();
-#endif
+  pinMode(LED1, OUTPUT);                                   //setup pin as output for indicator LED
+  led_Flash(2, 125);                                       //two quick LED flashes to indicate program start
 
-  SPI.begin();
+  Serial.begin(115200);
+  Serial.println();
+  Serial.println(F("3_LoRa_Transmitter Starting"));
 
-  if (LoRa.begin(NSS, NRESET, RFBUSY, DIO1, LORA_DEVICE))
+  SPI1.setSCK( PIN_SCK ); // bool setSCK(pin_size_t pin);
+  SPI1.setTX( PIN_MOSI );  // bool setTX(pin_size_t pin);
+  SPI1.setRX( PIN_MISO );  // bool setRX(pin_size_t pin);
+  SPI1.begin();
+
+  //SPI beginTranscation is normally part of library routines, but if it is disabled in library
+  //a single instance is needed here, so uncomment the program line below
+  //SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
+
+  //setup hardware pins used by device, then check if device is found
+
+  if (LT.begin(NSS, NRESET, RFBUSY, DIO1, RX_EN, TX_EN, LORA_DEVICE))
   {
-#ifdef DEBUG
-    DebugSerial.println(F("LoRa Device found"));
-#endif
+    Serial.println(F("LoRa Device found"));
+    led_Flash(2, 125);                                   //two further quick LED flashes to indicate device found
+    delay(1000);
   }
   else
   {
-    DebugSerial.println(F("No LoRa device responding"));
-    while (1);
+    Serial.println(F("No device responding"));
+    while (1)
+    {
+      led_Flash(50, 50);                                 //long fast speed LED flash indicates device error
+    }
   }
 
-  LoRa.setupLoRa(Frequency, Offset, SpreadingFactor, Bandwidth, CodeRate);
+  //The function call list below shows the complete setup for the LoRa device using the information defined in the
+  //Settings.h file.
+  //The 'Setup LoRa device' list below can be replaced with a single function call;
+  //LT.setupLoRa(Frequency, Offset, SpreadingFactor, Bandwidth, CodeRate);
 
-#ifdef SENDREADY
-  //Send a ready packet so remorte can check its working, send control message 0x0001
-  Message[0] = 1;
-  Message[1] = 0;
-  Message[2] = 'R';
-  TXPacketL = LoRa.transmitReliable(Message, 3, NetworkID, TXtimeoutmS, TXpower, WAIT_TX);
-  delay(1000);
-#endif
+  //***************************************************************************************************
+  //Setup LoRa device
+  //***************************************************************************************************
+  LT.setMode(MODE_STDBY_RC);
+  LT.setRegulatorMode(USE_LDO);
+  LT.setPacketType(PACKET_TYPE_LORA);
+  LT.setRfFrequency(Frequency, Offset);
+  LT.setBufferBaseAddress(0, 0);
+  LT.setModulationParams(SpreadingFactor, Bandwidth, CodeRate);
+  LT.setPacketParams(12, LORA_PACKET_VARIABLE_LENGTH, 255, LORA_CRC_ON, LORA_IQ_NORMAL, 0, 0);
+  LT.setDioIrqParams(IRQ_RADIO_ALL, (IRQ_TX_DONE + IRQ_RX_TX_TIMEOUT), 0, 0);
+  LT.setHighSensitivity();
+  //***************************************************************************************************
 
-  //now calculate timeout in microseconds based on baud rate and number of characters, assuming a 11bit byte
+  Serial.println();
+  LT.printModemSettings();                               //reads and prints the configured LoRa settings, useful check
+  Serial.println();
+  LT.printOperatingSettings();                           //reads and prints the configured operating settings, useful check
+  Serial.println();
+  Serial.println();
+  LT.printRegisters(0x900, 0x9FF);                       //print contents of device registers
+  Serial.println();
+  Serial.println();
 
-  SerialTimeoutuS = ((1000000 / SerialInputBaud) * 11) * TimeoutCharacters;
-
-#ifdef DEBUG
-  DebugSerial.print(F("SerialTimeoutuS "));
-  DebugSerial.println(SerialTimeoutuS);
-  DebugSerial.println(F("Clear serial buffer"));
-#endif
-
-  while (SerialInput.available() > 0)           //clear serial input
-  {
-    SerialInput.read();
-  }
-
-#ifdef DEBUG
-  DebugSerial.println(F("Waiting start of serial input"));
-#endif
-
-  MessageID = 257;                              //first message to send is 0x0101
+  Serial.print(F("Transmitter ready"));
+  Serial.println();
 }
