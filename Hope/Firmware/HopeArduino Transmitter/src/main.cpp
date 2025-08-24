@@ -106,7 +106,7 @@ void loop()
 
   digitalWrite(LED1, HIGH);
   startmS =  millis();                                         //start transmit timer
-  if (LT.transmit(buff, TXPacketL, 10000, TXpower, WAIT_TX))   //will return packet length sent if OK, otherwise 0 if transmit, timeout 10 seconds
+  if (LT.transmit(buff, TXPacketL, 10000, TXpower, NO_WAIT))   //will return packet length sent if OK, otherwise 0 if transmit, timeout 10 seconds
   {
     endmS = millis();                                          //packet sent, note end time
     TXPacketCount++;
@@ -153,6 +153,10 @@ void setup()
   Serial.begin(115200);
   Serial.println();
   Serial.println(F("3_LoRa_Transmitter Starting"));
+
+  pinMode(PIN_TXCOEN,OUTPUT);
+  digitalWrite(PIN_TXCOEN,HIGH);
+  delay(3);
 
   SPI1.setSCK( PIN_SCK ); // bool setSCK(pin_size_t pin);
   SPI1.setTX( PIN_MOSI );  // bool setTX(pin_size_t pin);

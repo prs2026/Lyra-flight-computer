@@ -76,6 +76,11 @@ int sx1280radio::initradio(){
   SPI1.setRX( PIN_MISO );  // bool setRX(pin_size_t pin);
   SPI1.begin();
 
+  pinMode(PIN_TXCOEN,OUTPUT);
+  digitalWrite(PIN_TXCOEN,HIGH);
+  delay(3);
+
+
   Serial.println(F("3_LoRa_TransmitterIRQ Starting"));
 
   if (LT.begin(NSS, NRESET, RFBUSY, PIN_DIO1,LORA_DEVICE))

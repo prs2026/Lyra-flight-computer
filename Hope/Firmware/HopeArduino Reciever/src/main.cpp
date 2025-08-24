@@ -219,6 +219,10 @@ void setup()
     digitalWrite(BUZZER, LOW);
   }
 
+  pinMode(PIN_TXCOEN,OUTPUT);
+  digitalWrite(PIN_TXCOEN,HIGH);
+  delay(3);
+
   SPI1.setSCK( PIN_SCK ); // bool setSCK(pin_size_t pin);
   SPI1.setTX( PIN_MOSI );  // bool setTX(pin_size_t pin);
   SPI1.setRX( PIN_MISO );  // bool setRX(pin_size_t pin);

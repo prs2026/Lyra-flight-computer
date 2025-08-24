@@ -15,7 +15,7 @@
 #define LTUNUSED(v) (void) (v)       //add LTUNUSED(variable); to avoid compiler warnings 
 #define USE_SPI_TRANSACTION
 
-#define SX128XDEBUG                //enable debug messages
+//s#define SX128XDEBUG                //enable debug messages
 //#define RANGINGDEBUG               //enable debug messages for ranging
 //#define SX128XDEBUGRXTX            //enable debug messages for RX TX switching
 //#define SX128XDEBUGPINS            //enable pin allocation debug messages
