@@ -53,7 +53,7 @@ const uint32_t RangingAddress = 16;              //must match address in recever
 const uint16_t  waittimemS = 10000;              //wait this long in mS for packet before assuming timeout
 const uint16_t  TXtimeoutmS = 5000;              //ranging TX timeout in mS
 const uint16_t  packet_delaymS = 0;              //forced extra delay in mS between ranging requests
-const uint16_t  rangeingcount = 5;               //number of times ranging is cqarried out for each distance measurment
+const uint16_t  rangeingcount = 2;               //number of times ranging is cqarried out for each distance measurment
 //float distance_adjustmentment = 1.0000;              //adjustment factor to calculated distance
 
 const int8_t TXpower = 10;                       //Transmit power used

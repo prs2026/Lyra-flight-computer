@@ -273,10 +273,6 @@ packet sx1280radio::receivepacket(){
     recievedpacket.data[i] = RXBUFFER[i];
   }
 
-  Serial.printf("\n>uptime: %d\n", recievedpacket.r.uptime);
-  Serial.printf(">lat: %f\n", recievedpacket.r.lat);
-  Serial.printf(">lon: %f\n", recievedpacket.r.lon);
-  Serial.printf(">battvoltage: %f\n", recievedpacket.r.battvoltage);
 
   digitalWrite(PIN_LED, LOW);                        //LED off
 

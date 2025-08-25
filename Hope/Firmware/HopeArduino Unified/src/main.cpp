@@ -1,62 +1,22 @@
 #include <Arduino.h>
-/*******************************************************************************************************
-  Programs for Arduino - Copyright of the author Stuart Robinson - 08/02/20
-
-  This program is supplied as is, it is up to the user of the program to decide if the program is
-  suitable for the intended purpose and free from errors.
-*******************************************************************************************************/
-
-/*******************************************************************************************************
-  Program Operation - The program listens for incoming packets using the LoRa settings in the 'Settings.h'
-  file. The pins to access the lora device need to be defined in the 'Settings.h' file also.
-
-  There is a printout of the valid packets received, the packet is assumed to be in ASCII printable text,
-  if its not ASCII text characters from 0x20 to 0x7F, expect weird things to happen on the Serial Monitor.
-  The LED will flash for each packet received and the buzzer will sound, if fitted.
-
-  Sample serial monitor output;
-
-  1109s  Hello World 1234567890*,CRC,DAAB,RSSI,-61dBm,SNR,9dB,Length,23,Packets,1026,Errors,0,IRQreg,50
-
-  If there is a packet error it might look like this, which is showing a CRC error,
-
-  1189s PacketError,RSSI,-111dBm,SNR,-12dB,Length,0,Packets,1126,Errors,1,IRQreg,70,IRQ_HEADER_VALID,IRQ_CRC_ERROR,IRQ_RX_DONE
-
-  Serial monitor baud rate is set at 9600.
-*******************************************************************************************************/
-
-#define Station1address 16
-#define Station1lat
-#define station1lon
-
-#define Station2address 17
-#define Station2lat
-#define station2lon
-
-#define Station3address 18
-#define Station3lat
-#define station3lon
-
-#define ThisStationAddress 16
 
 
 #include <SPI.h>                                 //the lora device is SPI based so load the SPI library
 #include <SX128XLT.h>                            //include the appropriate library   
 #include <basiclib.h>
 
-//*******  Setup hardware pin definitions here ! ***************
-
-//These are the pin definitions for one of my own boards, the Easy Pro Mini,
-//be sure to change the definitions to match your own setup.
-
+stationdata Station1;
+stationdata Station2;
+stationdata Station3;
 
 #include <SPI.h>                                //the lora device is SPI based so load the SPI library                                         
 
 #include "basiclib.h"
 #include "sx1280lib.h"
 #include <gpslib.h>
+#include <ArduinoEigenDense.h>
 
-//#define MODEFLIGHT
+#define MODEFLIGHT
 //#define MODESTATION
 
 #if !defined(MODEFLIGHT)
@@ -74,7 +34,8 @@ uint32_t checktime;
 const uint32_t sendpacketinterval = 2000;
 uint32_t sendpackettime;
 
-uint8_t camstatus;
+Matrix3d stationpoints;
+
 
 
 void setup( ) {
@@ -93,7 +54,27 @@ void setup( ) {
 
   Serial1.begin(9600);
  
-  
+  Station1.ID = 16;
+  Station1.alt = 5029;
+  Station1.lat = 39.24715773473315;
+  Station1.lon = -119.81061508627381;
+  Station1.distance = 1940;
+  Station1.xcoord = 0;
+  Station1.ycoord = 0;
+
+  Station2.ID = 17;
+  Station2.alt = 5029;
+  Station2.lat = 39.275649549942784;
+  Station2.lon = -119.79315491913076;
+  Station2.distance = 2370;
+
+  Station3.ID = 18;
+  Station3.alt = 5029;
+  Station3.lat = 39.238545400773376;
+  Station3.lon = -119.76962665183977;
+  Station3.distance = 2510;
+
+  // test point 39.25442283421696, -119.79019707259835, 5029 (on surface of lake)
 
   #if defined(MODEFLIGHT)
   Serial.print("flightuni");
@@ -101,7 +82,51 @@ void setup( ) {
   
   pinMode(UART_TX_PIN,OUTPUT);
   digitalWrite(UART_TX_PIN, HIGH);
+
+  //setup reference plane
+
+  Eigen::Vector3d station2pos = gpsToENU(Station2.lat,Station2.lon,Station2.alt,Station1.lat,Station1.lon,Station1.alt);
+
+  Station2.xcoord = station2pos.x();
+  Station2.ycoord = station2pos.y();
+  Station2.zcoord = station2pos.z();
+
+  Serial.printf("Station 2 coords: %f %f %f\n",Station2.xcoord,Station2.ycoord,Station2.zcoord);
+
+  Eigen::Vector3d station3pos = gpsToENU(Station3.lat,Station3.lon,Station3.alt,Station1.lat,Station1.lon,Station1.alt);
+
+  Station3.xcoord = station3pos.x();
+  Station3.ycoord = station3pos.y();
+  Station3.zcoord = station3pos.z();
+
+  Serial.printf("Station 3 coords: %f %f %f\n",Station3.xcoord,Station3.ycoord,Station3.zcoord);
+
+  stationpoints << 0,0,0,
+                  station2pos.x(),station2pos.y(),station2pos.z(),
+                  station3pos.x(),station3pos.y(),station3pos.z();
+
+  Serial.println("trying to trilaterate");
+  uint32_t mathcalctime = micros();
+
+  Vector3d testmatrix(Station1.distance,Station2.distance,Station3.distance);
+
+  Vector3d solution1, solution2;
   
+  
+
+  if (trilaterate(stationpoints, testmatrix, solution1, solution2)) {
+        //Serial.printf("Solution 1: %f %f %f\n",solution1.x(),solution1.y(),solution1.z());
+        //Serial.printf("Solution 2: %f %f %f\n",solution2.x(),solution2.y(),solution2.z());
+    } else {
+        //Serial.println("no valid solution");
+    }
+
+  double outlat, outlon, outalt;
+  
+  enuToLLA(solution2,Station1.lat,Station1.lon,Station1.alt,outlat,outlon,outalt);
+  Serial.printf("Took %d microseconds",micros()-mathcalctime);
+  Serial.printf("Solution 2 gps point: lat/lon: %f,%f alt %f\n",outlat,outlon,outalt);
+
   #endif // MODEFLIGHT
   
   #if defined(MODEGROUND)
@@ -123,17 +148,44 @@ void setup( ) {
 void loop() {
   #if defined(MODEFLIGHT)
 
-  packet testtest;
+  packet packettosendloop;
 
-  testtest.r.lat = radio.pingrange(Station1address);
+  Station1.distance = radio.pingrange(Station1.ID);
+  Station2.distance = radio.pingrange(Station2.ID);
+  Station3.distance = radio.pingrange(Station3.ID);
 
-  testtest.r.uptime = millis();
-  testtest.r.battvoltage = 4;
-  testtest.r.command = camstatus;
+  Vector3d distancematrix(Station1.distance,Station2.distance,Station3.distance);
+
+
+  Vector3d solution1, solution2;
   
-  radio.sendpacket(testtest);
+  Serial.println("trying to trilaterate");
 
-  delay(1000);
+  if (trilaterate(stationpoints, distancematrix, solution1, solution2)) {
+        Serial.printf("Solution 1: %f %f %f\n",solution1.x(),solution1.y(),solution1.z());
+        Serial.printf("Solution 2: %f %f %f\n",solution2.x(),solution2.y(),solution2.z());
+    } else {
+        Serial.println("no valid solution");
+    }
+
+  double outlat, outlon, outalt;
+  
+  enuToLLA(solution2,Station1.lat,Station1.lon,Station1.alt,outlat,outlon,outalt);
+  
+  Serial.printf("Solution 2 gps point: lat/lon: %f,%f alt %f\n",outlat,outlon,outalt);
+
+  packettosendloop.r.lat = outlat;
+  packettosendloop.r.lat = outlon;
+  packettosendloop.r.alt = outalt;
+  packettosendloop.r.battvoltage = getbatteryvoltage();
+
+  packettosendloop.r.uptime = millis();
+  
+  packettosendloop.r.command = 0xa;
+  
+  radio.sendpacket(packettosendloop);
+
+  //delay(1000);
   
   #endif // MODEFLIGHT
   
@@ -155,9 +207,10 @@ void loop() {
   
   packet newpacket = radio.receivepacket();
 
-  //Serial.printf("\n>uptime: %d",newpacket.uptime);
-  //Serial.printf("\n>battvolts: %f",newpacket.battvoltage);
-  //Serial.printf("\n>status: %d",newpacket.command);
+  Serial.printf("\n>uptime: %d\n", newpacket.r.uptime);
+  Serial.printf(">lat: %f\n", newpacket.r.lat);
+  Serial.printf(">lon: %f\n", newpacket.r.lon);
+  Serial.printf(">battvoltage: %f\n", newpacket.r.battvoltage);
   #endif // MODESTATION
   
 

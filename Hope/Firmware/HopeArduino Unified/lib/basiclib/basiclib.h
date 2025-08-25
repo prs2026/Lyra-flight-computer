@@ -1,6 +1,9 @@
 #if !defined(BASICLIB)
 #define BASICLIB
 
+#include <ArduinoEigenDense.h>
+
+using namespace Eigen;
 
 #define PIN_MISO 28
 #define PIN_CS   25
@@ -28,19 +31,52 @@ union packet
 {
      struct{
     uint32_t uptime;
-    float lat;
-    float lon;
+    double lat;
+    double lon;
+    double alt;
     float battvoltage;
     uint8_t command;
     }r;
     uint8_t data[sizeof(r)];
 };
 
+struct stationdata
+{
+    int ID;
+    float lat;
+    float lon;
+    float alt;
+    float distance;
+    double xcoord;
+    double ycoord;
+    double zcoord;
+};
+
+
 
 int parsecommand(uint8_t command);
 
 float getbatteryvoltage();
 
+Eigen::Vector3d gpsToECEF(double lat, double lon, double alt);
 
+Eigen::Matrix3d ecefToEnuMatrix(double lat, double lon);
+
+Eigen::Vector3d gpsToENU(double lat, double lon, double alt, 
+                         double refLat, double refLon, double refAlt);
+
+bool trilaterate(const Matrix3d &points, const Vector3d &radii,
+    Vector3d &solution1, Vector3d &solution2);
+
+Eigen::Vector3d enuToECEF(const Eigen::Vector3d& enu,
+                          double refLat_deg, double refLon_deg, double refAlt);
+
+void ecefToLLA(const Eigen::Vector3d& ecef,
+               double& lat_deg, double& lon_deg, double& alt);
+               
+void enuToLLA(const Eigen::Vector3d& enu,
+              double refLat_deg, double refLon_deg, double refAlt,
+              double& lat_deg, double& lon_deg, double& alt);
+    
 
 #endif // BASICLIB
