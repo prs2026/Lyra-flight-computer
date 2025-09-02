@@ -674,6 +674,7 @@ void SX128XLT::setupLoRa(uint32_t frequency, int32_t offset, uint8_t modParam1, 
   setPacketParams(12, LORA_PACKET_VARIABLE_LENGTH, 255, LORA_CRC_ON, LORA_IQ_NORMAL, 0, 0);
   setDioIrqParams(IRQ_RADIO_ALL, (IRQ_TX_DONE + IRQ_RX_TX_TIMEOUT), 0, 0);
   setHighSensitivity();
+  
 }
 
 

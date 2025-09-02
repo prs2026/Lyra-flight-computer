@@ -29,13 +29,12 @@ using namespace Eigen;
 
 union packet
 {
-     struct{
+    struct{
     uint32_t uptime;
-    double lat;
-    double lon;
-    double alt;
-    float battvoltage;
-    uint8_t command;
+    int32_t lat;
+    int32_t lon;
+    int32_t alt;
+    uint16_t battvoltage;
     }r;
     uint8_t data[sizeof(r)];
 };

@@ -21,7 +21,6 @@ SX128XLT LT;                                    //create a library class instanc
 uint8_t TXPacketL;
 uint32_t TXPacketCount;
 
-uint8_t buff[sizeof(packet)];      //the message to send
 
 
 
@@ -106,7 +105,7 @@ void packet_is_OK()
 
 void packet_is_Error()
 {
-  uint16_t IRQStatus;
+  uint16_t IRQStatus,localCRC;
   IRQStatus = LT.readIrqStatus();                   //read the LoRa device IRQ status register
 
   printElapsedTime();                               //print elapsed time to Serial Monitor
@@ -132,6 +131,10 @@ void packet_is_Error()
     Serial.print(F(",IRQreg,"));
     Serial.print(IRQStatus, HEX);
     LT.printIrqStatus();                            //print the names of the IRQ registers set
+    localCRC = LT.CRCCCITT(RXBUFFER, RXPacketL, 0xFFFF);  //calculate the CRC, this is the external CRC calculation of the RXBUFFER
+    Serial.print(F(",CRC,"));                        //contents, not the LoRa device internal CRC
+    Serial.print(localCRC, HEX);
+  
   }
 
   delay(250);                                       //gives a longer buzzer and LED flash for error
@@ -170,7 +173,7 @@ int sx1280radio::initradio(){
     while (1);
   }
 
-  LT.setupLoRa(2445000000, 0, LORA_SF7, LORA_BW_0400, LORA_CR_4_5);      //configure frequency and LoRa settings
+  LT.setupLoRa(Frequency, 0, LORA_SF7, LORA_BW_0400, LORA_CR_4_5);      //configure frequency and LoRa settings
 
   Serial.print(F("Transmitter ready"));
   Serial.println();
@@ -199,15 +202,23 @@ int sx1280radio::sendpacket(packet packetToSend){
   Serial.print(F("Packet> "));
   Serial.flush();
 
+  //uint8_t buff[sizeof(packet)+1] = "";      //the message to send
+
+  uint8_t buff[sizeof(packet)] = "";
+  // uint8_t buff[] = "why";
+
+  uint8_t j = 0;
   for (int i = 0; i < sizeof(packetToSend); i++)
   {
-    buff[i] = packetToSend.data[i];
+    buff[j] = packetToSend.data[j];
+    j++;
   }
   
 
   TXPacketL = sizeof(buff);                                    //set TXPacketL to length of array
+  
   buff[TXPacketL - 1] = '*';                                   //replace null character at buffer end so its visible on reciver
-  LT.setupLoRa(2445000000, 0, LORA_SF7, LORA_BW_0400, LORA_CR_4_5);      //configure frequency and LoRa settings
+  LT.setupLoRa(Frequency, 0, LORA_SF7, LORA_BW_0400, LORA_CR_4_5);      //configure frequency and LoRa settings
 
   //LT.printASCIIPacket(buff, TXPacketL);                        //print the buffer (the sent packet) as ASCII
   LT.printHEXPacket(buff,TXPacketL);
@@ -426,7 +437,7 @@ void sx1280radio::checkforping(){
 
 // 0x01 = masters 0x00 = slave
 void sx1280radio::setuptorange(int role){
-   LT.setupRanging(Frequency, Offset, SpreadingFactor, Bandwidth, CodeRate, RangingAddress, role);
+   LT.setupRanging(RangingFrequency , Offset, SpreadingFactor, Bandwidth, CodeRate, RangingAddress, role);
 
   //LT.setRangingCalibration(Calibration);               //override automatic lookup of calibration value from library table
 

@@ -53,28 +53,36 @@ void setup( ) {
   Serial1.setTX(UART_TX_PIN);
 
   Serial1.begin(9600);
+
+  //all at 6400ft
+
+  //station 1 39.251663002648804, -119.96871477918272
  
   Station1.ID = 16;
-  Station1.alt = 5029;
-  Station1.lat = 39.24715773473315;
-  Station1.lon = -119.81061508627381;
-  Station1.distance = 1940;
+  Station1.alt = 6400; // ft
+  Station1.lat = 39.251663002648804;
+  Station1.lon = -119.96871477918272;
+  Station1.distance = 162;
   Station1.xcoord = 0;
   Station1.ycoord = 0;
 
+  //station2 39.251512936807316, -119.96958783820142
+
   Station2.ID = 17;
-  Station2.alt = 5029;
-  Station2.lat = 39.275649549942784;
-  Station2.lon = -119.79315491913076;
-  Station2.distance = 2370;
+  Station2.alt = 6400; // ft
+  Station2.lat = 39.251512936807316;
+  Station2.lon = -119.96958783820142;
+  Station2.distance = 177;
+
+  //station3 39.25232642482777, -119.96894920782334
 
   Station3.ID = 18;
-  Station3.alt = 5029;
-  Station3.lat = 39.238545400773376;
-  Station3.lon = -119.76962665183977;
-  Station3.distance = 2510;
+  Station3.alt = 6400; // ft
+  Station3.lat = 39.25232642482777;
+  Station3.lon = -119.96894920782334;
+  Station3.distance = 176;
 
-  // test point 39.25442283421696, -119.79019707259835, 5029 (on surface of lake)
+  // test point 39.25189334300624, -119.96920743754161, 6400 (on surface of lake)
 
   #if defined(MODEFLIGHT)
   Serial.print("flightuni");
@@ -83,7 +91,7 @@ void setup( ) {
   pinMode(UART_TX_PIN,OUTPUT);
   digitalWrite(UART_TX_PIN, HIGH);
 
-  //setup reference plane
+  // setup reference plane
 
   Eigen::Vector3d station2pos = gpsToENU(Station2.lat,Station2.lon,Station2.alt,Station1.lat,Station1.lon,Station1.alt);
 
@@ -134,7 +142,7 @@ void setup( ) {
   Serial.print("pingstation");
 
   radio.setuptorange(0x00);
-  radio.settolisten(ThisStationAddress);
+  radio.settolisten(Station3.ID);
   
   #endif // MODEGROUND
   #if defined(MODESTATION)
@@ -148,7 +156,7 @@ void setup( ) {
 void loop() {
   #if defined(MODEFLIGHT)
 
-  packet packettosendloop;
+  radio.setuptorange(0x01);
 
   Station1.distance = radio.pingrange(Station1.ID);
   Station2.distance = radio.pingrange(Station2.ID);
@@ -168,24 +176,30 @@ void loop() {
         Serial.println("no valid solution");
     }
 
-  double outlat, outlon, outalt;
+  double outlat = 0;
+  double outlon = 0;
+  double outalt = 0;
   
   enuToLLA(solution2,Station1.lat,Station1.lon,Station1.alt,outlat,outlon,outalt);
   
   Serial.printf("Solution 2 gps point: lat/lon: %f,%f alt %f\n",outlat,outlon,outalt);
 
-  packettosendloop.r.lat = outlat;
-  packettosendloop.r.lat = outlon;
-  packettosendloop.r.alt = outalt;
-  packettosendloop.r.battvoltage = getbatteryvoltage();
+  outlat = 0;
+  outlon = 0;
+  outalt = 0;
+
+  packet packettosendloop;
+
+  packettosendloop.r.lat = outlat*1e6;
+  packettosendloop.r.lon = outlon*1e6;
+  packettosendloop.r.alt = outalt*1e6;
+  packettosendloop.r.battvoltage = 4*1e2;
 
   packettosendloop.r.uptime = millis();
-  
-  packettosendloop.r.command = 0xa;
-  
+
   radio.sendpacket(packettosendloop);
 
-  //delay(1000);
+  delay(1000);
   
   #endif // MODEFLIGHT
   
@@ -207,10 +221,12 @@ void loop() {
   
   packet newpacket = radio.receivepacket();
 
-  Serial.printf("\n>uptime: %d\n", newpacket.r.uptime);
-  Serial.printf(">lat: %f\n", newpacket.r.lat);
-  Serial.printf(">lon: %f\n", newpacket.r.lon);
-  Serial.printf(">battvoltage: %f\n", newpacket.r.battvoltage);
+  Serial.printf("\nuptime: %d\n", newpacket.r.uptime);
+  Serial.printf("lat: %f\n", float(newpacket.r.lat)/1e6);
+  Serial.printf("lon: %f\n", float(newpacket.r.lon)/1e6);
+  Serial.printf("alt: %f\n", float(newpacket.r.alt)/1e6);
+  Serial.printf("battvoltage: %f\n", newpacket.r.battvoltage/1e2);
+
   #endif // MODESTATION
   
 
