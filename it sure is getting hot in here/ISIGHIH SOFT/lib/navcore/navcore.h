@@ -198,7 +198,6 @@ uint32_t NAVCORE::sensorinit(){
     imustatus == 2 ? _sysstate.r.errorflag || 0b100 : _sysstate.r.errorflag;
     tempsens.init();
     tempsens.read1(1);
-    tempsens.init();
     tempsens.read2(1);
     return 0;
 }

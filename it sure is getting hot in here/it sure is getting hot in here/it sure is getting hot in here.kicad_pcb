@@ -5775,7 +5775,7 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "resistor")
 		(property "Reference" "R12"
-			(at 0 -1.17 270)
+			(at 0 -1.17 -90)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "d941622f-5504-45d2-8545-d20eccf471e7")
@@ -5787,7 +5787,7 @@
 			)
 		)
 		(property "Value" "5.1k"
-			(at 0 1.17 270)
+			(at 0 1.17 -90)
 			(layer "F.Fab")
 			(uuid "8f60674a-7cc0-41b5-8093-1d60fa3831ac")
 			(effects
@@ -5965,7 +5965,7 @@
 			(uuid "8af091c0-3cb9-4bb5-aa0d-b75f99793aab")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 270)
+			(at 0 0 -90)
 			(layer "F.Fab")
 			(uuid "1299ecf1-7f7e-4706-a600-4d3d468fa1cf")
 			(effects
@@ -7158,7 +7158,7 @@
 		(descr "Resistor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "resistor")
 		(property "Reference" "R11"
-			(at 0 -1.17 270)
+			(at 0 -1.17 -90)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "0fdfb620-16ce-4c6a-9886-dc7d48970bcf")
@@ -7170,7 +7170,7 @@
 			)
 		)
 		(property "Value" "5.1k"
-			(at 0 1.17 270)
+			(at 0 1.17 -90)
 			(layer "F.Fab")
 			(uuid "492b8032-2b50-416b-be87-1b938e2a35b9")
 			(effects
@@ -7348,7 +7348,7 @@
 			(uuid "924f6709-1339-4f63-a483-3a2cb5663661")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 270)
+			(at 0 0 -90)
 			(layer "F.Fab")
 			(uuid "48320f28-78d7-490a-9f50-1b90065b6b8f")
 			(effects
@@ -12127,7 +12127,7 @@
 		(uuid "a5fb3f01-7cec-4527-83ac-f5a3a056f5da")
 		(at 140.55 104.775)
 		(property "Reference" "U4"
-			(at 0 5.91 360)
+			(at 0 5.91 0)
 			(layer "B.SilkS")
 			(hide yes)
 			(uuid "42e7f12c-842d-48b6-afc0-56585d264faf")
@@ -12140,7 +12140,7 @@
 			)
 		)
 		(property "Value" "BMI088"
-			(at 0 -5.91 360)
+			(at 0 -5.91 0)
 			(layer "B.Fab")
 			(uuid "3643883f-084c-4b2c-9ef3-6d42690ce060")
 			(effects
@@ -12430,7 +12430,7 @@
 			(uuid "9e56ec16-fe41-42af-8f51-ce260264f660")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "B.Fab")
 			(uuid "70785edc-4af9-42e7-b290-4ff4ff04326a")
 			(effects

@@ -16,8 +16,8 @@ stationdata Station3;
 #include <gpslib.h>
 #include <ArduinoEigenDense.h>
 
-#define MODEFLIGHT
-//#define MODESTATION
+//#define MODEFLIGHT
+#define MODESTATION
 
 #if !defined(MODEFLIGHT)
 #if !defined(MODESTATION)
@@ -162,44 +162,44 @@ void loop() {
   Station2.distance = radio.pingrange(Station2.ID);
   Station3.distance = radio.pingrange(Station3.ID);
 
-  Vector3d distancematrix(Station1.distance,Station2.distance,Station3.distance);
+  // Vector3d distancematrix(Station1.distance,Station2.distance,Station3.distance);
 
 
-  Vector3d solution1, solution2;
+  // Vector3d solution1, solution2;
   
-  Serial.println("trying to trilaterate");
+  // Serial.println("trying to trilaterate");
 
-  if (trilaterate(stationpoints, distancematrix, solution1, solution2)) {
-        Serial.printf("Solution 1: %f %f %f\n",solution1.x(),solution1.y(),solution1.z());
-        Serial.printf("Solution 2: %f %f %f\n",solution2.x(),solution2.y(),solution2.z());
-    } else {
-        Serial.println("no valid solution");
-    }
+  // if (trilaterate(stationpoints, distancematrix, solution1, solution2)) {
+  //       Serial.printf("Solution 1: %f %f %f\n",solution1.x(),solution1.y(),solution1.z());
+  //       Serial.printf("Solution 2: %f %f %f\n",solution2.x(),solution2.y(),solution2.z());
+  //   } else {
+  //       Serial.println("no valid solution");
+  //   }
 
-  double outlat = 0;
-  double outlon = 0;
-  double outalt = 0;
+  // double outlat = 0;
+  // double outlon = 0;
+  // double outalt = 0;
   
-  enuToLLA(solution2,Station1.lat,Station1.lon,Station1.alt,outlat,outlon,outalt);
+  // enuToLLA(solution2,Station1.lat,Station1.lon,Station1.alt,outlat,outlon,outalt);
   
-  Serial.printf("Solution 2 gps point: lat/lon: %f,%f alt %f\n",outlat,outlon,outalt);
+  // Serial.printf("Solution 2 gps point: lat/lon: %f,%f alt %f\n",outlat,outlon,outalt);
 
-  outlat = 0;
-  outlon = 0;
-  outalt = 0;
+  // outlat = 0;
+  // outlon = 0;
+  // outalt = 0;
 
   packet packettosendloop;
 
-  packettosendloop.r.lat = outlat*1e6;
-  packettosendloop.r.lon = outlon*1e6;
-  packettosendloop.r.alt = outalt*1e6;
-  packettosendloop.r.battvoltage = 4*1e2;
+  packettosendloop.r.lat = Station1.distance;
+  packettosendloop.r.lon = Station2.distance;
+  packettosendloop.r.alt = Station3.distance;
+  packettosendloop.r.battvoltage = getbatteryvoltage()*1e2;
 
   packettosendloop.r.uptime = millis();
 
   radio.sendpacket(packettosendloop);
 
-  delay(1000);
+  //delay(1000);
   
   #endif // MODEFLIGHT
   
@@ -221,11 +221,11 @@ void loop() {
   
   packet newpacket = radio.receivepacket();
 
-  Serial.printf("\nuptime: %d\n", newpacket.r.uptime);
-  Serial.printf("lat: %f\n", float(newpacket.r.lat)/1e6);
-  Serial.printf("lon: %f\n", float(newpacket.r.lon)/1e6);
-  Serial.printf("alt: %f\n", float(newpacket.r.alt)/1e6);
-  Serial.printf("battvoltage: %f\n", newpacket.r.battvoltage/1e2);
+  Serial.printf("\n>uptime: %f\n", float(newpacket.r.uptime)/1e3);
+  Serial.printf(">distance1: %d\n", newpacket.r.lat);
+  Serial.printf(">distance2: %d\n", newpacket.r.lon);
+  Serial.printf(">distance3: %d\n", newpacket.r.alt);
+  Serial.printf(">battvoltage: %f\n", newpacket.r.battvoltage/1e2);
 
   #endif // MODESTATION
   
