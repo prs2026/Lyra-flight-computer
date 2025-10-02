@@ -2,4 +2,5 @@
   (version 7)
   (lib (name "easyeda2kicad")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/easyeda2kicad/easyeda2kicad.kicad_sym")(options "")(descr ""))
   (lib (name ".kicad_sym")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/easyeda2kicad/.kicad_sym")(options "")(descr ""))
+  (lib (name "2025-10-01_06-18-47")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/2025-10-01_06-18-47.kicad_sym")(options "")(descr ""))
 )

@@ -1116,6 +1116,184 @@
 			)
 		)
 	)
+	(symbol "7*7*6-6PWX"
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "SW"
+			(at 0 10.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "7*7*6-6P WX"
+			(at 0 -10.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ":SW-SMD_L7.0-W7.0-P1.40-LS7.4"
+			(at 0 -12.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C2858288"
+			(at 0 -15.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(symbol "7*7*6-6PWX_0_1"
+			(rectangle
+				(start -7.62 7.62)
+				(end 7.62 -7.62)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type background)
+				)
+			)
+			(pin unspecified line
+				(at -12.7 5.08 0)
+				(length 5.08)
+				(name "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -12.7 0 0)
+				(length 5.08)
+				(name "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -12.7 -5.08 0)
+				(length 5.08)
+				(name "3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 12.7 -5.08 180)
+				(length 5.08)
+				(name "4"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "4"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 12.7 0 180)
+				(length 5.08)
+				(name "5"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "5"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 12.7 5.08 180)
+				(length 5.08)
+				(name "6"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "6"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+	)
 	(symbol "AON7423"
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4971,6 +5149,149 @@
 			)
 		)
 	)
+	(symbol "FEC0603CP-14NG-LRH"
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "L"
+			(at 0 5.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "FEC0603CP-14NG-LRH"
+			(at 0 -5.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ":IND-SMD_L1.7-W1.0-1"
+			(at 0 -7.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/Others_Prosperity-Dielectrics-FEC0603CP-14NG-LRH_C346297.html"
+			(at 0 -10.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C346297"
+			(at 0 -12.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(symbol "FEC0603CP-14NG-LRH_0_1"
+			(arc
+				(start -4.29 -0.02)
+				(mid -2.81 -1.01)
+				(end -2.27 -0.02)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(arc
+				(start -2.13 -0.02)
+				(mid -0.66 -1.01)
+				(end -0.11 -0.02)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(arc
+				(start 0.02 -0.02)
+				(mid 1.49 -1.01)
+				(end 2.04 -0.02)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(arc
+				(start 2.21 -0.02)
+				(mid 3.68 -1.01)
+				(end 4.23 -0.02)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(pin unspecified line
+				(at -5.08 0 0)
+				(length 0.762)
+				(name "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 5.08 0 180)
+				(length 0.762)
+				(name "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+	)
 	(symbol "HJ-SMA086"
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -6225,6 +6546,195 @@
 			)
 		)
 	)
+	(symbol "MXDLN16TL"
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "U"
+			(at 0 7.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "MXDLN16TL"
+			(at 0 -7.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ":LGA-6_L1.1-W0.7-P0.40-BL"
+			(at 0 -10.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/Low-Noise-OpAmps_Maxscend-MXDLN16TL_C462323.html"
+			(at 0 -12.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C462323"
+			(at 0 -15.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(symbol "MXDLN16TL_0_1"
+			(rectangle
+				(start -8.89 5.08)
+				(end 8.89 -5.08)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type background)
+				)
+			)
+			(circle
+				(center -7.62 3.81)
+				(radius 0.38)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(pin unspecified line
+				(at -11.43 2.54 0)
+				(length 2.54)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -11.43 0 0)
+				(length 2.54)
+				(name "VDD"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -11.43 -2.54 0)
+				(length 2.54)
+				(name "RFOUT"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 11.43 -2.54 180)
+				(length 2.54)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "4"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 11.43 0 180)
+				(length 2.54)
+				(name "RFIN"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "5"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 11.43 2.54 180)
+				(length 2.54)
+				(name "EN"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "6"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+	)
 	(symbol "PE4259-63"
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -6405,6 +6915,196 @@
 					)
 				)
 				(number "6"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+	)
+	(symbol "PJ-320D"
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "CN"
+			(at 0 7.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PJ-320D"
+			(at 0 -10.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ":AUDIO-SMD_PJ-320D"
+			(at 0 -12.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/Audio-Video-Connectors_SHOU-HAN-PJ-320D_C431535.html"
+			(at 0 -15.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C431535"
+			(at 0 -17.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(symbol "PJ-320D_0_1"
+			(rectangle
+				(start -10.92 0)
+				(end -9.4 -4.57)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type background)
+				)
+			)
+			(polyline
+				(pts
+					(xy 0 2.54) (xy -10.16 2.54) (xy -10.16 0)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(polyline
+				(pts
+					(xy 0 -5.08) (xy -5.84 -5.08) (xy -6.35 -4.06) (xy -6.86 -5.08)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(polyline
+				(pts
+					(xy 0 -2.54) (xy -4.57 -2.54) (xy -5.08 -1.52) (xy -5.59 -2.54)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(polyline
+				(pts
+					(xy 1.02 0) (xy -3.3 0) (xy -3.81 -1.02) (xy -4.32 0)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(pin unspecified line
+				(at 5.08 2.54 180)
+				(length 5.08)
+				(name "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 5.08 -5.08 180)
+				(length 5.08)
+				(name "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 5.08 -2.54 180)
+				(length 5.08)
+				(name "3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 5.08 0 180)
+				(length 5.08)
+				(name "4"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "4"
 					(effects
 						(font
 							(size 1.27 1.27)
@@ -7161,6 +7861,188 @@
 			)
 		)
 	)
+	(symbol "SAFEB1G57KE0F00R15"
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "L"
+			(at 0 7.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "SAFEB1G57KE0F00R15"
+			(at 0 -7.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ":FILTER-SMD_5P-L1.4-W1.1-L_HDF1588E-B2"
+			(at 0 -10.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/Filters_muRata_SAFEB1G57KE0F00R15_SAFEB1G57KE0F00R15_C91645.html"
+			(at 0 -12.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C91645"
+			(at 0 -15.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(symbol "SAFEB1G57KE0F00R15_0_1"
+			(rectangle
+				(start -10.16 8.13)
+				(end 10.16 -7.62)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type background)
+				)
+			)
+			(circle
+				(center -8.89 6.86)
+				(radius 0.38)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(circle
+				(center -8.89 6.86)
+				(radius 0.38)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(pin unspecified line
+				(at -12.7 2.54 0)
+				(length 2.54)
+				(name "IN"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 12.7 -2.54 180)
+				(length 2.54)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 12.7 0 180)
+				(length 2.54)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -12.7 -2.54 0)
+				(length 2.54)
+				(name "OUT"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "4"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 12.7 2.54 180)
+				(length 2.54)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "5"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+	)
 	(symbol "SK12D07VG4"
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -7848,6 +8730,184 @@
 			)
 		)
 	)
+	(symbol "SM04B-SRSS-TB(LF)(SN)"
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "CN"
+			(at 0 8.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "SM04B-SRSS-TB (LF)(SN)"
+			(at 0 -1.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ":CONN-SMD_4P-P1.00_SM04B-SRSS-TB-LF-SN"
+			(at 0 -3.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/Others_JST-Sales-America__JST-Sales-America-SM04B-SRSS-TB-LF-SN_C160404.html"
+			(at 0 -6.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C160404"
+			(at 0 -8.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(symbol "SM04B-SRSS-TB(LF)(SN)_0_1"
+			(rectangle
+				(start -11.43 1.27)
+				(end 11.43 -3.81)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type background)
+				)
+			)
+			(pin unspecified line
+				(at -3.81 3.81 270)
+				(length 2.54)
+				(name "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -1.27 3.81 270)
+				(length 2.54)
+				(name "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 1.27 3.81 270)
+				(length 2.54)
+				(name "3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 3.81 3.81 270)
+				(length 2.54)
+				(name "4"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "4"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 8.89 3.81 270)
+				(length 2.54)
+				(name "5"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "5"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -8.89 3.81 270)
+				(length 2.54)
+				(name "6"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "6"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+	)
 	(symbol "SX1M12.000M10F30TNN"
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -7992,6 +9052,141 @@
 					)
 				)
 				(number "4"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+	)
+	(symbol "TCS40DPR,LF"
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "U"
+			(at 0 10.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "TCS40DPR,LF"
+			(at 0 -5.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ":SOT-23F_L2.9-W1.8-P0.95-LS2.4-BR"
+			(at 0 -7.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/Sensors_TOSHIBA_TCS40DPR-LF_TCS40DPR-LF_C150116.html"
+			(at 0 -10.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C150116"
+			(at 0 -12.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(symbol "TCS40DPR,LF_0_1"
+			(rectangle
+				(start -10.16 2.54)
+				(end 10.16 -5.08)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type background)
+				)
+			)
+			(circle
+				(center -8.89 1.27)
+				(radius 0.38)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(pin unspecified line
+				(at -12.7 0 0)
+				(length 2.54)
+				(name "VCC"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 12.7 0 180)
+				(length 2.54)
+				(name "VOUT"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 0 5.08 270)
+				(length 2.54)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "3"
 					(effects
 						(font
 							(size 1.27 1.27)
@@ -8530,6 +9725,795 @@
 			)
 		)
 	)
+	(symbol "TS-1095-A16B3-D1"
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "SW"
+			(at 0 7.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "TS-1095-A16B3-D1"
+			(at 0 -7.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ":SW-TH_4P-L6.0-W6.0-P4.50-LS6.5"
+			(at 0 -10.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/Tactile-Switches_Yuandi-TS-1095-A16B3-D1_C493026.html"
+			(at 0 -12.7 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C493026"
+			(at 0 -15.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(symbol "TS-1095-A16B3-D1_0_1"
+			(polyline
+				(pts
+					(xy -2.54 -2.54) (xy 2.54 -2.54)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(polyline
+				(pts
+					(xy -2.54 2.54) (xy 2.54 2.54)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(polyline
+				(pts
+					(xy -0.76 1.27) (xy -0.76 -1.02)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(polyline
+				(pts
+					(xy 0 -2.54) (xy 0 -0.76)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(polyline
+				(pts
+					(xy 0 1.52) (xy 0 0.76)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(polyline
+				(pts
+					(xy 0 2.54) (xy 0 1.52)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(polyline
+				(pts
+					(xy -0.76 0.25) (xy -1.02 0.25) (xy -1.02 0) (xy -0.76 0)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(pin unspecified line
+				(at -5.08 2.54 0)
+				(length 5.08)
+				(name "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 5.08 2.54 180)
+				(length 5.08)
+				(name "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -5.08 -2.54 0)
+				(length 5.08)
+				(name "3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 5.08 -2.54 180)
+				(length 5.08)
+				(name "4"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "4"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+	)
+	(symbol "USB-307HE-B-SU"
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "CN"
+			(at 0 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "USB-307HE-B-SU"
+			(at 0 -27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ":USB-TYPE-C-SMD_USB-307HE-B-SU"
+			(at 0 -30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/Others_HOOYA-USB-307HE-B-SU_C309351.html"
+			(at 0 -33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C309351"
+			(at 0 -35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(symbol "USB-307HE-B-SU_0_1"
+			(rectangle
+				(start -12.7 20.32)
+				(end 12.7 -17.78)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type background)
+				)
+			)
+			(pin unspecified line
+				(at -17.78 12.7 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "A1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -17.78 -10.16 0)
+				(length 5.08)
+				(name "SSRXN2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "A10"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -17.78 -12.7 0)
+				(length 5.08)
+				(name "SSRXP2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "A11"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -17.78 -15.24 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "A12"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -17.78 10.16 0)
+				(length 5.08)
+				(name "SSTXP1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "A2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -17.78 7.62 0)
+				(length 5.08)
+				(name "SSTXN1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "A3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -17.78 5.08 0)
+				(length 5.08)
+				(name "VBUS"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "A4"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -17.78 2.54 0)
+				(length 5.08)
+				(name "CC1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "A5"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -17.78 0 0)
+				(length 5.08)
+				(name "DP1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "A6"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -17.78 -2.54 0)
+				(length 5.08)
+				(name "DN1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "A7"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -17.78 -5.08 0)
+				(length 5.08)
+				(name "SBU1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "A8"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -17.78 -7.62 0)
+				(length 5.08)
+				(name "VBUS"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "A9"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 17.78 -15.24 180)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "B1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 17.78 7.62 180)
+				(length 5.08)
+				(name "SSRXN1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "B10"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 17.78 10.16 180)
+				(length 5.08)
+				(name "SSRXP1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "B11"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 17.78 12.7 180)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "B12"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 17.78 -12.7 180)
+				(length 5.08)
+				(name "SSTXP2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "B2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 17.78 -10.16 180)
+				(length 5.08)
+				(name "SSTXN2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "B3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 17.78 -7.62 180)
+				(length 5.08)
+				(name "VBUS"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "B4"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 17.78 -5.08 180)
+				(length 5.08)
+				(name "CC2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "B5"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 17.78 -2.54 180)
+				(length 5.08)
+				(name "DP2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "B6"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 17.78 0 180)
+				(length 5.08)
+				(name "DN2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "B7"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 17.78 2.54 180)
+				(length 5.08)
+				(name "SBU2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "B8"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 17.78 5.08 180)
+				(length 5.08)
+				(name "VBUS"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "B9"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 0 25.4 270)
+				(length 5.08)
+				(name "SH"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "SH1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 0 -22.86 90)
+				(length 5.08)
+				(name "SH2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "SH2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 2.54 -22.86 90)
+				(length 5.08)
+				(name "SH4"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "SH2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 2.54 25.4 270)
+				(length 5.08)
+				(name "SH"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "SH3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+	)
 	(symbol "VGDD79S868N0S1"
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -9054,367 +11038,295 @@
 			)
 		)
 	)
-  (symbol "PJ-320D"
+	(symbol "XC6206P332MR"
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "U"
+			(at 0 10.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "XC6206P332MR"
+			(at 0.254 -17.272 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ":SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR"
+			(at 0.254 -19.812 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/Low-Dropout-Regulators-LDO_XC6206P332MR_C5446.html"
+			(at 0.254 -22.352 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C5446"
+			(at 0.254 -24.892 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(symbol "XC6206P332MR_0_1"
+			(rectangle
+				(start -7.62 2.54)
+				(end 7.62 -7.62)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type background)
+				)
+			)
+			(pin unspecified line
+				(at 0 -12.7 90)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at -12.7 0 0)
+				(length 5.08)
+				(name "Vin"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin unspecified line
+				(at 12.7 0 180)
+				(length 5.08)
+				(name "Vout"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+	)
+  (symbol "SH-4AWB"
     (in_bom yes)
     (on_board yes)
     (property
       "Reference"
       "CN"
       (id 0)
-      (at 0 7.62 0)
+      (at 0 13.97 0)
       (effects (font (size 1.27 1.27) ) )
     )
     (property
       "Value"
-      "PJ-320D"
+      "SH-4AWB"
       (id 1)
-      (at 0 -10.16 0)
+      (at 0 -13.97 0)
       (effects (font (size 1.27 1.27) ) )
     )
     (property
       "Footprint"
-      ":AUDIO-SMD_PJ-320D"
+      ":CONN-SMD_4P-P1.00_665104131822"
       (id 2)
-      (at 0 -12.70 0)
-      (effects (font (size 1.27 1.27) ) hide)
-    )
-    (property
-      "Datasheet"
-      "https://lcsc.com/product-detail/Audio-Video-Connectors_SHOU-HAN-PJ-320D_C431535.html"
-      (id 3)
-      (at 0 -15.24 0)
+      (at 0 -16.51 0)
       (effects (font (size 1.27 1.27) ) hide)
     )
     (property
       "LCSC Part"
-      "C431535"
+      "C20625577"
       (id 5)
-      (at 0 -17.78 0)
+      (at 0 -19.05 0)
       (effects (font (size 1.27 1.27) ) hide)
     )
-    (symbol "PJ-320D_0_1"
+    (symbol "SH-4AWB_0_1"
       (rectangle
-        (start -10.92 -0.00)
-        (end -9.40 -4.57)
+        (start -1.27 6.35)
+        (end 3.81 -6.35)
         (stroke (width 0) (type default) (color 0 0 0 0))
         (fill (type background))
       )
-      (polyline
-        (pts
-          (xy 0.00 -5.08) (xy -5.84 -5.08) (xy -6.35 -4.06) (xy -6.86 -5.08)
-        )
-        (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type none))
-      )
-      (polyline
-        (pts
-          (xy 0.00 -2.54) (xy -4.57 -2.54) (xy -5.08 -1.52) (xy -5.59 -2.54)
-        )
-        (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type none))
-      )
-      (polyline
-        (pts
-          (xy 1.02 -0.00) (xy -3.30 -0.00) (xy -3.81 -1.02) (xy -4.32 -0.00)
-        )
-        (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type none))
-      )
-      (polyline
-        (pts
-          (xy 0.00 2.54) (xy -10.16 2.54) (xy -10.16 -0.00)
-        )
+      (circle
+        (center 0.00 5.08)
+        (radius 0.38)
         (stroke (width 0) (type default) (color 0 0 0 0))
         (fill (type none))
       )
       (pin unspecified line
-        (at 5.08 -0.00 180)
-        (length 5.08)
-        (name "4" (effects (font (size 1.27 1.27))))
-        (number "4" (effects (font (size 1.27 1.27))))
+        (at -3.81 3.81 0)
+        (length 2.54)
+        (name "1" (effects (font (size 1.27 1.27))))
+        (number "1" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at 5.08 -5.08 180)
-        (length 5.08)
+        (at -3.81 1.27 0)
+        (length 2.54)
         (name "2" (effects (font (size 1.27 1.27))))
         (number "2" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at 5.08 -2.54 180)
-        (length 5.08)
+        (at -3.81 -1.27 0)
+        (length 2.54)
         (name "3" (effects (font (size 1.27 1.27))))
         (number "3" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at 5.08 2.54 180)
-        (length 5.08)
-        (name "1" (effects (font (size 1.27 1.27))))
-        (number "1" (effects (font (size 1.27 1.27))))
-      )
-    )
-  )
-  (symbol "7*7*6-6PWX"
-    (in_bom yes)
-    (on_board yes)
-    (property
-      "Reference"
-      "SW"
-      (id 0)
-      (at 0 10.16 0)
-      (effects (font (size 1.27 1.27) ) )
-    )
-    (property
-      "Value"
-      "7*7*6-6P WX"
-      (id 1)
-      (at 0 -10.16 0)
-      (effects (font (size 1.27 1.27) ) )
-    )
-    (property
-      "Footprint"
-      ":SW-SMD_L7.0-W7.0-P1.40-LS7.4"
-      (id 2)
-      (at 0 -12.70 0)
-      (effects (font (size 1.27 1.27) ) hide)
-    )
-    (property
-      "LCSC Part"
-      "C2858288"
-      (id 5)
-      (at 0 -15.24 0)
-      (effects (font (size 1.27 1.27) ) hide)
-    )
-    (symbol "7*7*6-6PWX_0_1"
-      (rectangle
-        (start -7.62 7.62)
-        (end 7.62 -7.62)
-        (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type background))
+        (at -3.81 -3.81 0)
+        (length 2.54)
+        (name "4" (effects (font (size 1.27 1.27))))
+        (number "4" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at 12.70 5.08 180)
-        (length 5.08)
-        (name "6" (effects (font (size 1.27 1.27))))
-        (number "6" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 12.70 -0.00 180)
-        (length 5.08)
+        (at 2.54 8.89 270)
+        (length 2.54)
         (name "5" (effects (font (size 1.27 1.27))))
         (number "5" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at 12.70 -5.08 180)
-        (length 5.08)
-        (name "4" (effects (font (size 1.27 1.27))))
-        (number "4" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at -12.70 -5.08 0)
-        (length 5.08)
-        (name "3" (effects (font (size 1.27 1.27))))
-        (number "3" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at -12.70 -0.00 0)
-        (length 5.08)
-        (name "2" (effects (font (size 1.27 1.27))))
-        (number "2" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at -12.70 5.08 0)
-        (length 5.08)
-        (name "1" (effects (font (size 1.27 1.27))))
-        (number "1" (effects (font (size 1.27 1.27))))
+        (at 2.54 -8.89 90)
+        (length 2.54)
+        (name "6" (effects (font (size 1.27 1.27))))
+        (number "6" (effects (font (size 1.27 1.27))))
       )
     )
   )
-  (symbol "TS-1095-A16B3-D1"
+  (symbol "1.25-4PWB"
     (in_bom yes)
     (on_board yes)
     (property
       "Reference"
-      "SW"
+      "FPC"
       (id 0)
-      (at 0 7.62 0)
+      (at 0 15.24 0)
       (effects (font (size 1.27 1.27) ) )
     )
     (property
       "Value"
-      "TS-1095-A16B3-D1"
+      "1.25-4PWB"
       (id 1)
-      (at 0 -7.62 0)
+      (at 0 -12.70 0)
       (effects (font (size 1.27 1.27) ) )
     )
     (property
       "Footprint"
-      ":SW-TH_4P-L6.0-W6.0-P4.50-LS6.5"
+      ":CONN-SMD_1.25-4PWB"
       (id 2)
-      (at 0 -10.16 0)
-      (effects (font (size 1.27 1.27) ) hide)
-    )
-    (property
-      "Datasheet"
-      "https://lcsc.com/product-detail/Tactile-Switches_Yuandi-TS-1095-A16B3-D1_C493026.html"
-      (id 3)
-      (at 0 -12.70 0)
+      (at 0 -15.24 0)
       (effects (font (size 1.27 1.27) ) hide)
     )
     (property
       "LCSC Part"
-      "C493026"
+      "C2905011"
       (id 5)
-      (at 0 -15.24 0)
+      (at 0 -17.78 0)
       (effects (font (size 1.27 1.27) ) hide)
     )
-    (symbol "TS-1095-A16B3-D1_0_1"
-      (polyline
-        (pts
-          (xy -2.54 2.54) (xy 2.54 2.54)
-        )
+    (symbol "1.25-4PWB_0_1"
+      (rectangle
+        (start -2.54 7.62)
+        (end 3.81 -5.08)
         (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type none))
+        (fill (type background))
       )
-      (polyline
-        (pts
-          (xy -2.54 -2.54) (xy 2.54 -2.54)
-        )
-        (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type none))
-      )
-      (polyline
-        (pts
-          (xy 0.00 2.54) (xy 0.00 1.52)
-        )
-        (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type none))
-      )
-      (polyline
-        (pts
-          (xy 0.00 -2.54) (xy 0.00 -0.76)
-        )
-        (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type none))
-      )
-      (polyline
-        (pts
-          (xy 0.00 1.52) (xy 0.00 0.76)
-        )
-        (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type none))
-      )
-      (polyline
-        (pts
-          (xy -0.76 1.27) (xy -0.76 -1.02)
-        )
-        (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type none))
-      )
-      (polyline
-        (pts
-          (xy -0.76 0.25) (xy -1.02 0.25) (xy -1.02 -0.00) (xy -0.76 -0.00)
-        )
+      (circle
+        (center 0.00 6.35)
+        (radius 0.38)
         (stroke (width 0) (type default) (color 0 0 0 0))
         (fill (type none))
       )
       (pin unspecified line
-        (at -5.08 2.54 0)
-        (length 5.08)
-        (name "1" (effects (font (size 1.27 1.27))))
-        (number "1" (effects (font (size 1.27 1.27))))
+        (at 2.54 -7.62 90)
+        (length 2.54)
+        (name "6" (effects (font (size 1.27 1.27))))
+        (number "6" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at 5.08 2.54 180)
-        (length 5.08)
-        (name "2" (effects (font (size 1.27 1.27))))
-        (number "2" (effects (font (size 1.27 1.27))))
+        (at 2.54 10.16 270)
+        (length 2.54)
+        (name "5" (effects (font (size 1.27 1.27))))
+        (number "5" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
         (at -5.08 -2.54 0)
-        (length 5.08)
+        (length 2.54)
+        (name "4" (effects (font (size 1.27 1.27))))
+        (number "4" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at -5.08 -0.00 0)
+        (length 2.54)
         (name "3" (effects (font (size 1.27 1.27))))
         (number "3" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at 5.08 -2.54 180)
-        (length 5.08)
-        (name "4" (effects (font (size 1.27 1.27))))
-        (number "4" (effects (font (size 1.27 1.27))))
-      )
-    )
-  )
-  (symbol "TCS40DPR,LF"
-    (in_bom yes)
-    (on_board yes)
-    (property
-      "Reference"
-      "U"
-      (id 0)
-      (at 0 10.16 0)
-      (effects (font (size 1.27 1.27) ) )
-    )
-    (property
-      "Value"
-      "TCS40DPR,LF"
-      (id 1)
-      (at 0 -5.08 0)
-      (effects (font (size 1.27 1.27) ) )
-    )
-    (property
-      "Footprint"
-      ":SOT-23F_L2.9-W1.8-P0.95-LS2.4-BR"
-      (id 2)
-      (at 0 -7.62 0)
-      (effects (font (size 1.27 1.27) ) hide)
-    )
-    (property
-      "Datasheet"
-      "https://lcsc.com/product-detail/Sensors_TOSHIBA_TCS40DPR-LF_TCS40DPR-LF_C150116.html"
-      (id 3)
-      (at 0 -10.16 0)
-      (effects (font (size 1.27 1.27) ) hide)
-    )
-    (property
-      "LCSC Part"
-      "C150116"
-      (id 5)
-      (at 0 -12.70 0)
-      (effects (font (size 1.27 1.27) ) hide)
-    )
-    (symbol "TCS40DPR,LF_0_1"
-      (rectangle
-        (start -10.16 2.54)
-        (end 10.16 -5.08)
-        (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type background))
-      )
-      (circle
-        (center -8.89 1.27)
-        (radius 0.38)
-        (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type none))
-      )
-      (pin unspecified line
-        (at -12.70 -0.00 0)
+        (at -5.08 2.54 0)
         (length 2.54)
-        (name "VCC" (effects (font (size 1.27 1.27))))
-        (number "1" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 12.70 -0.00 180)
-        (length 2.54)
-        (name "VOUT" (effects (font (size 1.27 1.27))))
+        (name "2" (effects (font (size 1.27 1.27))))
         (number "2" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at 0.00 5.08 270)
+        (at -5.08 5.08 0)
         (length 2.54)
-        (name "GND" (effects (font (size 1.27 1.27))))
-        (number "3" (effects (font (size 1.27 1.27))))
+        (name "1" (effects (font (size 1.27 1.27))))
+        (number "1" (effects (font (size 1.27 1.27))))
       )
     )
   )
-  (symbol "MXDLN16TL"
+  (symbol "MCP130T-315I_TT"
     (in_bom yes)
     (on_board yes)
     (property
@@ -9426,613 +11338,411 @@
     )
     (property
       "Value"
-      "MXDLN16TL"
+      "MCP130T-315I/TT"
       (id 1)
       (at 0 -7.62 0)
       (effects (font (size 1.27 1.27) ) )
     )
     (property
       "Footprint"
-      ":LGA-6_L1.1-W0.7-P0.40-BL"
+      ":SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR"
       (id 2)
       (at 0 -10.16 0)
       (effects (font (size 1.27 1.27) ) hide)
     )
     (property
-      "Datasheet"
-      "https://lcsc.com/product-detail/Low-Noise-OpAmps_Maxscend-MXDLN16TL_C462323.html"
-      (id 3)
+      "LCSC Part"
+      "C625194"
+      (id 5)
       (at 0 -12.70 0)
       (effects (font (size 1.27 1.27) ) hide)
     )
-    (property
-      "LCSC Part"
-      "C462323"
-      (id 5)
-      (at 0 -15.24 0)
-      (effects (font (size 1.27 1.27) ) hide)
-    )
-    (symbol "MXDLN16TL_0_1"
+    (symbol "MCP130T-315I_TT_0_1"
       (rectangle
-        (start -8.89 5.08)
-        (end 8.89 -5.08)
+        (start -2.54 5.08)
+        (end 7.62 -5.08)
         (stroke (width 0) (type default) (color 0 0 0 0))
         (fill (type background))
       )
       (circle
-        (center -7.62 3.81)
+        (center -1.27 3.81)
         (radius 0.38)
         (stroke (width 0) (type default) (color 0 0 0 0))
         (fill (type none))
       )
       (pin unspecified line
-        (at -11.43 2.54 0)
+        (at -5.08 -2.54 0)
         (length 2.54)
-        (name "GND" (effects (font (size 1.27 1.27))))
-        (number "1" (effects (font (size 1.27 1.27))))
+        (name "VSS" (effects (font (size 1.27 1.27))))
+        (number "3" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at -11.43 -0.00 0)
+        (at -5.08 -0.00 0)
         (length 2.54)
         (name "VDD" (effects (font (size 1.27 1.27))))
         (number "2" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at -11.43 -2.54 0)
+        (at -5.08 2.54 0)
         (length 2.54)
-        (name "RFOUT" (effects (font (size 1.27 1.27))))
-        (number "3" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 11.43 -2.54 180)
-        (length 2.54)
-        (name "GND" (effects (font (size 1.27 1.27))))
-        (number "4" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 11.43 -0.00 180)
-        (length 2.54)
-        (name "RFIN" (effects (font (size 1.27 1.27))))
-        (number "5" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 11.43 2.54 180)
-        (length 2.54)
-        (name "EN" (effects (font (size 1.27 1.27))))
-        (number "6" (effects (font (size 1.27 1.27))))
+        (name "~{RST}" (effects (font (size 1.27 1.27))))
+        (number "1" (effects (font (size 1.27 1.27))))
       )
     )
   )
-  (symbol "SAFEB1G57KE0F00R15"
+  (symbol "LM293ST"
     (in_bom yes)
     (on_board yes)
     (property
       "Reference"
-      "L"
+      "U"
       (id 0)
       (at 0 7.62 0)
       (effects (font (size 1.27 1.27) ) )
     )
     (property
       "Value"
-      "SAFEB1G57KE0F00R15"
+      "LM293ST"
       (id 1)
-      (at 0 -7.62 0)
+      (at 0 -10.16 0)
       (effects (font (size 1.27 1.27) ) )
     )
     (property
       "Footprint"
-      ":FILTER-SMD_5P-L1.4-W1.1-L_HDF1588E-B2"
+      ":MINISO-8_L3.0-W3.0-P0.65-LS4.9-BL"
       (id 2)
-      (at 0 -10.16 0)
-      (effects (font (size 1.27 1.27) ) hide)
-    )
-    (property
-      "Datasheet"
-      "https://lcsc.com/product-detail/Filters_muRata_SAFEB1G57KE0F00R15_SAFEB1G57KE0F00R15_C91645.html"
-      (id 3)
       (at 0 -12.70 0)
       (effects (font (size 1.27 1.27) ) hide)
     )
     (property
-      "LCSC Part"
-      "C91645"
-      (id 5)
+      "Datasheet"
+      "https://lcsc.com/product-detail/Others_STMicroelectronics_LM293ST_STMicroelectronics-LM293ST_C143242.html"
+      (id 3)
       (at 0 -15.24 0)
       (effects (font (size 1.27 1.27) ) hide)
     )
-    (symbol "SAFEB1G57KE0F00R15_0_1"
+    (property
+      "LCSC Part"
+      "C143242"
+      (id 5)
+      (at 0 -17.78 0)
+      (effects (font (size 1.27 1.27) ) hide)
+    )
+    (symbol "LM293ST_0_1"
       (rectangle
-        (start -10.16 8.13)
-        (end 10.16 -7.62)
+        (start -17.78 5.08)
+        (end 17.78 -7.62)
         (stroke (width 0) (type default) (color 0 0 0 0))
         (fill (type background))
       )
       (circle
-        (center -8.89 6.86)
-        (radius 0.38)
-        (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type none))
-      )
-      (circle
-        (center -8.89 6.86)
+        (center -16.51 3.81)
         (radius 0.38)
         (stroke (width 0) (type default) (color 0 0 0 0))
         (fill (type none))
       )
       (pin unspecified line
-        (at -12.70 2.54 0)
+        (at -20.32 2.54 0)
         (length 2.54)
-        (name "IN" (effects (font (size 1.27 1.27))))
+        (name "OUTPUT1" (effects (font (size 1.27 1.27))))
         (number "1" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at 12.70 -2.54 180)
+        (at -20.32 -0.00 0)
         (length 2.54)
-        (name "GND" (effects (font (size 1.27 1.27))))
+        (name "INTPUT1-" (effects (font (size 1.27 1.27))))
         (number "2" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at 12.70 -0.00 180)
+        (at -20.32 -2.54 0)
         (length 2.54)
-        (name "GND" (effects (font (size 1.27 1.27))))
+        (name "INPUT1+" (effects (font (size 1.27 1.27))))
         (number "3" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at -12.70 -2.54 0)
+        (at -20.32 -5.08 0)
         (length 2.54)
-        (name "OUT" (effects (font (size 1.27 1.27))))
+        (name "VCC-" (effects (font (size 1.27 1.27))))
         (number "4" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at 12.70 2.54 180)
+        (at 20.32 -5.08 180)
         (length 2.54)
-        (name "GND" (effects (font (size 1.27 1.27))))
+        (name "INPUT2+" (effects (font (size 1.27 1.27))))
         (number "5" (effects (font (size 1.27 1.27))))
       )
+      (pin unspecified line
+        (at 20.32 -2.54 180)
+        (length 2.54)
+        (name "INPUT2-" (effects (font (size 1.27 1.27))))
+        (number "6" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at 20.32 -0.00 180)
+        (length 2.54)
+        (name "OUTPUT2" (effects (font (size 1.27 1.27))))
+        (number "7" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at 20.32 2.54 180)
+        (length 2.54)
+        (name "VCC+" (effects (font (size 1.27 1.27))))
+        (number "8" (effects (font (size 1.27 1.27))))
+      )
     )
   )
-  (symbol "FEC0603CP-14NG-LRH"
+  (symbol "SI7232DN-T1-GE3"
     (in_bom yes)
     (on_board yes)
     (property
       "Reference"
-      "L"
-      (id 0)
-      (at 0 5.08 0)
-      (effects (font (size 1.27 1.27) ) )
-    )
-    (property
-      "Value"
-      "FEC0603CP-14NG-LRH"
-      (id 1)
-      (at 0 -5.08 0)
-      (effects (font (size 1.27 1.27) ) )
-    )
-    (property
-      "Footprint"
-      ":IND-SMD_L1.7-W1.0-1"
-      (id 2)
-      (at 0 -7.62 0)
-      (effects (font (size 1.27 1.27) ) hide)
-    )
-    (property
-      "Datasheet"
-      "https://lcsc.com/product-detail/Others_Prosperity-Dielectrics-FEC0603CP-14NG-LRH_C346297.html"
-      (id 3)
-      (at 0 -10.16 0)
-      (effects (font (size 1.27 1.27) ) hide)
-    )
-    (property
-      "LCSC Part"
-      "C346297"
-      (id 5)
-      (at 0 -12.70 0)
-      (effects (font (size 1.27 1.27) ) hide)
-    )
-    (symbol "FEC0603CP-14NG-LRH_0_1"
-      (arc
-        (start -4.29 -0.02)
-        (mid -2.81 -1.01)
-        (end -2.27 -0.02)
-        (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type none))
-      )
-      (arc
-        (start -2.13 -0.02)
-        (mid -0.66 -1.01)
-        (end -0.11 -0.02)
-        (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type none))
-      )
-      (arc
-        (start 0.02 -0.02)
-        (mid 1.49 -1.01)
-        (end 2.04 -0.02)
-        (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type none))
-      )
-      (arc
-        (start 2.21 -0.02)
-        (mid 3.68 -1.01)
-        (end 4.23 -0.02)
-        (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type none))
-      )
-      (pin unspecified line
-        (at 5.08 -0.00 180)
-        (length 0.762)
-        (name "2" (effects (font (size 1.27 1.27))))
-        (number "2" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at -5.08 -0.00 0)
-        (length 0.762)
-        (name "1" (effects (font (size 1.27 1.27))))
-        (number "1" (effects (font (size 1.27 1.27))))
-      )
-    )
-  )
-  (symbol "USB-307HE-B-SU"
-    (in_bom yes)
-    (on_board yes)
-    (property
-      "Reference"
-      "CN"
-      (id 0)
-      (at 0 30.48 0)
-      (effects (font (size 1.27 1.27) ) )
-    )
-    (property
-      "Value"
-      "USB-307HE-B-SU"
-      (id 1)
-      (at 0 -27.94 0)
-      (effects (font (size 1.27 1.27) ) )
-    )
-    (property
-      "Footprint"
-      ":USB-TYPE-C-SMD_USB-307HE-B-SU"
-      (id 2)
-      (at 0 -30.48 0)
-      (effects (font (size 1.27 1.27) ) hide)
-    )
-    (property
-      "Datasheet"
-      "https://lcsc.com/product-detail/Others_HOOYA-USB-307HE-B-SU_C309351.html"
-      (id 3)
-      (at 0 -33.02 0)
-      (effects (font (size 1.27 1.27) ) hide)
-    )
-    (property
-      "LCSC Part"
-      "C309351"
-      (id 5)
-      (at 0 -35.56 0)
-      (effects (font (size 1.27 1.27) ) hide)
-    )
-    (symbol "USB-307HE-B-SU_0_1"
-      (rectangle
-        (start -12.70 20.32)
-        (end 12.70 -17.78)
-        (stroke (width 0) (type default) (color 0 0 0 0))
-        (fill (type background))
-      )
-      (pin unspecified line
-        (at -17.78 12.70 0)
-        (length 5.08)
-        (name "GND" (effects (font (size 1.27 1.27))))
-        (number "A1" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at -17.78 10.16 0)
-        (length 5.08)
-        (name "SSTXP1" (effects (font (size 1.27 1.27))))
-        (number "A2" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at -17.78 7.62 0)
-        (length 5.08)
-        (name "SSTXN1" (effects (font (size 1.27 1.27))))
-        (number "A3" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at -17.78 5.08 0)
-        (length 5.08)
-        (name "VBUS" (effects (font (size 1.27 1.27))))
-        (number "A4" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at -17.78 2.54 0)
-        (length 5.08)
-        (name "CC1" (effects (font (size 1.27 1.27))))
-        (number "A5" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at -17.78 -0.00 0)
-        (length 5.08)
-        (name "DP1" (effects (font (size 1.27 1.27))))
-        (number "A6" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at -17.78 -2.54 0)
-        (length 5.08)
-        (name "DN1" (effects (font (size 1.27 1.27))))
-        (number "A7" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at -17.78 -5.08 0)
-        (length 5.08)
-        (name "SBU1" (effects (font (size 1.27 1.27))))
-        (number "A8" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at -17.78 -7.62 0)
-        (length 5.08)
-        (name "VBUS" (effects (font (size 1.27 1.27))))
-        (number "A9" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at -17.78 -10.16 0)
-        (length 5.08)
-        (name "SSRXN2" (effects (font (size 1.27 1.27))))
-        (number "A10" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at -17.78 -12.70 0)
-        (length 5.08)
-        (name "SSRXP2" (effects (font (size 1.27 1.27))))
-        (number "A11" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at -17.78 -15.24 0)
-        (length 5.08)
-        (name "GND" (effects (font (size 1.27 1.27))))
-        (number "A12" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 17.78 -15.24 180)
-        (length 5.08)
-        (name "GND" (effects (font (size 1.27 1.27))))
-        (number "B1" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 17.78 -12.70 180)
-        (length 5.08)
-        (name "SSTXP2" (effects (font (size 1.27 1.27))))
-        (number "B2" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 17.78 -10.16 180)
-        (length 5.08)
-        (name "SSTXN2" (effects (font (size 1.27 1.27))))
-        (number "B3" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 17.78 -7.62 180)
-        (length 5.08)
-        (name "VBUS" (effects (font (size 1.27 1.27))))
-        (number "B4" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 17.78 -5.08 180)
-        (length 5.08)
-        (name "CC2" (effects (font (size 1.27 1.27))))
-        (number "B5" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 17.78 -2.54 180)
-        (length 5.08)
-        (name "DP2" (effects (font (size 1.27 1.27))))
-        (number "B6" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 17.78 -0.00 180)
-        (length 5.08)
-        (name "DN2" (effects (font (size 1.27 1.27))))
-        (number "B7" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 17.78 2.54 180)
-        (length 5.08)
-        (name "SBU2" (effects (font (size 1.27 1.27))))
-        (number "B8" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 17.78 5.08 180)
-        (length 5.08)
-        (name "VBUS" (effects (font (size 1.27 1.27))))
-        (number "B9" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 17.78 7.62 180)
-        (length 5.08)
-        (name "SSRXN1" (effects (font (size 1.27 1.27))))
-        (number "B10" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 17.78 10.16 180)
-        (length 5.08)
-        (name "SSRXP1" (effects (font (size 1.27 1.27))))
-        (number "B11" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 17.78 12.70 180)
-        (length 5.08)
-        (name "GND" (effects (font (size 1.27 1.27))))
-        (number "B12" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 0.00 25.40 270)
-        (length 5.08)
-        (name "SH" (effects (font (size 1.27 1.27))))
-        (number "SH1" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 0.00 -22.86 90)
-        (length 5.08)
-        (name "SH2" (effects (font (size 1.27 1.27))))
-        (number "SH2" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 2.54 25.40 270)
-        (length 5.08)
-        (name "SH" (effects (font (size 1.27 1.27))))
-        (number "SH3" (effects (font (size 1.27 1.27))))
-      )
-      (pin unspecified line
-        (at 2.54 -22.86 90)
-        (length 5.08)
-        (name "SH4" (effects (font (size 1.27 1.27))))
-        (number "SH2" (effects (font (size 1.27 1.27))))
-      )
-    )
-  )
-  (symbol "SM04B-SRSS-TB(LF)(SN)"
-    (in_bom yes)
-    (on_board yes)
-    (property
-      "Reference"
-      "CN"
+      "Q"
       (id 0)
       (at 0 8.89 0)
       (effects (font (size 1.27 1.27) ) )
     )
     (property
       "Value"
-      "SM04B-SRSS-TB (LF)(SN)"
+      "SI7232DN-T1-GE3"
       (id 1)
-      (at 0 -1.27 0)
+      (at 0 -8.89 0)
       (effects (font (size 1.27 1.27) ) )
     )
     (property
       "Footprint"
-      ":CONN-SMD_4P-P1.00_SM04B-SRSS-TB-LF-SN"
+      ":POWER-1212-8_L3.3-W3.3-P0.66-LS3.3-BL"
       (id 2)
-      (at 0 -3.81 0)
+      (at 0 -11.43 0)
       (effects (font (size 1.27 1.27) ) hide)
     )
     (property
       "Datasheet"
-      "https://lcsc.com/product-detail/Others_JST-Sales-America__JST-Sales-America-SM04B-SRSS-TB-LF-SN_C160404.html"
+      "https://lcsc.com/product-detail/MOSFET_VISHAY_SI7232DN-T1-GE3_SI7232DN-T1-GE3_C144854.html"
       (id 3)
-      (at 0 -6.35 0)
+      (at 0 -13.97 0)
       (effects (font (size 1.27 1.27) ) hide)
     )
     (property
       "LCSC Part"
-      "C160404"
+      "C144854"
       (id 5)
-      (at 0 -8.89 0)
+      (at 0 -16.51 0)
       (effects (font (size 1.27 1.27) ) hide)
     )
-    (symbol "SM04B-SRSS-TB(LF)(SN)_0_1"
+    (symbol "SI7232DN-T1-GE3_0_1"
       (rectangle
-        (start -11.43 1.27)
-        (end 11.43 -3.81)
+        (start -7.62 6.86)
+        (end 7.62 -6.86)
         (stroke (width 0) (type default) (color 0 0 0 0))
         (fill (type background))
       )
+      (circle
+        (center -6.35 5.59)
+        (radius 0.38)
+        (stroke (width 0) (type default) (color 0 0 0 0))
+        (fill (type none))
+      )
+      (circle
+        (center -6.35 5.59)
+        (radius 0.38)
+        (stroke (width 0) (type default) (color 0 0 0 0))
+        (fill (type none))
+      )
       (pin unspecified line
-        (at -3.81 3.81 270)
+        (at -10.16 3.81 0)
         (length 2.54)
-        (name "1" (effects (font (size 1.27 1.27))))
+        (name "S1" (effects (font (size 1.27 1.27))))
         (number "1" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at -1.27 3.81 270)
+        (at -10.16 1.27 0)
         (length 2.54)
-        (name "2" (effects (font (size 1.27 1.27))))
+        (name "G1" (effects (font (size 1.27 1.27))))
         (number "2" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at 1.27 3.81 270)
+        (at -10.16 -1.27 0)
         (length 2.54)
-        (name "3" (effects (font (size 1.27 1.27))))
+        (name "S2" (effects (font (size 1.27 1.27))))
         (number "3" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at 3.81 3.81 270)
+        (at -10.16 -3.81 0)
         (length 2.54)
-        (name "4" (effects (font (size 1.27 1.27))))
+        (name "G2" (effects (font (size 1.27 1.27))))
         (number "4" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at 8.89 3.81 270)
+        (at 10.16 -3.81 180)
         (length 2.54)
-        (name "5" (effects (font (size 1.27 1.27))))
+        (name "D2" (effects (font (size 1.27 1.27))))
         (number "5" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at -8.89 3.81 270)
+        (at 10.16 -1.27 180)
         (length 2.54)
-        (name "6" (effects (font (size 1.27 1.27))))
+        (name "D2" (effects (font (size 1.27 1.27))))
         (number "6" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at 10.16 1.27 180)
+        (length 2.54)
+        (name "D1" (effects (font (size 1.27 1.27))))
+        (number "7" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at 10.16 3.81 180)
+        (length 2.54)
+        (name "D1" (effects (font (size 1.27 1.27))))
+        (number "8" (effects (font (size 1.27 1.27))))
       )
     )
   )
-  (symbol "XC6206P332MR"
+  (symbol "TPS2H160BQPWPRQ1"
     (in_bom yes)
     (on_board yes)
     (property
       "Reference"
       "U"
       (id 0)
-      (at 0 10.16 0)
+      (at 0 15.24 0)
       (effects (font (size 1.27 1.27) ) )
     )
     (property
       "Value"
-      "XC6206P332MR"
+      "TPS2H160BQPWPRQ1"
       (id 1)
-      (at 0 -10.16 0)
+      (at 0 -15.24 0)
       (effects (font (size 1.27 1.27) ) )
     )
     (property
       "Footprint"
-      ":SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR"
+      ":HTSSOP-16_L5.0-W4.4-P0.65-LS6.4-BL-EP-A"
       (id 2)
-      (at 0 -12.70 0)
-      (effects (font (size 1.27 1.27) ) hide)
-    )
-    (property
-      "Datasheet"
-      "https://lcsc.com/product-detail/Low-Dropout-Regulators-LDO_XC6206P332MR_C5446.html"
-      (id 3)
-      (at 0 -15.24 0)
+      (at 0 -17.78 0)
       (effects (font (size 1.27 1.27) ) hide)
     )
     (property
       "LCSC Part"
-      "C5446"
+      "C2680441"
       (id 5)
-      (at 0 -17.78 0)
+      (at 0 -20.32 0)
       (effects (font (size 1.27 1.27) ) hide)
     )
-    (symbol "XC6206P332MR_0_1"
+    (symbol "TPS2H160BQPWPRQ1_0_1"
       (rectangle
-        (start -5.08 7.62)
-        (end 5.08 -7.62)
+        (start -8.89 12.70)
+        (end 8.89 -12.70)
         (stroke (width 0) (type default) (color 0 0 0 0))
         (fill (type background))
       )
+      (circle
+        (center -7.62 11.43)
+        (radius 0.38)
+        (stroke (width 0) (type default) (color 0 0 0 0))
+        (fill (type none))
+      )
       (pin unspecified line
-        (at 10.16 -5.08 180)
-        (length 5.08)
-        (name "GND" (effects (font (size 1.27 1.27))))
+        (at -11.43 10.16 0)
+        (length 2.54)
+        (name "IN1" (effects (font (size 1.27 1.27))))
         (number "1" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at -10.16 -0.00 0)
-        (length 5.08)
-        (name "Vin" (effects (font (size 1.27 1.27))))
+        (at -11.43 7.62 0)
+        (length 2.54)
+        (name "IN2" (effects (font (size 1.27 1.27))))
         (number "2" (effects (font (size 1.27 1.27))))
       )
       (pin unspecified line
-        (at 10.16 5.08 180)
-        (length 5.08)
-        (name "Vout" (effects (font (size 1.27 1.27))))
+        (at -11.43 5.08 0)
+        (length 2.54)
+        (name "DIAG_EN" (effects (font (size 1.27 1.27))))
         (number "3" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at -11.43 2.54 0)
+        (length 2.54)
+        (name "~{FAULT}" (effects (font (size 1.27 1.27))))
+        (number "4" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at -11.43 -0.00 0)
+        (length 2.54)
+        (name "SEL" (effects (font (size 1.27 1.27))))
+        (number "5" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at -11.43 -2.54 0)
+        (length 2.54)
+        (name "CS" (effects (font (size 1.27 1.27))))
+        (number "6" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at -11.43 -5.08 0)
+        (length 2.54)
+        (name "CL" (effects (font (size 1.27 1.27))))
+        (number "7" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at -11.43 -7.62 0)
+        (length 2.54)
+        (name "GND" (effects (font (size 1.27 1.27))))
+        (number "8" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at -11.43 -10.16 0)
+        (length 2.54)
+        (name "THER" (effects (font (size 1.27 1.27))))
+        (number "9" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at 11.43 -8.89 180)
+        (length 2.54)
+        (name "NC" (effects (font (size 1.27 1.27))))
+        (number "10" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at 11.43 -6.35 180)
+        (length 2.54)
+        (name "OUT2" (effects (font (size 1.27 1.27))))
+        (number "11" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at 11.43 -3.81 180)
+        (length 2.54)
+        (name "OUT2" (effects (font (size 1.27 1.27))))
+        (number "12" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at 11.43 -1.27 180)
+        (length 2.54)
+        (name "VS" (effects (font (size 1.27 1.27))))
+        (number "13" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at 11.43 1.27 180)
+        (length 2.54)
+        (name "VS" (effects (font (size 1.27 1.27))))
+        (number "14" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at 11.43 3.81 180)
+        (length 2.54)
+        (name "OUT1" (effects (font (size 1.27 1.27))))
+        (number "15" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at 11.43 6.35 180)
+        (length 2.54)
+        (name "OUT1" (effects (font (size 1.27 1.27))))
+        (number "16" (effects (font (size 1.27 1.27))))
+      )
+      (pin unspecified line
+        (at 11.43 8.89 180)
+        (length 2.54)
+        (name "EP" (effects (font (size 1.27 1.27))))
+        (number "17" (effects (font (size 1.27 1.27))))
       )
     )
   )
