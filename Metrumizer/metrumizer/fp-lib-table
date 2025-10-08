@@ -3,4 +3,6 @@
   (lib (name ".pretty")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/easyeda2kicad/.pretty")(options "")(descr ""))
   (lib (name "footprints")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/footprints.pretty")(options "")(descr ""))
   (lib (name "easyeda2kicad")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/easyeda2kicad/easyeda2kicad.pretty")(options "")(descr ""))
+  (lib (name "SamacSys_Parts")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/SamacSys_Parts.pretty")(options "")(descr ""))
+  (lib (name "KiCad")(type "KiCad")(uri "${LYRAREPO}/Hardware/kicad/libs/KiCad")(options "")(descr ""))
 )

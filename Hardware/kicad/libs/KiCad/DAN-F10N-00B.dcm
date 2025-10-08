@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP DAN-F10N-00B
+D - RF Receiver BeiDou, Galileo, GNSS, GPS 1.166GHz ~ 1.186GHz, 1.569GHz ~ 1.581GHz -164dBm 921.6kbps Not Included
+K
+F https://content.u-blox.com/sites/default/files/documents/DAN-F10N_DataSheet_UBXDOC-963802114-13074.pdf
+$ENDCMP
+#
+#End Doc Library

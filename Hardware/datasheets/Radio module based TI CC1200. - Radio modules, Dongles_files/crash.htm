@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"></head><body>
+<script type="text/javascript">
+if (navigator.serviceWorker && parent.postMessage) {
+	navigator.serviceWorker.register('./service-worker.js')
+		.then(function (reg) {
+			// console.log('connect serviceWorker success');
+			window.addEventListener('message',  function (e) {
+				if (navigator.serviceWorker.controller !== null) {
+			    	navigator.serviceWorker.controller.postMessage(e.data);
+				}
+			});
+
+      navigator.serviceWorker.addEventListener('message', function(e) {
+        window.parent.postMessage(e.data, '*');
+      });
+		})
+		.catch(function (err) {
+	    	console.log('connect serviceWorker fail', err);
+	  });
+ }
+</script>
+
+</body></html>
