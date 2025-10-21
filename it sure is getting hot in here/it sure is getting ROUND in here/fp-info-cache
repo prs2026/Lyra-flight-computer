@@ -1,4 +1,4 @@
-26857890871815921
+26844192381552787
 .pretty
 4 pads 2.54mm spacign
 
@@ -69712,13 +69712,6 @@ solder jumper open
 0
 3
 3
-KiCad
-DANF10N00B
-56-SMD Module
-Integrated Circuit
-0
-100
-100
 LED_SMD
 LED-APA102-2020
 http://www.led-color.com/upload/201604/APA102-2020%20SMD%20LED.pdf
@@ -97649,69 +97642,6 @@ rotary encoder illuminated switch vertical
 0
 9
 8
-SamacSys_Parts
-12BH349GR
-12BH349-GR-1
-Battery
-0
-2
-2
-SamacSys_Parts
-CPT1414680T
-CPT-14146-80T-2
-Inductor
-0
-2
-2
-SamacSys_Parts
-GP1575124A02
-GP.1575.12.4.A.02-1
-Antenna
-0
-1
-1
-SamacSys_Parts
-HDRRA12W64P254_3X4_1016X254X810P
-TSW-104-08-T-T-RA
-Connector
-0
-12
-12
-SamacSys_Parts
-NE555DR
-D (R-PDSO-G8)
-Integrated Circuit
-0
-8
-8
-SamacSys_Parts
-PKMCS0909E4000R1
-PKMCS0909E4000-R1-6
-Loudspeaker or Buzzer
-0
-2
-2
-SamacSys_Parts
-SON110P970X1010X230-18N
-TESEO-LIV3F
-Integrated Circuit
-0
-18
-18
-SamacSys_Parts
-TESEOLIV4FTR
-TESEO-LIV4FTR-1
-Integrated Circuit
-0
-18
-18
-SamacSys_Parts
-TS0101F020P
-TS0101F020P-1
-Switch
-0
-3
-3
 Sensor
 ASAIR_AM2302_P2.54mm_Lead2.75mm_TabDown
 Temperature and humidity module, http://akizukidenshi.com/download/ds/aosong/AM2302.pdf
@@ -106924,10 +106854,24 @@ XSON-8_L4.0-W4.0-P0.80-TL-EP
 0
 9
 9
-footprints
-CONN3_2059-303&slash_998-403_WAG
+easyeda2kicad2
+CONN-TH_2P-P2.00_PH-2AK
 
-2059-303/998-403 
+
 0
-6
-6
+2
+2
+easyeda2kicad2
+WIRELM-SMD_16P-L16.0-W16.0-P2.00_LORA1280-TCXO
+
+
+0
+16
+16
+easyeda2kicad2
+X2QFN-10_L2.0-W1.5-P0.50-BL
+
+
+0
+10
+10
