@@ -20,8 +20,8 @@
 	(fp_circle (center 1.40 1.46) (end 1.43 1.46) (layer F.Fab) (width 0.06))
 	(fp_circle (center 1.65 0.95) (end 1.75 0.95) (layer Cmts.User) (width 0.20))
 	(model "C:/Users/E/Documents/GitHub/Lyra-flight-computer/Hardware/kicad/libs/easyeda2kicad/.3dshapes/SOT-23-3L_L2.9-W1.6-H1.1-LS2.8-P0.95.wrl"
-		(offset (xyz -0.530 -0.130 -0.000))
+		(offset (xyz 0.000 -0.000 -0.000))
 		(scale (xyz 1 1 1))
-		(rotate (xyz 0 0 180))
+		(rotate (xyz 0 0 270))
 	)
 )

@@ -16,8 +16,8 @@ stationdata Station3;
 #include <gpslib.h>
 #include <ArduinoEigenDense.h>
 
-//#define MODEFLIGHT
-#define MODESTATION
+#define MODEFLIGHT
+//#define MODESTATION
 
 #if !defined(MODEFLIGHT)
 #if !defined(MODESTATION)

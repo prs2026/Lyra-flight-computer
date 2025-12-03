@@ -4706,7 +4706,7 @@
 	)
 	(rectangle
 		(start 253.365 179.07)
-		(end 408.305 253.365)
+		(end 407.67 253.365)
 		(stroke
 			(width 0)
 			(type default)
@@ -4717,8 +4717,8 @@
 		(uuid 0e2562f9-895b-4799-8b7a-0dd88187807e)
 	)
 	(rectangle
-		(start 283.21 13.335)
-		(end 407.67 166.37)
+		(start 283.845 12.065)
+		(end 407.035 165.735)
 		(stroke
 			(width 0)
 			(type default)
@@ -4729,8 +4729,8 @@
 		(uuid 34c15972-dcb8-4871-8012-bf3794418ead)
 	)
 	(rectangle
-		(start 12.7 84.455)
-		(end 208.915 284.48)
+		(start 12.065 84.455)
+		(end 208.915 285.115)
 		(stroke
 			(width 0)
 			(type default)
