@@ -16312,7 +16312,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part" "C1525"
+		(property "LCSC Part" "C16772"
 			(at 244.475 33.655 0)
 			(effects
 				(font
@@ -17873,7 +17873,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part" "C1525"
+		(property "LCSC Part" "C16772"
 			(at 142.875 38.1 0)
 			(effects
 				(font
@@ -18640,76 +18640,6 @@
 			(project ""
 				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
 					(reference "#PWR03")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R_Small")
-		(at 245.745 66.675 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "72849945-216d-4afe-b6b6-915960360235")
-		(property "Reference" "R20"
-			(at 247.65 65.4049 0)
-			(effects
-				(font
-					(size 1.016 1.016)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "Rsns"
-			(at 247.65 67.9449 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 245.745 66.675 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 245.745 66.675 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, small symbol"
-			(at 245.745 66.675 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "eb946bf3-98e6-4471-8367-691f22b0b0f9")
-		)
-		(pin "1"
-			(uuid "c1370b67-4596-432e-bbda-b1f0967728c9")
-		)
-		(instances
-			(project "camcontrol"
-				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
-					(reference "R20")
 					(unit 1)
 				)
 			)
@@ -19759,7 +19689,7 @@
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(uuid "8e7631b0-0b69-494b-8604-f132131bc768")
@@ -20378,6 +20308,94 @@
 			(project "camcontrol"
 				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
 					(reference "#PWR029")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_Small")
+		(at 144.145 71.12 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "9b776fa5-3747-4adc-9098-551fcbd40baa")
+		(property "Reference" "R25"
+			(at 146.05 70.485 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "1k"
+			(at 146.05 73.025 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 144.145 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 144.145 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor, small symbol"
+			(at 144.145 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C11702"
+			(at 144.145 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC_Part" ""
+			(at 144.145 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "bed66b1f-6678-473d-9b1f-f3df1ec3dbf4")
+		)
+		(pin "2"
+			(uuid "c1bd9047-8e78-43fb-b36b-4c41657f8c77")
+		)
+		(instances
+			(project "camcontrol"
+				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
+					(reference "R25")
 					(unit 1)
 				)
 			)
@@ -21155,7 +21173,7 @@
 		(at 268.605 211.455 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
@@ -21885,7 +21903,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part" "C1525"
+		(property "LCSC Part" "C1532"
 			(at 199.39 46.99 0)
 			(effects
 				(font
@@ -21964,7 +21982,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part" "C1525"
+		(property "LCSC Part" "C1532"
 			(at 300.99 42.545 0)
 			(effects
 				(font
@@ -23466,76 +23484,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R_Small")
-		(at 144.145 71.12 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "f109a2f7-2ba3-4ca0-bc24-8e748784d475")
-		(property "Reference" "R11"
-			(at 146.05 69.8499 0)
-			(effects
-				(font
-					(size 1.016 1.016)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "Rsns"
-			(at 146.05 72.3899 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 144.145 71.12 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 144.145 71.12 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, small symbol"
-			(at 144.145 71.12 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "ceeb5fab-3495-468c-9f24-6340ecad7244")
-		)
-		(pin "1"
-			(uuid "009ee12e-c5c3-427c-b076-64433e813b00")
-		)
-		(instances
-			(project ""
-				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
-					(reference "R11")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:+3V3")
 		(at 74.295 170.815 0)
 		(unit 1)
@@ -23808,7 +23756,7 @@
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(uuid "fb0e267e-07cb-4247-817e-3c9134f955e6")
@@ -23888,6 +23836,94 @@
 			(project "camcontrol"
 				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
 					(reference "J7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_Small")
+		(at 245.745 66.675 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "fb25ac5b-e4b8-4cd1-b044-86f6f3eb382a")
+		(property "Reference" "R11"
+			(at 247.65 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "1k"
+			(at 247.65 68.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 245.745 66.675 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 245.745 66.675 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor, small symbol"
+			(at 245.745 66.675 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C11702"
+			(at 245.745 66.675 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC_Part" ""
+			(at 245.745 66.675 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "c5bc4373-f143-4c43-8ec4-14e5d9287e4f")
+		)
+		(pin "2"
+			(uuid "74e50846-88fe-41d3-b05d-0e51afb10ed5")
+		)
+		(instances
+			(project "camcontrol"
+				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
+					(reference "R11")
 					(unit 1)
 				)
 			)
