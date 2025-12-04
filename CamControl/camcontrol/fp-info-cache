@@ -1,4 +1,4 @@
-26878808202131207
+26882337838962164
 .pretty
 4 pads 2.54mm spacign
 
@@ -371,6 +371,13 @@ USB-TYPE-C-SMD_USB-307HE-B-SU
 28
 28
 .pretty
+Untitled
+
+
+0
+0
+0
+.pretty
 VSON-10_L3.0-W3.0-P0.50-TL-EP-1
 
 
@@ -419,6 +426,13 @@ screwswitchpad
 0
 1
 1
+.pretty
+wago2pin3mmspace
+
+
+0
+4
+2
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)

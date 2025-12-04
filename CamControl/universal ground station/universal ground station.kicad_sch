@@ -2963,7 +2963,7 @@
 	)
 	(symbol
 		(lib_id ".kicad_sym:E22-400MM22S")
-		(at 161.29 71.12 0)
+		(at 176.53 52.705 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -2972,7 +2972,7 @@
 		(fields_autoplaced yes)
 		(uuid "a0541dc5-f723-4e16-9a48-4c3c8c29f68a")
 		(property "Reference" "U2"
-			(at 161.544 37.846 0)
+			(at 176.784 19.431 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2981,7 +2981,7 @@
 			)
 		)
 		(property "Value" "E22-400MM22S"
-			(at 160.528 41.148 0)
+			(at 175.768 22.733 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2990,7 +2990,7 @@
 			)
 		)
 		(property "Footprint" ":WIRELM-SMD_E22-400MM22S"
-			(at 160.528 43.688 0)
+			(at 175.768 25.273 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2999,7 +2999,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 161.29 71.12 0)
+			(at 176.53 52.705 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3008,7 +3008,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 161.29 71.12 0)
+			(at 176.53 52.705 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3017,7 +3017,7 @@
 			)
 		)
 		(property "LCSC Part" "C5333984"
-			(at 160.528 46.228 0)
+			(at 175.768 27.813 0)
 			(effects
 				(font
 					(size 1.27 1.27)
