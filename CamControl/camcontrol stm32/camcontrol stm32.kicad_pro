@@ -475,7 +475,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "camcontrol.kicad_pro",
+    "filename": "camcontrol stm32.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -551,6 +551,12 @@
         "2A POWER"
       ],
       "/CAMPWR": [
+        "2A POWER"
+      ],
+      "/PWR A": [
+        "2A POWER"
+      ],
+      "/PWR B": [
         "2A POWER"
       ],
       "/USB_D+": [
