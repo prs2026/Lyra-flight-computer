@@ -5837,7 +5837,7 @@
 	)
 	(rectangle
 		(start 227.965 175.26)
-		(end 283.845 285.115)
+		(end 283.845 284.48)
 		(stroke
 			(width 0)
 			(type default)
@@ -6536,7 +6536,7 @@
 	)
 	(wire
 		(pts
-			(xy 292.1 181.61) (xy 292.1 180.975)
+			(xy 299.72 186.69) (xy 299.72 186.055)
 		)
 		(stroke
 			(width 0)
@@ -7456,7 +7456,7 @@
 	)
 	(wire
 		(pts
-			(xy 292.1 189.23) (xy 292.1 191.135)
+			(xy 299.72 194.31) (xy 299.72 196.215)
 		)
 		(stroke
 			(width 0)
@@ -7836,7 +7836,7 @@
 	)
 	(wire
 		(pts
-			(xy 292.1 197.485) (xy 292.1 196.215)
+			(xy 299.72 202.565) (xy 299.72 201.295)
 		)
 		(stroke
 			(width 0)
@@ -13468,7 +13468,7 @@
 	)
 	(symbol
 		(lib_id "Device:LED")
-		(at 292.1 185.42 90)
+		(at 299.72 190.5 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -13477,7 +13477,7 @@
 		(fields_autoplaced yes)
 		(uuid "1e54d8fe-2283-41aa-9e99-631cf2144809")
 		(property "Reference" "D1"
-			(at 289.56 188.2776 90)
+			(at 297.18 193.3576 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13486,7 +13486,7 @@
 			)
 		)
 		(property "Value" "LED"
-			(at 289.56 185.7376 90)
+			(at 297.18 190.8176 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13495,7 +13495,7 @@
 			)
 		)
 		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
-			(at 292.1 185.42 0)
+			(at 299.72 190.5 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13504,7 +13504,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 292.1 185.42 0)
+			(at 299.72 190.5 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13513,7 +13513,7 @@
 			)
 		)
 		(property "Description" "Light emitting diode"
-			(at 292.1 185.42 0)
+			(at 299.72 190.5 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13522,7 +13522,7 @@
 			)
 		)
 		(property "LCSC Part" "C89811"
-			(at 292.1 185.42 90)
+			(at 299.72 190.5 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13531,7 +13531,7 @@
 			)
 		)
 		(property "Sim.Pins" "1=K 2=A"
-			(at 292.1 185.42 0)
+			(at 299.72 190.5 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13540,7 +13540,7 @@
 			)
 		)
 		(property "Part #" ""
-			(at 292.1 185.42 90)
+			(at 299.72 190.5 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13887,7 +13887,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 292.1 197.485 0)
+		(at 299.72 202.565 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -13896,7 +13896,7 @@
 		(fields_autoplaced yes)
 		(uuid "26cba22b-4541-4c99-989b-29912cdb2958")
 		(property "Reference" "#PWR013"
-			(at 292.1 203.835 0)
+			(at 299.72 208.915 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13905,7 +13905,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 292.1 202.565 0)
+			(at 299.72 207.645 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13913,7 +13913,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 292.1 197.485 0)
+			(at 299.72 202.565 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13922,7 +13922,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 292.1 197.485 0)
+			(at 299.72 202.565 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13931,7 +13931,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 292.1 197.485 0)
+			(at 299.72 202.565 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14577,7 +14577,7 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
-		(at 292.1 180.975 0)
+		(at 299.72 186.055 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -14586,7 +14586,7 @@
 		(fields_autoplaced yes)
 		(uuid "46873f9e-67d5-47a4-8bca-09346cee05d3")
 		(property "Reference" "#PWR012"
-			(at 292.1 184.785 0)
+			(at 299.72 189.865 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14595,7 +14595,7 @@
 			)
 		)
 		(property "Value" "+3V3"
-			(at 292.1 177.165 0)
+			(at 299.72 182.245 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14603,7 +14603,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 292.1 180.975 0)
+			(at 299.72 186.055 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14612,7 +14612,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 292.1 180.975 0)
+			(at 299.72 186.055 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14621,7 +14621,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 292.1 180.975 0)
+			(at 299.72 186.055 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14807,7 +14807,7 @@
 	)
 	(symbol
 		(lib_id "Device:R_Small")
-		(at 292.1 193.675 0)
+		(at 299.72 198.755 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -14816,7 +14816,7 @@
 		(fields_autoplaced yes)
 		(uuid "4ba30ac2-6cc2-4723-b48b-6ad7cfc4a219")
 		(property "Reference" "R1"
-			(at 290.195 194.31 0)
+			(at 297.815 199.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14825,7 +14825,7 @@
 			)
 		)
 		(property "Value" "1k"
-			(at 290.195 191.77 0)
+			(at 297.815 196.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14834,7 +14834,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 292.1 193.675 0)
+			(at 299.72 198.755 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14843,7 +14843,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 292.1 193.675 0)
+			(at 299.72 198.755 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14852,7 +14852,7 @@
 			)
 		)
 		(property "Description" "Resistor, small symbol"
-			(at 292.1 193.675 0)
+			(at 299.72 198.755 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14861,7 +14861,7 @@
 			)
 		)
 		(property "LCSC Part" "C11702"
-			(at 292.1 193.675 0)
+			(at 299.72 198.755 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14870,7 +14870,7 @@
 			)
 		)
 		(property "LCSC_Part" ""
-			(at 292.1 193.675 0)
+			(at 299.72 198.755 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14879,7 +14879,7 @@
 			)
 		)
 		(property "Part #" ""
-			(at 292.1 193.675 0)
+			(at 299.72 198.755 0)
 			(effects
 				(font
 					(size 1.27 1.27)
