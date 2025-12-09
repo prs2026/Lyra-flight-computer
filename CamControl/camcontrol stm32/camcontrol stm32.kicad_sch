@@ -7046,7 +7046,7 @@
 	)
 	(wire
 		(pts
-			(xy 123.825 205.74) (xy 131.445 205.74)
+			(xy 121.92 205.74) (xy 131.445 205.74)
 		)
 		(stroke
 			(width 0)
@@ -7143,6 +7143,16 @@
 			(type default)
 		)
 		(uuid "56695e05-f079-4ea6-947c-0b1e3d24909a")
+	)
+	(wire
+		(pts
+			(xy 38.735 184.15) (xy 38.735 187.325)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5742713a-dfb8-49b8-a942-aa08c89c5b49")
 	)
 	(wire
 		(pts
@@ -11354,7 +11364,7 @@
 		(uuid "0023a58f-41f7-4db3-9a68-2fc7675f4017")
 	)
 	(label "BOOTSEL"
-		(at 123.825 205.74 0)
+		(at 121.92 205.74 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -12867,6 +12877,72 @@
 			(project "camcontrol"
 				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
 					(reference "J4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3V3")
+		(at 38.735 184.15 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "10e61476-3bd6-436f-a615-25b670f8b62f")
+		(property "Reference" "#PWR029"
+			(at 38.735 187.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 38.735 179.705 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 38.735 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 38.735 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3V3\""
+			(at 38.735 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "36fef3cd-545a-4570-8ae0-4aca532d71f7")
+		)
+		(instances
+			(project "camcontrol stm32"
+				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
+					(reference "#PWR029")
 					(unit 1)
 				)
 			)
@@ -17236,7 +17312,7 @@
 		(dnp no)
 		(uuid "a21c20c9-cf95-42aa-8720-86aed4fde070")
 		(property "Reference" "AE1"
-			(at 23.495 177.1649 0)
+			(at 22.86 173.355 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17245,7 +17321,7 @@
 			)
 		)
 		(property "Value" "Antenna_Shield"
-			(at 23.495 179.7049 0)
+			(at 22.86 175.895 0)
 			(effects
 				(font
 					(size 1.27 1.27)
