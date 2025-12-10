@@ -8126,6 +8126,16 @@
 	)
 	(wire
 		(pts
+			(xy 38.735 185.42) (xy 38.735 187.325)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d0df17b5-eee8-4fd4-9a4f-969e01b2db21")
+	)
+	(wire
+		(pts
 			(xy 121.92 120.015) (xy 131.445 120.015)
 		)
 		(stroke
@@ -16033,6 +16043,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:+3V3")
+		(at 38.735 185.42 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "784a63f3-2e3f-41c3-ab6a-ae78adc86eca")
+		(property "Reference" "#PWR029"
+			(at 38.735 189.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 38.735 180.975 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 38.735 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 38.735 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3V3\""
+			(at 38.735 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1986f637-e851-432e-9590-b7b75fb5c695")
+		)
+		(instances
+			(project "camcontrol stm32"
+				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
+					(reference "#PWR029")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:LED")
 		(at 81.28 135.89 90)
 		(unit 1)
@@ -17299,7 +17375,7 @@
 		(dnp no)
 		(uuid "a21c20c9-cf95-42aa-8720-86aed4fde070")
 		(property "Reference" "AE1"
-			(at 23.495 177.1649 0)
+			(at 22.86 174.625 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17308,7 +17384,7 @@
 			)
 		)
 		(property "Value" "Antenna_Shield"
-			(at 23.495 179.7049 0)
+			(at 22.86 177.165 0)
 			(effects
 				(font
 					(size 1.27 1.27)
