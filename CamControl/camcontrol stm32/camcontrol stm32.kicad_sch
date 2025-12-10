@@ -7046,7 +7046,7 @@
 	)
 	(wire
 		(pts
-			(xy 123.825 205.74) (xy 131.445 205.74)
+			(xy 122.555 205.74) (xy 131.445 205.74)
 		)
 		(stroke
 			(width 0)
@@ -8336,7 +8336,7 @@
 	)
 	(wire
 		(pts
-			(xy 123.19 210.82) (xy 131.445 210.82)
+			(xy 122.555 210.82) (xy 131.445 210.82)
 		)
 		(stroke
 			(width 0)
@@ -11344,7 +11344,7 @@
 		)
 	)
 	(label "RF CTRL"
-		(at 123.19 210.82 0)
+		(at 122.555 210.82 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -11354,7 +11354,7 @@
 		(uuid "0023a58f-41f7-4db3-9a68-2fc7675f4017")
 	)
 	(label "BOOTSEL"
-		(at 123.825 205.74 0)
+		(at 122.555 205.74 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -12242,6 +12242,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC Part" "C5142571"
+			(at 108.585 220.345 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "21cfdfc2-987a-4fee-b6d7-db1573f65a67")
 		)
@@ -13012,6 +13021,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC Part" "C5142571"
+			(at 102.235 220.345 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "a49d15a4-8bce-4b4e-bdf2-e3d917fd6fcd")
 		)
@@ -13647,7 +13665,7 @@
 				)
 			)
 		)
-		(property "Value" "20m"
+		(property "Value" "10m"
 			(at 99.695 43.18 90)
 			(effects
 				(font
@@ -13683,6 +13701,15 @@
 			)
 		)
 		(property "Part #" ""
+			(at 99.695 45.72 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C3024467"
 			(at 99.695 45.72 90)
 			(effects
 				(font
@@ -15151,6 +15178,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC Part" "C1546"
+			(at 100.33 198.12 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "0314bef3-e30a-410e-b7ef-685184c3f94f")
 		)
@@ -15294,7 +15330,7 @@
 				)
 			)
 		)
-		(property "Value" "20m"
+		(property "Value" "10m"
 			(at 204.47 43.18 90)
 			(effects
 				(font
@@ -15330,6 +15366,15 @@
 			)
 		)
 		(property "Part #" ""
+			(at 204.47 45.72 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C3024467"
 			(at 204.47 45.72 90)
 			(effects
 				(font
@@ -16733,6 +16778,15 @@
 				(hide yes)
 			)
 		)
+		(property "LCSC Part" "C3312945"
+			(at 38.735 200.025 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "6"
 			(uuid "cb6a9127-8a93-4d8f-bf16-cf597a371f16")
 		)
@@ -17203,6 +17257,15 @@
 			)
 		)
 		(property "Part #" ""
+			(at 60.325 194.31 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C14441"
 			(at 60.325 194.31 90)
 			(effects
 				(font
