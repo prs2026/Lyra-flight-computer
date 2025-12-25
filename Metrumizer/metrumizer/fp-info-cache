@@ -1,4 +1,4 @@
-26857890871815921
+26884123359994832
 .pretty
 4 pads 2.54mm spacign
 
@@ -29,6 +29,13 @@ APAE1575R1820ABDC1-T
 1
 .pretty
 AUDIO-SMD_PJ-320D
+
+
+0
+4
+4
+.pretty
+BUZ-SMD_4P-L8.5-W8.5-P8.50-BR
 
 
 0
@@ -125,6 +132,13 @@ GPSM-SMD_ATGM336H-TR
 0
 18
 18
+.pretty
+HTSSOP-14_L5.0-W4.4-P0.65-LS6.4-BL-EP-3
+
+
+0
+15
+15
 .pretty
 HTSSOP-16_L5.0-W4.4-P0.65-LS6.4-BL-EP-A
 
@@ -273,6 +287,13 @@ SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR
 3
 3
 .pretty
+SOT-23-3_L2.9-W1.5-P1.90-LS2.8-BR-1
+
+
+0
+3
+3
+.pretty
 SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR
 
 
@@ -350,6 +371,20 @@ USB-TYPE-C-SMD_USB-307HE-B-SU
 28
 28
 .pretty
+Untitled
+
+
+0
+0
+0
+.pretty
+VSON-10_L3.0-W3.0-P0.50-TL-EP-1
+
+
+0
+11
+11
+.pretty
 WIRELM-SMD_DL-LLCC68-S
 
 
@@ -378,12 +413,26 @@ WIRELM-SMD_L11.5-W11.5-P1.50-BL
 14
 14
 .pretty
+WSON-10_L3.0-W3.0-P0.50-BL-EP-A
+
+
+0
+11
+11
+.pretty
 screwswitchpad
 
 
 0
 1
 1
+.pretty
+wago2pin3mmspace
+
+
+0
+4
+2
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -106924,6 +106973,48 @@ XSON-8_L4.0-W4.0-P0.80-TL-EP
 0
 9
 9
+easyeda2kicad2
+CONN-TH_2P-P2.00_PH-2AK
+
+
+0
+2
+2
+easyeda2kicad2
+CSPG-8_L2.1-W1.8_BALFHB-WL-03D3
+
+
+0
+8
+8
+easyeda2kicad2
+QFN-10-2x2-hotrod
+
+
+0
+14
+10
+easyeda2kicad2
+VQFN-10_L2.0-W2.0-P0.45-TL
+
+
+0
+10
+10
+easyeda2kicad2
+WIRELM-SMD_16P-L16.0-W16.0-P2.00_LORA1280-TCXO
+
+
+0
+16
+16
+easyeda2kicad2
+X2QFN-10_L2.0-W1.5-P0.50-BL
+
+
+0
+10
+10
 footprints
 CONN3_2059-303&slash_998-403_WAG
 
