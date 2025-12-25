@@ -2,7 +2,7 @@
 #define GPSLIB
 #include <Arduino.h>
 #include <basiclib.h>
-#include <TinyGPS++.h>
+//#include <TinyGPS++.h>
 
 
 class gpsinput

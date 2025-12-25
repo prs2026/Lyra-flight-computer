@@ -6566,16 +6566,6 @@
 	)
 	(wire
 		(pts
-			(xy 334.645 34.925) (xy 334.645 36.195)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1204c6d4-e74c-4669-b713-c019746413d7")
-	)
-	(wire
-		(pts
 			(xy 146.685 157.48) (xy 149.225 157.48)
 		)
 		(stroke
@@ -7796,16 +7786,6 @@
 	)
 	(wire
 		(pts
-			(xy 334.645 41.275) (xy 334.645 42.545)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a64de25b-c7f3-41b7-8675-b06306e01b00")
-	)
-	(wire
-		(pts
 			(xy 375.92 235.585) (xy 375.92 236.855)
 		)
 		(stroke
@@ -8303,6 +8283,16 @@
 			(type default)
 		)
 		(uuid "e4b85744-415b-4e49-bb14-81213c4a9484")
+	)
+	(wire
+		(pts
+			(xy 43.18 128.27) (xy 43.18 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e5e89244-d0c0-4294-9b55-055b27831cd4")
 	)
 	(wire
 		(pts
@@ -12366,7 +12356,7 @@
 	)
 	(symbol
 		(lib_id "Device:R_Small")
-		(at 140.335 259.715 0)
+		(at 140.335 267.335 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -12375,7 +12365,7 @@
 		(fields_autoplaced yes)
 		(uuid "0b445180-a7b2-4262-b669-1c3a1a440bd7")
 		(property "Reference" "R8"
-			(at 142.24 258.4449 0)
+			(at 142.24 266.0649 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12384,7 +12374,7 @@
 			)
 		)
 		(property "Value" "15k"
-			(at 142.24 260.9849 0)
+			(at 142.24 268.6049 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12393,7 +12383,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 140.335 259.715 0)
+			(at 140.335 267.335 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12402,7 +12392,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 140.335 259.715 0)
+			(at 140.335 267.335 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12411,7 +12401,7 @@
 			)
 		)
 		(property "Description" "Resistor, small symbol"
-			(at 140.335 259.715 0)
+			(at 140.335 267.335 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12420,7 +12410,7 @@
 			)
 		)
 		(property "LCSC Part" "C25756"
-			(at 140.335 259.715 0)
+			(at 140.335 267.335 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12429,7 +12419,7 @@
 			)
 		)
 		(property "Part #" ""
-			(at 140.335 259.715 0)
+			(at 140.335 267.335 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15041,7 +15031,7 @@
 	)
 	(symbol
 		(lib_id "Device:R_Small")
-		(at 102.235 259.715 0)
+		(at 102.235 266.7 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -15050,7 +15040,7 @@
 		(fields_autoplaced yes)
 		(uuid "54708860-ffa9-43e7-96e9-5cd748ad47f4")
 		(property "Reference" "R23"
-			(at 104.14 258.4449 0)
+			(at 104.14 265.4299 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15059,7 +15049,7 @@
 			)
 		)
 		(property "Value" "15k"
-			(at 104.14 260.9849 0)
+			(at 104.14 267.9699 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15068,7 +15058,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 102.235 259.715 0)
+			(at 102.235 266.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15077,7 +15067,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 102.235 259.715 0)
+			(at 102.235 266.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15086,7 +15076,7 @@
 			)
 		)
 		(property "Description" "Resistor, small symbol"
-			(at 102.235 259.715 0)
+			(at 102.235 266.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15095,7 +15085,7 @@
 			)
 		)
 		(property "LCSC Part" "C25756"
-			(at 102.235 259.715 0)
+			(at 102.235 266.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15104,7 +15094,7 @@
 			)
 		)
 		(property "Part #" ""
-			(at 102.235 259.715 0)
+			(at 102.235 266.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15865,7 +15855,7 @@
 	)
 	(symbol
 		(lib_id "Device:R_Small")
-		(at 140.335 267.335 0)
+		(at 140.335 259.715 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -15874,7 +15864,7 @@
 		(fields_autoplaced yes)
 		(uuid "745b733b-dd3f-4534-a893-1d0526d8db87")
 		(property "Reference" "R9"
-			(at 142.875 266.0649 0)
+			(at 142.875 258.4449 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15883,7 +15873,7 @@
 			)
 		)
 		(property "Value" "51k"
-			(at 142.875 268.6049 0)
+			(at 142.875 260.9849 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15892,7 +15882,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 140.335 267.335 0)
+			(at 140.335 259.715 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15901,7 +15891,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 140.335 267.335 0)
+			(at 140.335 259.715 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15910,7 +15900,7 @@
 			)
 		)
 		(property "Description" "Resistor, small symbol"
-			(at 140.335 267.335 0)
+			(at 140.335 259.715 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15919,7 +15909,7 @@
 			)
 		)
 		(property "LCSC Part" "C25794"
-			(at 140.335 267.335 0)
+			(at 140.335 259.715 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15928,7 +15918,7 @@
 			)
 		)
 		(property "Part #" ""
-			(at 140.335 267.335 0)
+			(at 140.335 259.715 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16427,7 +16417,7 @@
 	)
 	(symbol
 		(lib_id "Device:R_Small")
-		(at 102.235 266.7 0)
+		(at 102.235 259.715 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -16436,7 +16426,7 @@
 		(fields_autoplaced yes)
 		(uuid "8d25b4d1-46a7-437f-a8ad-f978c4b04c15")
 		(property "Reference" "R24"
-			(at 104.775 265.4299 0)
+			(at 104.775 258.4449 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16445,7 +16435,7 @@
 			)
 		)
 		(property "Value" "51k"
-			(at 104.775 267.9699 0)
+			(at 104.775 260.9849 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16454,7 +16444,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 102.235 266.7 0)
+			(at 102.235 259.715 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16463,7 +16453,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 102.235 266.7 0)
+			(at 102.235 259.715 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16472,7 +16462,7 @@
 			)
 		)
 		(property "Description" "Resistor, small symbol"
-			(at 102.235 266.7 0)
+			(at 102.235 259.715 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16481,7 +16471,7 @@
 			)
 		)
 		(property "LCSC Part" "C25794"
-			(at 102.235 266.7 0)
+			(at 102.235 259.715 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16490,7 +16480,7 @@
 			)
 		)
 		(property "Part #" ""
-			(at 102.235 266.7 0)
+			(at 102.235 259.715 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16596,72 +16586,6 @@
 			(project "camcontrol stm32"
 				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
 					(reference "R4")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 334.645 42.545 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "8dd6ba24-706d-470f-9f94-b74f1f1da1b1")
-		(property "Reference" "#PWR039"
-			(at 334.645 48.895 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 334.645 47.625 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 334.645 42.545 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 334.645 42.545 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 334.645 42.545 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "fac31688-dc50-4509-a83e-0b44d30510a6")
-		)
-		(instances
-			(project "camcontrol stm32"
-				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
-					(reference "#PWR039")
 					(unit 1)
 				)
 			)
@@ -17186,94 +17110,6 @@
 			(project "camcontrol"
 				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
 					(reference "J3")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C_Small")
-		(at 334.645 38.735 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board no)
-		(dnp yes)
-		(fields_autoplaced yes)
-		(uuid "9c205ba0-894f-429c-bcd7-335e80e9d913")
-		(property "Reference" "C15"
-			(at 337.185 37.4712 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100n"
-			(at 337.185 40.0112 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
-			(at 334.645 38.735 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 334.645 38.735 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 334.645 38.735 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part" "C1525"
-			(at 334.645 38.735 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Part #" ""
-			(at 334.645 38.735 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "5269f1ee-cc6d-4911-8513-a9725bf89821")
-		)
-		(pin "2"
-			(uuid "eff2d115-5024-4a61-8f27-452f2872b7b7")
-		)
-		(instances
-			(project "camcontrol stm32"
-				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
-					(reference "C15")
 					(unit 1)
 				)
 			)
@@ -18508,6 +18344,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:+3V3")
+		(at 43.18 128.27 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "c2da4fa5-3ea4-4b43-a495-2fa0520fdf0e")
+		(property "Reference" "#PWR030"
+			(at 43.18 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 43.18 123.825 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 43.18 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 43.18 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3V3\""
+			(at 43.18 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "a84e7d1b-f56f-43bb-a6f4-2dcccc0429ff")
+		)
+		(instances
+			(project "camcontrol stm32"
+				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
+					(reference "#PWR030")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+12V")
 		(at 102.235 256.54 0)
 		(unit 1)
@@ -18700,72 +18602,6 @@
 			(project "camcontrol stm32"
 				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
 					(reference "#PWR023")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 334.645 34.925 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "d31abd53-f412-4576-8b13-345cf06e8225")
-		(property "Reference" "#PWR032"
-			(at 334.645 38.735 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 334.645 30.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 334.645 34.925 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 334.645 34.925 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 334.645 34.925 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "51591234-f8de-46b9-b4b9-904aebed44ce")
-		)
-		(instances
-			(project "camcontrol stm32"
-				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
-					(reference "#PWR032")
 					(unit 1)
 				)
 			)
@@ -19468,74 +19304,6 @@
 			(project "camcontrol"
 				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
 					(reference "#PWR017")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 43.18 134.62 0)
-		(mirror y)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "fd182627-6463-4213-aeb9-6fd17515f2a4")
-		(property "Reference" "#PWR048"
-			(at 43.18 140.97 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 43.18 139.065 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 43.18 134.62 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 43.18 134.62 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 43.18 134.62 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "a8572d44-5455-4753-8db2-e14adac452ed")
-		)
-		(instances
-			(project "camcontrol stm32"
-				(path "/299d0a04-aa0f-4714-a339-a062da4333a5"
-					(reference "#PWR048")
 					(unit 1)
 				)
 			)

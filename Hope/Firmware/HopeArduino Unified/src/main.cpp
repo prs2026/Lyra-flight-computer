@@ -1,6 +1,5 @@
 #include <Arduino.h>
 
-
 #include <SPI.h>                                 //the lora device is SPI based so load the SPI library
 #include <SX128XLT.h>                            //include the appropriate library   
 #include <basiclib.h>
@@ -16,8 +15,9 @@ stationdata Station3;
 #include <gpslib.h>
 #include <ArduinoEigenDense.h>
 
-#define MODEFLIGHT
-//#define MODESTATION
+//#define MODEFLIGHT
+
+#define MODESTATION
 
 #if !defined(MODEFLIGHT)
 #if !defined(MODESTATION)
@@ -26,7 +26,7 @@ stationdata Station3;
 #endif // MODE FLIGHT
 #endif // MODE STATION
 sx1280radio radio;
-gpsinput gps;
+//gpsinput gps;
 
 const uint32_t checkinterval = 500;
 uint32_t checktime;
@@ -37,10 +37,9 @@ uint32_t sendpackettime;
 Matrix3d stationpoints;
 
 
-
 void setup( ) {
   delay(3000);
-  Serial.begin();
+  Serial.begin(115200);
   Serial.println("init");
   pinMode( PIN_LED, OUTPUT);
 
@@ -49,10 +48,7 @@ void setup( ) {
 
   radio.initradio();
 
-  Serial1.setRX(UART_RX_PIN);
-  Serial1.setTX(UART_TX_PIN);
-
-  Serial1.begin(9600);
+  //Serial1.begin(9600);
 
   //all at 6400ft
 
@@ -99,7 +95,7 @@ void setup( ) {
   Station2.ycoord = station2pos.y();
   Station2.zcoord = station2pos.z();
 
-  Serial.printf("Station 2 coords: %f %f %f\n",Station2.xcoord,Station2.ycoord,Station2.zcoord);
+  //Serial.printf("Station 2 coords: %f %f %f\n",Station2.xcoord,Station2.ycoord,Station2.zcoord);
 
   Eigen::Vector3d station3pos = gpsToENU(Station3.lat,Station3.lon,Station3.alt,Station1.lat,Station1.lon,Station1.alt);
 
@@ -107,14 +103,14 @@ void setup( ) {
   Station3.ycoord = station3pos.y();
   Station3.zcoord = station3pos.z();
 
-  Serial.printf("Station 3 coords: %f %f %f\n",Station3.xcoord,Station3.ycoord,Station3.zcoord);
+  //Serial.printf("Station 3 coords: %f %f %f\n",Station3.xcoord,Station3.ycoord,Station3.zcoord);
 
   stationpoints << 0,0,0,
                   station2pos.x(),station2pos.y(),station2pos.z(),
                   station3pos.x(),station3pos.y(),station3pos.z();
 
   Serial.println("trying to trilaterate");
-  uint32_t mathcalctime = micros();
+  //uint32_t mathcalctime = micros();
 
   Vector3d testmatrix(Station1.distance,Station2.distance,Station3.distance);
 
@@ -132,8 +128,8 @@ void setup( ) {
   double outlat, outlon, outalt;
   
   enuToLLA(solution2,Station1.lat,Station1.lon,Station1.alt,outlat,outlon,outalt);
-  Serial.printf("Took %d microseconds",micros()-mathcalctime);
-  Serial.printf("Solution 2 gps point: lat/lon: %f,%f alt %f\n",outlat,outlon,outalt);
+  //Serial.printf("Took %d microseconds",micros()-mathcalctime);
+  //Serial.printf("Solution 2 gps point: lat/lon: %f,%f alt %f\n",outlat,outlon,outalt);
 
   #endif // MODEFLIGHT
   
@@ -221,15 +217,13 @@ void loop() {
   
   packet newpacket = radio.receivepacket();
 
-  Serial.printf("\n>uptime: %f\n", float(newpacket.r.uptime)/1e3);
-  Serial.printf(">distance1: %d\n", newpacket.r.lat);
-  Serial.printf(">distance2: %d\n", newpacket.r.lon);
-  Serial.printf(">distance3: %d\n", newpacket.r.alt);
-  Serial.printf(">battvoltage: %f\n", newpacket.r.battvoltage/1e2);
+  //Serial.printf("\n>uptime: %f\n", float(newpacket.r.uptime)/1e3);
+  //Serial.printf(">distance1: %d\n", newpacket.r.lat);
+  //Serial.printf(">distance2: %d\n", newpacket.r.lon);
+  //Serial.printf(">distance3: %d\n", newpacket.r.alt);
+  //Serial.printf(">battvoltage: %f\n", newpacket.r.battvoltage/1e2);
 
   #endif // MODESTATION
-  
-
   
 }
 

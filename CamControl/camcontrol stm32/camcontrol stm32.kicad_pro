@@ -587,7 +587,7 @@
       "plot": "",
       "pos_files": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "camcontrol stm32.step",
       "svg": "",
       "vrml": ""
     },
