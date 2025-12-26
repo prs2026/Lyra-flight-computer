@@ -150,10 +150,10 @@ sx1280radio::sx1280radio(){
 
 int sx1280radio::initradio(){
     // bool setCS(pin_size_t pin); choosing to handle the CS pin in the library
-  // SPI_1.setSCK( PIN_SCK ); // bool setSCK(pin_size_t pin);
-  // SPI_1.setTX( PIN_MOSI );  // bool setTX(pin_size_t pin);
-  // SPI_1.setRX( PIN_MISO );  // bool setRX(pin_size_t pin);
-  SPI.begin();
+  SPI1.setSCK( PIN_SCK ); // bool setSCK(pin_size_t pin);
+  SPI1.setTX( PIN_MOSI );  // bool setTX(pin_size_t pin);
+  SPI1.setRX( PIN_MISO );  // bool setRX(pin_size_t pin);
+  SPI1.begin();
 
   
 

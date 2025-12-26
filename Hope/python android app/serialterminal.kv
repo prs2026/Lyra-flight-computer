@@ -1,0 +1,84 @@
+
+# ============================================
+# serialterminal.kv
+# ============================================
+# Save this in a file named 'serialterminal.kv'
+
+<SerialTerminal>:
+    orientation: 'vertical'
+    padding: 5
+    spacing: 5
+    
+    # Button bar - Row 1
+    BoxLayout:
+        size_hint_y: None
+        height: '48dp'
+        spacing: 5
+        
+        Button:
+            text: 'Connect'
+            on_press: root.connect_serial()
+            background_color: 0.2, 0.7, 0.2, 1
+            bold: True
+        
+        Button:
+            text: 'Disconnect'
+            on_press: root.disconnect_serial()
+            background_color: 0.8, 0.2, 0.2, 1
+            bold: True
+        
+        Button:
+            text: 'Clear'
+            on_press: root.clear_terminal()
+            background_color: 0.3, 0.3, 0.7, 1
+            bold: True
+    
+    # Button bar - Row 2 (Logging controls)
+    BoxLayout:
+        size_hint_y: None
+        height: '48dp'
+        spacing: 5
+        
+        Button:
+            text: 'Start Log'
+            on_press: root.start_logging()
+            background_color: 0.2, 0.6, 0.8, 1
+            bold: True
+            disabled: root.is_logging
+        
+        Button:
+            text: 'Stop Log'
+            on_press: root.stop_logging()
+            background_color: 0.8, 0.5, 0.2, 1
+            bold: True
+            disabled: not root.is_logging
+        
+        Label:
+            text: 'LOGGING' if root.is_logging else 'NOT LOGGING'
+            color: (0, 1, 0, 1) if root.is_logging else (0.5, 0.5, 0.5, 1)
+            bold: True
+            font_size: '14sp'
+    
+    # Terminal display
+    ScrollView:
+        do_scroll_x: False
+        scroll_y: 0
+        
+        Label:
+            text: root.terminal_text
+            size_hint_y: None
+            height: max(self.texture_size[1], root.height - 106)
+            text_size: self.width - 20, None
+            halign: 'left'
+            valign: 'top'
+            padding: 10, 10
+            font_name: 'RobotoMono-Regular'
+            font_size: '13sp'
+            color: 0, 1, 0, 1
+            
+            canvas.before:
+                Color:
+                    rgba: 0, 0, 0, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size

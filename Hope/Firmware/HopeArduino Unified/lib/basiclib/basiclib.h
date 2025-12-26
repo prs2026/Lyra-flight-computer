@@ -30,6 +30,7 @@ using namespace Eigen;
 union packet
 {
     struct{
+    uint8_t checksum;
     uint32_t uptime;
     int32_t lat;
     int32_t lon;

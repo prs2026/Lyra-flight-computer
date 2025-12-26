@@ -1,0 +1,17 @@
+Metadata-Version: 2.1
+Name: usb4a
+Version: 0.3.0
+Summary: Python package for Android USB host.
+Home-page: https://github.com/jacklinquan/usb4a
+Author: Quan Lin
+Author-email: jacklinquan@gmail.com
+License: MIT
+Classifier: Development Status :: 3 - Alpha
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: Android
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Description-Content-Type: text/markdown
+
+https://github.com/jacklinquan/usb4a

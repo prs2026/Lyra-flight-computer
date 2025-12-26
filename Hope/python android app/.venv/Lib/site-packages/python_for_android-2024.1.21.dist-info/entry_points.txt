@@ -1,0 +1,8 @@
+[console_scripts]
+p4a = pythonforandroid.entrypoints:main
+python-for-android = pythonforandroid.entrypoints:main
+
+[distutils.commands]
+aab = pythonforandroid.bdistapk:BdistAAB
+aar = pythonforandroid.bdistapk:BdistAAR
+apk = pythonforandroid.bdistapk:BdistAPK

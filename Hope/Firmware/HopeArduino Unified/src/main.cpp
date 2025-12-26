@@ -15,9 +15,9 @@ stationdata Station3;
 #include <gpslib.h>
 #include <ArduinoEigenDense.h>
 
-//#define MODEFLIGHT
+#define MODEFLIGHT
 
-#define MODESTATION
+//#define MODESTATION
 
 #if !defined(MODEFLIGHT)
 #if !defined(MODESTATION)
@@ -217,11 +217,11 @@ void loop() {
   
   packet newpacket = radio.receivepacket();
 
-  //Serial.printf("\n>uptime: %f\n", float(newpacket.r.uptime)/1e3);
-  //Serial.printf(">distance1: %d\n", newpacket.r.lat);
-  //Serial.printf(">distance2: %d\n", newpacket.r.lon);
-  //Serial.printf(">distance3: %d\n", newpacket.r.alt);
-  //Serial.printf(">battvoltage: %f\n", newpacket.r.battvoltage/1e2);
+  Serial.printf("\n>uptime: %f\n", float(newpacket.r.uptime)/1e3);
+  Serial.printf(">distance1: %d\n", newpacket.r.lat);
+  Serial.printf(">distance2: %d\n", newpacket.r.lon);
+  Serial.printf(">distance3: %d\n", newpacket.r.alt);
+  Serial.printf(">battvoltage: %f\n", newpacket.r.battvoltage/1e2);
 
   #endif // MODESTATION
   
