@@ -40,6 +40,17 @@ union packet
     uint8_t data[sizeof(r)];
 };
 
+struct recievedpacket{
+    uint8_t checksum;
+    uint32_t uptime;
+    int32_t distance1;
+    int32_t distance2;
+    int32_t distance3;
+    uint16_t battvoltage;
+    int16_t rssi;
+    int8_t snr;
+};
+
 struct stationdata
 {
     int ID;

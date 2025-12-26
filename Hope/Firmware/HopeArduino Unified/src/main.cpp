@@ -15,9 +15,9 @@ stationdata Station3;
 #include <gpslib.h>
 #include <ArduinoEigenDense.h>
 
-#define MODEFLIGHT
+//#define MODEFLIGHT
 
-//#define MODESTATION
+#define MODESTATION
 
 #if !defined(MODEFLIGHT)
 #if !defined(MODESTATION)
@@ -36,6 +36,8 @@ uint32_t sendpackettime;
 
 Matrix3d stationpoints;
 
+Vector3d lastpoint = Vector3d::Zero();
+uint32_t lastpointtime = 0;
 
 void setup( ) {
   delay(3000);
@@ -87,6 +89,22 @@ void setup( ) {
   pinMode(UART_TX_PIN,OUTPUT);
   digitalWrite(UART_TX_PIN, HIGH);
 
+  
+
+  #endif // MODEFLIGHT
+  
+  #if defined(MODEGROUND)
+
+  Serial.print("pingstation");
+
+  radio.setuptorange(0x00);
+  radio.settolisten(Station3.ID);
+  
+  #endif // MODEGROUND
+  #if defined(MODESTATION)
+
+  Serial.print("groundstation");
+
   // setup reference plane
 
   Eigen::Vector3d station2pos = gpsToENU(Station2.lat,Station2.lon,Station2.alt,Station1.lat,Station1.lon,Station1.alt);
@@ -129,21 +147,7 @@ void setup( ) {
   
   enuToLLA(solution2,Station1.lat,Station1.lon,Station1.alt,outlat,outlon,outalt);
   //Serial.printf("Took %d microseconds",micros()-mathcalctime);
-  //Serial.printf("Solution 2 gps point: lat/lon: %f,%f alt %f\n",outlat,outlon,outalt);
-
-  #endif // MODEFLIGHT
-  
-  #if defined(MODEGROUND)
-
-  Serial.print("pingstation");
-
-  radio.setuptorange(0x00);
-  radio.settolisten(Station3.ID);
-  
-  #endif // MODEGROUND
-  #if defined(MODESTATION)
-
-  Serial.print("groundstation");
+  Serial.printf("Solution 2 gps point: lat/lon: %f,%f alt %f\n",outlat,outlon,outalt);
   
   #endif // MODEGROUND
 
@@ -158,31 +162,7 @@ void loop() {
   Station2.distance = radio.pingrange(Station2.ID);
   Station3.distance = radio.pingrange(Station3.ID);
 
-  // Vector3d distancematrix(Station1.distance,Station2.distance,Station3.distance);
-
-
-  // Vector3d solution1, solution2;
   
-  // Serial.println("trying to trilaterate");
-
-  // if (trilaterate(stationpoints, distancematrix, solution1, solution2)) {
-  //       Serial.printf("Solution 1: %f %f %f\n",solution1.x(),solution1.y(),solution1.z());
-  //       Serial.printf("Solution 2: %f %f %f\n",solution2.x(),solution2.y(),solution2.z());
-  //   } else {
-  //       Serial.println("no valid solution");
-  //   }
-
-  // double outlat = 0;
-  // double outlon = 0;
-  // double outalt = 0;
-  
-  // enuToLLA(solution2,Station1.lat,Station1.lon,Station1.alt,outlat,outlon,outalt);
-  
-  // Serial.printf("Solution 2 gps point: lat/lon: %f,%f alt %f\n",outlat,outlon,outalt);
-
-  // outlat = 0;
-  // outlon = 0;
-  // outalt = 0;
 
   packet packettosendloop;
 
@@ -215,13 +195,57 @@ void loop() {
 
   #if defined(MODESTATION)
   
-  packet newpacket = radio.receivepacket();
+  recievedpacket newpacket = radio.receivepacket();
 
-  Serial.printf("\n>uptime: %f\n", float(newpacket.r.uptime)/1e3);
-  Serial.printf(">distance1: %d\n", newpacket.r.lat);
-  Serial.printf(">distance2: %d\n", newpacket.r.lon);
-  Serial.printf(">distance3: %d\n", newpacket.r.alt);
-  Serial.printf(">battvoltage: %f\n", newpacket.r.battvoltage/1e2);
+  Vector3d distancematrix(newpacket.distance1,newpacket.distance2,newpacket.distance3);
+
+  Vector3d solution1, solution2;
+  
+  Serial.println("trying to trilaterate");
+
+  if (trilaterate(stationpoints, distancematrix, solution1, solution2)) {
+        Serial.printf("Solution 1: %f %f %f\n",solution1.x(),solution1.y(),solution1.z());
+        Serial.printf("Solution 2: %f %f %f\n",solution2.x(),solution2.y(),solution2.z());
+  } else {
+      Serial.println("no valid solution");
+  }
+
+  double outlat = 0;
+  double outlon = 0;
+  double outalt = 0;
+
+  float solvedvvel = 0;
+  float solveddistance = 1200;
+
+  solvedvvel = (solution1.z() - lastpoint.z())/(float(millis() - lastpointtime)/1e3);
+
+  lastpoint = solution1;
+  lastpointtime = millis();
+  
+  enuToLLA(solution2,Station1.lat,Station1.lon,Station1.alt,outlat,outlon,outalt);
+  
+  Serial.printf("Solution 2 gps point: lat/lon: %f,%f alt %f\n",outlat,outlon,outalt);
+
+  
+
+  Serial.printf("\n %f,%f,%f,%f,%d,%d,%d,%f,%d,%d,%f,%f \n",float(newpacket.uptime)/1e3,
+                                                      outalt,
+                                                      solvedvvel,
+                                                      solveddistance,
+                                                      newpacket.distance1,
+                                                      newpacket.distance2,
+                                                      newpacket.distance3,
+                                                      float(newpacket.battvoltage)/1e2,
+                                                      newpacket.rssi,
+                                                      newpacket.snr,
+                                                      outlat,
+                                                      outlon);
+
+  // Serial.printf("\n>uptime: %f\n", float(newpacket.r.uptime)/1e3);
+  // Serial.printf(">distance1: %d\n", newpacket.r.lat/1e2);
+  // Serial.printf(">distance2: %d\n", newpacket.r.lon/1e2);
+  // Serial.printf(">distance3: %d\n", newpacket.r.alt/1e2);
+  // Serial.printf(">battvoltage: %f\n", newpacket.r.battvoltage/1e2);
 
   #endif // MODESTATION
   

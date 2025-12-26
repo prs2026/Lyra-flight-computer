@@ -28,7 +28,7 @@ public:
 
     int sendpacket(packet packetToSend);
 
-    packet receivepacket();
+    recievedpacket receivepacket();
 
     void setuptorange(int role);
 

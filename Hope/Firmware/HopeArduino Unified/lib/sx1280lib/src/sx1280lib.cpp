@@ -78,28 +78,28 @@ void packet_is_OK()
 
   RXpacketCount++;
 
-  printElapsedTime();                              //print elapsed time to Serial Monitor
-  Serial.print(F("  "));
-  //LT.printASCIIPacket(RXBUFFER, RXPacketL);        //print the packet as ASCII characters
-  Serial.print(F("  "));
-  LT.printHEXPacket(RXBUFFER,RXPacketL);
+  // printElapsedTime();                              //print elapsed time to Serial Monitor
+  // Serial.print(F("  "));
+  // //LT.printASCIIPacket(RXBUFFER, RXPacketL);        //print the packet as ASCII characters
+  // Serial.print(F("  "));
+  // LT.printHEXPacket(RXBUFFER,RXPacketL);
 
 
   localCRC = LT.CRCCCITT(RXBUFFER, RXPacketL, 0xFFFF);  //calculate the CRC, this is the external CRC calculation of the RXBUFFER
-  Serial.print(F(",CRC,"));                        //contents, not the LoRa device internal CRC
-  Serial.print(localCRC, HEX);
-  Serial.print(F(",RSSI,"));
-  Serial.print(PacketRSSI);
-  Serial.print(F("dBm,SNR,"));
-  Serial.print(PacketSNR);
-  Serial.print(F("dB,Length,"));
-  Serial.print(RXPacketL);
-  Serial.print(F(",Packets,"));
-  Serial.print(RXpacketCount);
-  Serial.print(F(",Errors,"));
-  Serial.print(errors);
-  Serial.print(F(",IRQreg,"));
-  Serial.print(IRQStatus, HEX);
+  // Serial.print(F(",CRC,"));                        //contents, not the LoRa device internal CRC
+  // Serial.print(localCRC, HEX);
+  // Serial.print(F(",RSSI,"));
+  // Serial.print(PacketRSSI);
+  // Serial.print(F("dBm,SNR,"));
+  // Serial.print(PacketSNR);
+  // Serial.print(F("dB,Length,"));
+  // Serial.print(RXPacketL);
+  // Serial.print(F(",Packets,"));
+  // Serial.print(RXpacketCount);
+  // Serial.print(F(",Errors,"));
+  // Serial.print(errors);
+  // Serial.print(F(",IRQreg,"));
+  // Serial.print(IRQStatus, HEX);
 }
 
 
@@ -260,9 +260,9 @@ int sx1280radio::sendpacket(packet packetToSend){
 }
 
 
-packet sx1280radio::receivepacket(){
+recievedpacket sx1280radio::receivepacket(){
 
-  packet recievedpacket;
+  packet downlinkedpacket;
 
   RXPacketL = LT.receive(RXBUFFER, RXBUFFER_SIZE, 60000, WAIT_RX); //wait for a packet to arrive with 60seconds (60000mS) timeout
 
@@ -271,26 +271,38 @@ packet sx1280radio::receivepacket(){
   PacketRSSI = LT.readPacketRSSI();              //read the recived RSSI value
   PacketSNR = LT.readPacketSNR();                //read the received SNR value
 
+  recievedpacket emptypacket;
+
+  
+
   if (RXPacketL == 0)                            //if the LT.receive() function detects an error, RXpacketL == 0
   {
     packet_is_Error();
-    return recievedpacket;
+    return emptypacket;
   }
   else
   {
     packet_is_OK();
   }
 
-  for (int i = 0; i < sizeof(recievedpacket); i++)
+  for (int i = 0; i < sizeof(downlinkedpacket); i++)
   {
-    recievedpacket.data[i] = RXBUFFER[i];
+    downlinkedpacket.data[i] = RXBUFFER[i];
   }
 
+  emptypacket.checksum = downlinkedpacket.r.checksum;
+  emptypacket.uptime = downlinkedpacket.r.uptime;
+  emptypacket.distance1 = downlinkedpacket.r.lat;
+  emptypacket.distance2 = downlinkedpacket.r.lon;
+  emptypacket.distance3 = downlinkedpacket.r.alt;
+  emptypacket.battvoltage = downlinkedpacket.r.battvoltage;
+  emptypacket.rssi = PacketRSSI;
+  emptypacket.snr = PacketSNR;
 
   digitalWrite(PIN_LED, LOW);                        //LED off
 
   Serial.println();
-  return recievedpacket; 
+  return emptypacket; 
 }
 
 

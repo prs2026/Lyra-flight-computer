@@ -1,13 +1,348 @@
-
-# ============================================
-# serialterminal.kv
-# ============================================
-# Save this in a file named 'serialterminal.kv'
-
 <SerialTerminal>:
     orientation: 'vertical'
     padding: 5
     spacing: 5
+    
+    # Data Age Counter at the top
+    BoxLayout:
+        size_hint_y: None
+        height: '60dp'
+        orientation: 'vertical'
+        
+        canvas.before:
+            Color:
+                rgba: root.data_age_color
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        
+        Label:
+            text: root.data_age_text
+            font_size: '28sp'
+            bold: True
+            color: 0, 0, 0, 1
+            size_hint_y: 0.6
+        
+        Label:
+            text: 'NOT SAVING' if not root.is_logging else ''
+            font_size: '14sp'
+            bold: True
+            color: 0, 0, 0, 1
+            size_hint_y: 0.4
+    
+    # Large display for Altitude and Vertical Velocity
+    BoxLayout:
+        size_hint_y: 0.22
+        spacing: 10
+        
+        BoxLayout:
+            orientation: 'vertical'
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.4, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            
+            Label:
+                text: 'ALTITUDE'
+                font_size: '16sp'
+                bold: True
+                size_hint_y: 0.25
+                color: 0.7, 0.7, 0.7, 1
+            
+            Label:
+                text: f'{root.altitude:.2f} m'
+                font_size: '20sp'
+                bold: True
+                color: 1, 1, 1, 1
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                markup: True
+        
+        BoxLayout:
+            orientation: 'vertical'
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.4, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            
+            Label:
+                text: 'VERTICAL VEL'
+                font_size: '16sp'
+                bold: True
+                size_hint_y: 0.25
+                color: 0.7, 0.7, 0.7, 1
+            
+            Label:
+                text: f'{root.vertical_velocity:.2f} m/s'
+                font_size: '20sp'
+                bold: True
+                color: 1, 1, 1, 1
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                markup: True
+    
+    # Grid for other values
+    GridLayout:
+        cols: 2
+        rows: 5
+        size_hint_y: 0.24
+        spacing: 5
+        
+        # Uptime
+        BoxLayout:
+            orientation: 'vertical'
+            canvas.before:
+                Color:
+                    rgba: 0.15, 0.15, 0.15, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            
+            Label:
+                text: 'Uptime'
+                font_size: '12sp'
+                size_hint_y: 0.35
+                color: 0.8, 0.8, 0.8, 1
+            
+            Label:
+                text: f'{root.uptime:.2f} s'
+                font_size: '16sp'
+                bold: True
+                color: 1, 1, 1, 1
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+        
+        # Ground Distance
+        BoxLayout:
+            orientation: 'vertical'
+            canvas.before:
+                Color:
+                    rgba: 0.15, 0.15, 0.15, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            
+            Label:
+                text: 'Ground Dist'
+                font_size: '12sp'
+                size_hint_y: 0.35
+                color: 0.8, 0.8, 0.8, 1
+            
+            Label:
+                text: f'{root.ground_distance:.2f} m'
+                font_size: '16sp'
+                bold: True
+                color: 1, 1, 1, 1
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+        
+        # Range 1
+        BoxLayout:
+            orientation: 'vertical'
+            canvas.before:
+                Color:
+                    rgba: 0.15, 0.15, 0.15, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            
+            Label:
+                text: 'Range 1'
+                font_size: '12sp'
+                size_hint_y: 0.35
+                color: 0.8, 0.8, 0.8, 1
+            
+            Label:
+                text: f'{root.range1:.2f} m'
+                font_size: '16sp'
+                bold: True
+                color: 1, 1, 1, 1
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+        
+        # Range 2
+        BoxLayout:
+            orientation: 'vertical'
+            canvas.before:
+                Color:
+                    rgba: 0.15, 0.15, 0.15, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            
+            Label:
+                text: 'Range 2'
+                font_size: '12sp'
+                size_hint_y: 0.35
+                color: 0.8, 0.8, 0.8, 1
+            
+            Label:
+                text: f'{root.range2:.2f} m'
+                font_size: '16sp'
+                bold: True
+                color: 1, 1, 1, 1
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+        
+        # Range 3
+        BoxLayout:
+            orientation: 'vertical'
+            canvas.before:
+                Color:
+                    rgba: 0.15, 0.15, 0.15, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            
+            Label:
+                text: 'Range 3'
+                font_size: '12sp'
+                size_hint_y: 0.35
+                color: 0.8, 0.8, 0.8, 1
+            
+            Label:
+                text: f'{root.range3:.2f} m'
+                font_size: '16sp'
+                bold: True
+                color: 1, 1, 1, 1
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+        
+        # Battery Voltage
+        BoxLayout:
+            orientation: 'vertical'
+            canvas.before:
+                Color:
+                    rgba: 0.15, 0.15, 0.15, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            
+            Label:
+                text: 'Battery'
+                font_size: '12sp'
+                size_hint_y: 0.35
+                color: 0.8, 0.8, 0.8, 1
+            
+            Label:
+                text: f'{root.battery_voltage:.2f} V'
+                font_size: '16sp'
+                bold: True
+                color: 1, 1, 0, 1
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+        
+        # RSSI
+        BoxLayout:
+            orientation: 'vertical'
+            canvas.before:
+                Color:
+                    rgba: 0.15, 0.15, 0.15, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            
+            Label:
+                text: 'RSSI'
+                font_size: '12sp'
+                size_hint_y: 0.35
+                color: 0.8, 0.8, 0.8, 1
+            
+            Label:
+                text: f'{root.rssi:.2f} dBm'
+                font_size: '16sp'
+                bold: True
+                color: 1, 1, 1, 1
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+        
+        # SNR
+        BoxLayout:
+            orientation: 'vertical'
+            canvas.before:
+                Color:
+                    rgba: 0.15, 0.15, 0.15, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            
+            Label:
+                text: 'SNR'
+                font_size: '12sp'
+                size_hint_y: 0.35
+                color: 0.8, 0.8, 0.8, 1
+            
+            Label:
+                text: f'{root.snr:.2f} dB'
+                font_size: '16sp'
+                bold: True
+                color: 1, 1, 1, 1
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+        
+        # Latitude
+        BoxLayout:
+            orientation: 'vertical'
+            canvas.before:
+                Color:
+                    rgba: 0.15, 0.15, 0.15, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            
+            Label:
+                text: 'Latitude'
+                font_size: '12sp'
+                size_hint_y: 0.35
+                color: 0.8, 0.8, 0.8, 1
+            
+            Label:
+                text: f'{root.latitude:.6f}°'
+                font_size: '16sp'
+                bold: True
+                color: 1, 1, 1, 1
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+        
+        # Longitude
+        BoxLayout:
+            orientation: 'vertical'
+            canvas.before:
+                Color:
+                    rgba: 0.15, 0.15, 0.15, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            
+            Label:
+                text: 'Longitude'
+                font_size: '12sp'
+                size_hint_y: 0.35
+                color: 0.8, 0.8, 0.8, 1
+            
+            Label:
+                text: f'{root.longitude:.6f}°'
+                font_size: '16sp'
+                bold: True
+                color: 1, 1, 1, 1
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
     
     # Button bar - Row 1
     BoxLayout:
@@ -61,19 +396,20 @@
     
     # Terminal display
     ScrollView:
+        size_hint_y: 0.20
         do_scroll_x: False
         scroll_y: 0
         
         Label:
             text: root.terminal_text
             size_hint_y: None
-            height: max(self.texture_size[1], root.height - 106)
+            height: max(self.texture_size[1], root.height * 0.20)
             text_size: self.width - 20, None
             halign: 'left'
             valign: 'top'
             padding: 10, 10
             font_name: 'RobotoMono-Regular'
-            font_size: '13sp'
+            font_size: '10sp'
             color: 0, 1, 0, 1
             
             canvas.before:
