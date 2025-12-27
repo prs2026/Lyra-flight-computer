@@ -1,3 +1,4 @@
+
 <SerialTerminal>:
     orientation: 'vertical'
     padding: 5
@@ -52,7 +53,7 @@
                 color: 0.7, 0.7, 0.7, 1
             
             Label:
-                text: f'{root.altitude:.2f} m'
+                text: f'{root.altitude:.2f} ft'
                 font_size: '20sp'
                 bold: True
                 color: 1, 1, 1, 1
@@ -78,7 +79,7 @@
                 color: 0.7, 0.7, 0.7, 1
             
             Label:
-                text: f'{root.vertical_velocity:.2f} m/s'
+                text: f'{root.vertical_velocity:.2f} ft/s'
                 font_size: '20sp'
                 bold: True
                 color: 1, 1, 1, 1
@@ -136,7 +137,7 @@
                 color: 0.8, 0.8, 0.8, 1
             
             Label:
-                text: f'{root.ground_distance:.2f} m'
+                text: f'{root.ground_distance:.2f} ft'
                 font_size: '16sp'
                 bold: True
                 color: 1, 1, 1, 1
@@ -304,11 +305,13 @@
                     pos: self.pos
                     size: self.size
             
-            Label:
+            Button:
                 text: 'Latitude'
                 font_size: '12sp'
                 size_hint_y: 0.35
+                background_color: 0.2, 0.2, 0.2, 1
                 color: 0.8, 0.8, 0.8, 1
+                on_press: root.copy_gps_to_clipboard()
             
             Label:
                 text: f'{root.latitude:.6f}°'
@@ -329,11 +332,13 @@
                     pos: self.pos
                     size: self.size
             
-            Label:
+            Button:
                 text: 'Longitude'
                 font_size: '12sp'
                 size_hint_y: 0.35
+                background_color: 0.2, 0.2, 0.2, 1
                 color: 0.8, 0.8, 0.8, 1
+                on_press: root.copy_gps_to_clipboard()
             
             Label:
                 text: f'{root.longitude:.6f}°'

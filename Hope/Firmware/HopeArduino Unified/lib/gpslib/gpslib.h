@@ -14,6 +14,8 @@ public:
     ~gpsinput();
         
     int checkformessages();
+    Vector3d getposition();
+    int hasfix();
 };
 
 #endif // BASICLIB

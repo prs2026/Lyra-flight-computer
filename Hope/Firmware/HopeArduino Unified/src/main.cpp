@@ -8,6 +8,8 @@ stationdata Station1;
 stationdata Station2;
 stationdata Station3;
 
+stationdata ThisStation;
+
 #include <SPI.h>                                //the lora device is SPI based so load the SPI library                                         
 
 #include "basiclib.h"
@@ -17,22 +19,25 @@ stationdata Station3;
 
 //#define MODEFLIGHT
 
-#define MODESTATION
+//#define DATARECEIVER
 
 #if !defined(MODEFLIGHT)
-#if !defined(MODESTATION)
-#define MODEGROUND
+#if !defined(DATARECEIVER)
+#define PINGSTATION
 
 #endif // MODE FLIGHT
 #endif // MODE STATION
 sx1280radio radio;
-//gpsinput gps;
+gpsinput gps;
 
 const uint32_t checkinterval = 500;
 uint32_t checktime;
 
 const uint32_t sendpacketinterval = 2000;
 uint32_t sendpackettime;
+
+const uint32_t sendpositioninterval = 30000;
+uint32_t sendpositiontime;
 
 Matrix3d stationpoints;
 
@@ -50,14 +55,16 @@ void setup( ) {
 
   radio.initradio();
 
-  //Serial1.begin(9600);
+  Serial1.setRX(UART_RX_PIN);
+  Serial1.setTX(UART_TX_PIN);
+  Serial1.begin(9600);
 
-  //all at 6400ft
+  //all at 6400ft/1950.6m
 
   //station 1 39.251663002648804, -119.96871477918272
  
   Station1.ID = 16;
-  Station1.alt = 6400; // ft
+  Station1.alt = 1950.6; // m
   Station1.lat = 39.251663002648804;
   Station1.lon = -119.96871477918272;
   Station1.distance = 162;
@@ -67,7 +74,7 @@ void setup( ) {
   //station2 39.251512936807316, -119.96958783820142
 
   Station2.ID = 17;
-  Station2.alt = 6400; // ft
+  Station2.alt = 1950.6; // ft
   Station2.lat = 39.251512936807316;
   Station2.lon = -119.96958783820142;
   Station2.distance = 177;
@@ -75,13 +82,14 @@ void setup( ) {
   //station3 39.25232642482777, -119.96894920782334
 
   Station3.ID = 18;
-  Station3.alt = 6400; // ft
+  Station3.alt = 1950.6; // ft
   Station3.lat = 39.25232642482777;
   Station3.lon = -119.96894920782334;
   Station3.distance = 176;
 
-  // test point 39.25189334300624, -119.96920743754161, 6400 (on surface of lake)
+  ThisStation = Station2; // CHANGE THIS WHEN UPLOADING TO PING STATIONS
 
+  
   #if defined(MODEFLIGHT)
   Serial.print("flightuni");
   radio.setuptorange(0x01);
@@ -93,17 +101,25 @@ void setup( ) {
 
   #endif // MODEFLIGHT
   
-  #if defined(MODEGROUND)
+  #if defined(PINGSTATION)
 
   Serial.print("pingstation");
+  Serial.printf("THIS STATION ID: %d",ThisStation.ID);
 
   radio.setuptorange(0x00);
-  radio.settolisten(Station3.ID);
+  radio.settolisten(ThisStation.ID); 
   
-  #endif // MODEGROUND
-  #if defined(MODESTATION)
+  #endif // PINGSTATION
+
+  
+  #if defined(DATARECEIVER)
 
   Serial.print("groundstation");
+
+  
+
+  // test point 39.25189334300624, -119.96920743754161, 6400 (on surface of lake)
+
 
   // setup reference plane
 
@@ -149,11 +165,12 @@ void setup( ) {
   //Serial.printf("Took %d microseconds",micros()-mathcalctime);
   Serial.printf("Solution 2 gps point: lat/lon: %f,%f alt %f\n",outlat,outlon,outalt);
   
-  #endif // MODEGROUND
+  #endif // PINGSTATION
 
 }
 
 void loop() {
+  //------------------------------------------------------------------------------
   #if defined(MODEFLIGHT)
 
   radio.setuptorange(0x01);
@@ -165,7 +182,7 @@ void loop() {
   
 
   packet packettosendloop;
-
+  packettosendloop.r.checksum = 101; // flight unit identifier
   packettosendloop.r.lat = Station1.distance;
   packettosendloop.r.lon = Station2.distance;
   packettosendloop.r.alt = Station3.distance;
@@ -178,8 +195,8 @@ void loop() {
   //delay(1000);
   
   #endif // MODEFLIGHT
-  
-  #if defined(MODEGROUND)
+  //------------------------------------------------------------------------------
+  #if defined(PINGSTATION)
 
   if(millis() - checktime > checkinterval){
 
@@ -187,67 +204,112 @@ void loop() {
     radio.checkforping();
   }
 
+  gps.checkformessages();
+  //Serial.println("checking gps");
   
+  if (/*gps.hasfix()*/ 1 & (millis() - sendpositiontime > sendpositioninterval))
+  {
+    Serial.print("sending gps location\n");
+    sendpositiontime = millis();
+    Vector3d currentpos;
+    currentpos = gps.getposition();
+    packet packettosend;
 
-  //gps.checkformessages();
+    packettosend.r.lat = currentpos.x()*1e6;
+    packettosend.r.lon = currentpos.y()*1e6;
+    packettosend.r.alt = currentpos.z()*1e6;
+    packettosend.r.battvoltage = getbatteryvoltage()*1e2;
+    packettosend.r.uptime = millis();
+    packettosend.r.checksum = ThisStation.ID;
+
+    radio.sendpacket(packettosend);
+
+    radio.setuptorange(0x00);
+    radio.settolisten(ThisStation.ID);
+  }
   
-  #endif // MODEGROUND
-
-  #if defined(MODESTATION)
+  #endif // PINGSTATION
+  //------------------------------------------------------------------------------
+  #if defined(DATARECEIVER)
   
   recievedpacket newpacket = radio.receivepacket();
 
-  Vector3d distancematrix(newpacket.distance1,newpacket.distance2,newpacket.distance3);
+  if (newpacket.checksum == 101)
+  {
+    Vector3d distancematrix(newpacket.distance1,newpacket.distance2,newpacket.distance3);
 
-  Vector3d solution1, solution2;
-  
-  Serial.println("trying to trilaterate");
+    Vector3d solution1, solution2;
+    
+    Serial.println("trying to trilaterate");
 
-  if (trilaterate(stationpoints, distancematrix, solution1, solution2)) {
-        Serial.printf("Solution 1: %f %f %f\n",solution1.x(),solution1.y(),solution1.z());
-        Serial.printf("Solution 2: %f %f %f\n",solution2.x(),solution2.y(),solution2.z());
-  } else {
-      Serial.println("no valid solution");
+    if (trilaterate(stationpoints, distancematrix, solution1, solution2)) {
+          Serial.printf("Solution 1: %f %f %f\n",solution1.x(),solution1.y(),solution1.z());
+          Serial.printf("Solution 2: %f %f %f\n",solution2.x(),solution2.y(),solution2.z());
+    } else {
+        Serial.println("no valid solution");
+    }
+
+    double outlat = 0;
+    double outlon = 0;
+    double outalt = 0;
+
+    float solvedvvel = 0;
+    float solveddistance = 1200;
+
+    solvedvvel = (solution1.z() - lastpoint.z())/(float(millis() - lastpointtime)/1e3);
+
+    lastpoint = solution1;
+    lastpointtime = millis();
+    
+    enuToLLA(solution2,Station1.lat,Station1.lon,Station1.alt,outlat,outlon,outalt);
+    
+    //Serial.printf("Solution 2 gps point: lat/lon: %f,%f alt %f\n",outlat,outlon,outalt);
+
+    
+
+    Serial.printf("\n %f,%f,%f,%f,%d,%d,%d,%f,%d,%d,%f,%f \n",float(newpacket.uptime)/1e3,
+                                                        outalt,
+                                                        solvedvvel,
+                                                        solveddistance,
+                                                        newpacket.distance1,
+                                                        newpacket.distance2,
+                                                        newpacket.distance3,
+                                                        float(newpacket.battvoltage)/1e2,
+                                                        newpacket.rssi,
+                                                        newpacket.snr,
+                                                        outlat,
+                                                        outlon);
   }
-
-  double outlat = 0;
-  double outlon = 0;
-  double outalt = 0;
-
-  float solvedvvel = 0;
-  float solveddistance = 1200;
-
-  solvedvvel = (solution1.z() - lastpoint.z())/(float(millis() - lastpointtime)/1e3);
-
-  lastpoint = solution1;
-  lastpointtime = millis();
+  else if (newpacket.checksum == Station1.ID)
+  {
+    Station1.lat = newpacket.distance1/1e6;
+    Station1.lon = newpacket.distance2/1e6;
+    Station1.alt = newpacket.distance3/1e6;
+    Station1.battvoltage = float(newpacket.battvoltage)/1e2;
+    Station1.uptime = newpacket.uptime;
+    Serial.printf("Station 1 updated data: %f,%f,%f,%f,%f\n",Station1.lat,Station1.lon,Station1.alt,Station1.battvoltage,Station1.uptime);
+  }
+  else if (newpacket.checksum == Station2.ID)
+  {
+    Station2.lat = newpacket.distance1/1e6;
+    Station2.lon = newpacket.distance2/1e6;
+    Station2.alt = newpacket.distance3/1e6;
+    Station2.battvoltage = float(newpacket.battvoltage)/1e2;
+    Station2.uptime = newpacket.uptime;
+    Serial.printf("Station 2 updated data: %f,%f,%f,%f,%f\n",Station2.lat,Station2.lon,Station2.alt,Station2.battvoltage,Station2.uptime);
+  }
+  else if (newpacket.checksum == Station3.ID)
+  {
+    Station3.lat = newpacket.distance1/1e6;
+    Station3.lon = newpacket.distance2/1e6;
+    Station3.alt = newpacket.distance3/1e6;
+    Station3.battvoltage = float(newpacket.battvoltage)/1e2;
+    Station3.uptime = newpacket.uptime;
+    Serial.printf("Station 3 updated data: %f,%f,%f,%f,%f\n",Station3.lat,Station3.lon,Station3.alt,Station3.battvoltage,Station3.uptime);
+  }
   
-  enuToLLA(solution2,Station1.lat,Station1.lon,Station1.alt,outlat,outlon,outalt);
-  
-  Serial.printf("Solution 2 gps point: lat/lon: %f,%f alt %f\n",outlat,outlon,outalt);
-
-  
-
-  Serial.printf("\n %f,%f,%f,%f,%d,%d,%d,%f,%d,%d,%f,%f \n",float(newpacket.uptime)/1e3,
-                                                      outalt,
-                                                      solvedvvel,
-                                                      solveddistance,
-                                                      newpacket.distance1,
-                                                      newpacket.distance2,
-                                                      newpacket.distance3,
-                                                      float(newpacket.battvoltage)/1e2,
-                                                      newpacket.rssi,
-                                                      newpacket.snr,
-                                                      outlat,
-                                                      outlon);
-
-  // Serial.printf("\n>uptime: %f\n", float(newpacket.r.uptime)/1e3);
-  // Serial.printf(">distance1: %d\n", newpacket.r.lat/1e2);
-  // Serial.printf(">distance2: %d\n", newpacket.r.lon/1e2);
-  // Serial.printf(">distance3: %d\n", newpacket.r.alt/1e2);
-  // Serial.printf(">battvoltage: %f\n", newpacket.r.battvoltage/1e2);
-
-  #endif // MODESTATION
+  //------------------------------------------------------------------------------
+  #endif // DATARECEIVER
   
 }
 

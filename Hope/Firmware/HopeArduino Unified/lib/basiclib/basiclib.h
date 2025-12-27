@@ -61,6 +61,8 @@ struct stationdata
     double xcoord;
     double ycoord;
     double zcoord;
+    float battvoltage;
+    float uptime;
 };
 
 

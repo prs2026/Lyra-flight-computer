@@ -3,6 +3,7 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty, BooleanProperty, NumericProperty, ListProperty
 from kivy.clock import Clock
+from kivy.core.clipboard import Clipboard
 from threading import Thread
 from time import sleep, time
 import os
@@ -67,8 +68,11 @@ class SerialTerminal(BoxLayout):
         else:
             self.data_age = time() - self.last_packet_time
             
-            # Update color based on age
-            if self.data_age < 3.0:
+            # If not logging, always red
+            if not self.is_logging:
+                self.data_age_color = [1, 0, 0, 1]  # Red
+            # Update color based on age when logging
+            elif self.data_age < 3.0:
                 self.data_age_color = [0, 0.8, 0, 1]  # Green
             elif self.data_age < 5.0:
                 self.data_age_color = [1, 1, 0, 1]  # Yellow
@@ -123,7 +127,7 @@ class SerialTerminal(BoxLayout):
             # Open serial connection
             self.serial_connection = serial4a.get_serial_port(
                 device_name,
-                9600,  # Baud rate - adjust as needed
+                115200,  # Baud rate
                 8,     # Data bits
                 'N',   # Parity (N=None, E=Even, O=Odd)
                 1,     # Stop bits
@@ -132,7 +136,7 @@ class SerialTerminal(BoxLayout):
             
             if self.serial_connection:
                 self.add_terminal_text(f"Connected to {device_name}\n")
-                self.add_terminal_text("Baud: 9600, 8N1\n")
+                self.add_terminal_text("Baud: 115200, 8N1\n")
                 self.add_terminal_text("-" * 50 + "\n")
                 
                 # Set connected status
@@ -283,11 +287,6 @@ class SerialTerminal(BoxLayout):
                 self.log_file.flush()  # Ensure data is written immediately
             except Exception as e:
                 pass  # Silent fail to avoid interrupting serial read
-        
-        # Limit buffer size to prevent memory issues
-        max_chars = 20000
-        if len(self.terminal_text) > max_chars:
-            self.terminal_text = self.terminal_text[-max_chars:]
     
     def start_logging(self):
         """Start logging serial data to file"""
@@ -346,6 +345,12 @@ class SerialTerminal(BoxLayout):
             
         except Exception as e:
             self.add_terminal_text(f"Error stopping logging: {str(e)}\n")
+    
+    def copy_gps_to_clipboard(self):
+        """Copy GPS coordinates to clipboard"""
+        gps_string = f"{self.latitude:.6f}, {self.longitude:.6f}"
+        Clipboard.copy(gps_string)
+        self.add_terminal_text(f"Copied to clipboard: {gps_string}\n")
     
     def on_stop(self):
         """Called when app stops"""
