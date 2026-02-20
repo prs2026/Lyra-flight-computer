@@ -19,12 +19,6 @@ C9,100n,C_0402_1005Metric,7.2376,-18.9436,-90.0,top
 D1,LED,LED_0603_1608Metric,2.9718,-24.1808,180.0,bottom
 D2,LED,LED_0603_1608Metric,1.6764,-11.3792,180.0,bottom
 D3,D_Zener,D_SOD-323F,11.3186,-4.4958,0.0,top
-J1,Power 1,Molex_PicoBlade_53048-0210_1x02_P1.25mm_Horizontal,1.2972,-2.2606,270.0,bottom
-J2,Conn_01x04,PinHeader_1x04_P2.54mm_Vertical,10.668,-23.7998,90.0,bottom
-J3,Power 1,Molex_PicoBlade_53048-0210_1x02_P1.25mm_Horizontal,1.27,-7.9094,270.0,bottom
-J4,Power 1,Molex_PicoBlade_53048-0210_1x02_P1.25mm_Horizontal,1.2446,-15.2554,270.0,bottom
-J5,Conn_01x06,PinHeader_1x06_P1.27mm_Vertical,11.5062,-21.59,270.0,bottom
-J7,Power 1,Molex_PicoBlade_53048-0210_1x02_P1.25mm_Horizontal,1.1702,-20.5486,270.0,bottom
 L1,47n,L_0402_1005Metric,5.2368,-9.2528,0.0,top
 Q1,AO3401A,SOT-23,11.0368,-7.3891,-90.0,top
 R1,1k,R_0402_1005Metric,2.7178,-24.1808,0.0,top

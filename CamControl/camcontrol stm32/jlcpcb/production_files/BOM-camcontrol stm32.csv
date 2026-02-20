@@ -23,9 +23,3 @@ INA2180,U7,WSON-8-1EP_2x2mm_P0.5mm_EP0.9x1.6mm,C83224,1
 LED,"D1,D2",LED_0603_1608Metric,C89811,2
 STM32WLE4CCUx,U3,QFN-48-1EP_7x7mm_P0.5mm_EP5.6x5.6mm,C2888218,1
 TPS25970LRPWR,"U5,U6",QFN-10-2x2-hotrod,C3662801,2
-Conn_01x04,J2,PinHeader_1x04_P2.54mm_Vertical,,1
-Power 1,J7,Molex_PicoBlade_53048-0210_1x02_P1.25mm_Horizontal,,1
-Power 1,J3,Molex_PicoBlade_53048-0210_1x02_P1.25mm_Horizontal,,1
-Conn_01x06,J5,PinHeader_1x06_P1.27mm_Vertical,,1
-Power 1,J4,Molex_PicoBlade_53048-0210_1x02_P1.25mm_Horizontal,,1
-Power 1,J1,Molex_PicoBlade_53048-0210_1x02_P1.25mm_Horizontal,,1

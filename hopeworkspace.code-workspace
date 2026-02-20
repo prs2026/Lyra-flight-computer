@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"path": "Software/Flight/LEO - adapted"
+		},
+		{
+			"path": "Hope/Firmware/HopeArduino Unified"
+		},
+		{
+			"path": "Hope/Firmware/HopeArduino Reciever"
+		},
+		{
+			"path": "Hope/python android app"
+		},
+		{
+			"path": "../../emerge sims"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"typeinfo": "cpp"
+		}
+	}
+}

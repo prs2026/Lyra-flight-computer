@@ -1,0 +1,49 @@
+{
+  "build": {
+    "core": "stm32",
+    "cpu": "cortex-m4",
+    "extra_flags": "-DSTM32WLE5xx -DSTM32WLExx",
+    "f_cpu": "48000000L",
+    "framework_extra_flags": {
+      "arduino": "-D__CORTEX_M4 -DSTM32WLE5xx"
+    },
+    "mcu": "stm32wle5ccux",
+    "product_line": "STM32WLE5xx",
+    "variant": "STM32WLxx/WLE5CCUx"
+  },
+  "connectivity": [
+    "lora",
+    "subghz"
+  ],
+  "debug": {
+    "jlink_device": "STM32WLE5CC",
+    "openocd_target": "stm32wlx",
+    "svd_path": "STM32WLE5.svd",
+    "default_tools": [
+      "stlink"
+    ]
+  },
+  "frameworks": [
+    "arduino",
+    "stm32cube",
+    "cmsis"
+  ],
+  "name": "STM32WLE5CC",
+  "upload": {
+    "disable_flushing": false,
+    "maximum_ram_size": 65536,
+    "maximum_size": 262144,
+    "protocol": "stlink",
+    "protocols": [
+      "stlink",
+      "jlink",
+      "blackmagic",
+      "mbed"
+    ],
+    "require_upload_port": true,
+    "use_1200bps_touch": false,
+    "wait_for_upload_port": false
+  },
+  "url": "https://www.st.com/en/microcontrollers-microprocessors/stm32wle5cc.html",
+  "vendor": "STMicroelectronics"
+}
