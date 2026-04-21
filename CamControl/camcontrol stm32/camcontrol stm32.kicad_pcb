@@ -1050,7 +1050,7 @@
 			(uuid "0cc096d7-42ca-45fc-a6bf-d4a258373e04")
 		)
 		(embedded_fonts no)
-		(model "${KICAD9_3DMODEL_DIR}/Diode_SMD.3dshapes/D_SOD-323F.step"
+		(model "${KICAD9_3DMODEL_DIR}/Diode_SMD.3dshapes/D_SOD-123F.wrl"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -11347,7 +11347,7 @@
 		(path "/957b7aff-6da7-47ff-9f4d-deadd01ad86c")
 		(sheetname "/")
 		(sheetfile "camcontrol stm32.kicad_sch")
-		(attr through_hole)
+		(attr through_hole exclude_from_pos_files exclude_from_bom)
 		(fp_line
 			(start -1.55 1.14)
 			(end -1.55 -7.49)
@@ -11932,7 +11932,7 @@
 		(path "/9bd50a3f-02de-448e-a074-5d9f89b0fb2d")
 		(sheetname "/")
 		(sheetfile "camcontrol stm32.kicad_sch")
-		(attr through_hole)
+		(attr through_hole exclude_from_pos_files exclude_from_bom)
 		(fp_line
 			(start -0.25 1.45)
 			(end -0.75 1.45)
@@ -12396,7 +12396,7 @@
 		(path "/efee9494-7120-4452-a42e-c510629e0c50")
 		(sheetname "/")
 		(sheetfile "camcontrol stm32.kicad_sch")
-		(attr through_hole)
+		(attr through_hole exclude_from_pos_files exclude_from_bom)
 		(fp_line
 			(start -0.25 1.45)
 			(end -0.75 1.45)
@@ -13398,7 +13398,7 @@
 		(path "/96ce20d4-9c65-4ce4-8fc9-e389df546a69")
 		(sheetname "/")
 		(sheetfile "camcontrol stm32.kicad_sch")
-		(attr through_hole)
+		(attr through_hole exclude_from_pos_files exclude_from_bom)
 		(fp_line
 			(start -0.25 1.45)
 			(end -0.75 1.45)
@@ -13862,7 +13862,7 @@
 		(path "/10adb9a5-b3f0-419f-bb42-81f2184810c8")
 		(sheetname "/")
 		(sheetfile "camcontrol stm32.kicad_sch")
-		(attr through_hole)
+		(attr through_hole exclude_from_pos_files exclude_from_bom)
 		(fp_line
 			(start -0.25 1.45)
 			(end -0.75 1.45)
@@ -14705,7 +14705,7 @@
 		(path "/36ae2c91-4067-40b8-a086-f93677bebf46")
 		(sheetname "/")
 		(sheetfile "camcontrol stm32.kicad_sch")
-		(attr through_hole)
+		(attr through_hole exclude_from_pos_files exclude_from_bom)
 		(fp_line
 			(start 1.77 -9.39)
 			(end 1.77 1.77)
