@@ -58,6 +58,7 @@ class MPCORE{
         bool ready = false;
         bool beepon = 1;
         bool dogpspassthrough = false;
+        bool flushpending = false;
         
 
 
@@ -112,6 +113,7 @@ class MPCORE{
         int logdata(mpstate state,navpacket navstate);
         logpacket readdata(uint64_t page,bool serial);
         int logtobuf();
+        int flushbufferpage();
 
         int movebuftofile();
 
@@ -337,6 +339,18 @@ int MPCORE::movebuftofile(){
     return 0;
 }
 
+int MPCORE::flushbufferpage(){
+    if (logbuf.isEmpty())
+    {
+        return 0;
+    }
+
+    logpacket datatolog = logbuf.pop();
+    datatolog.r.MPstate.r.missiontime = datatolog.r.MPstate.r.uptime - liftofftime;
+    logdata(datatolog.r.MPstate, datatolog.r.navsysstate);
+    return 1;
+}
+
 int MPCORE::logdata(mpstate state, navpacket navstate){
 
     NAV.event ? state.r.status = state.r.status | 0b1 : state.r.status = state.r.status;
@@ -497,7 +511,7 @@ int MPCORE::changestate(){
             detectiontime = millis();
             Serial.println("liftoff");
             liftofftime = millis();
-            movebuftofile();
+            flushpending = true;
         }
         
     }

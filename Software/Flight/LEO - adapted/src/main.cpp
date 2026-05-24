@@ -64,12 +64,13 @@ void loop() { // main core loop
     MP.changestate();
     MP.checkforpyros();
 
-    // if (millis() - MP.prevtime.logdata >= MP.intervals[MP._sysstate.r.state].logdata){
-    //     if (MP.sendserialon && MP.sendtoteleplot)
-    //     {
-    //         Serial.print(">shouldlog: 1 \n");
-    //     }
-    // }
+    if (MP.flushpending)
+    {
+        if (MP.flushbufferpage() == 0)
+        {
+            MP.flushpending = false;
+        }
+    }
     
     if (millis() - MP.prevtime.logdata >= MP.intervals[MP._sysstate.r.state].logdata && NAV.newdata){
         uint32_t prevlogmicros = micros();
@@ -88,18 +89,8 @@ void loop() { // main core loop
         // }
         MP.prevtime.logdata = millis();
         eventsfired += 2;
-        //MP.sendserialon ? Serial.printf(">loggingtime: %d \n",micros() - prevlogmicros) : 1==1;
+        MP.sendserialon ? Serial.printf(">loggingtime: %d \n",micros() - prevlogmicros) : 1==1;
     }
-
-
-    // if (MP.sendserialon & millis() - MP.prevtime.serial >= MP.intervals[MP._sysstate.r.state].serial){
-    //     uint32_t prevserialmicros = micros();
-    //     Serial.printf(">brk1: %d \n",digitalRead(BRKOUT1));
-    //     Serial.printf(">brk1time: %d \n",brkout1statustime);
-    //     port.senddata(MP._sysstate,NAV._sysstate);
-    //     MP.prevtime.serial = millis();
-    //     MP.sendserialon ? Serial.printf(">porttime: %d \n",micros() - prevserialmicros) : 1==1;
-    // }
 
 
     if (millis()- MP.prevtime.led >= MP.intervals[MP._sysstate.r.state].led){
@@ -136,9 +127,9 @@ void loop() { // main core loop
         MP.parsecommand(buf);
     }
 
-    if (MP._sysstate.r.uptime > 10000 && cameraon == false){
-        P1.fire();
-    }
+    // if (MP._sysstate.r.uptime > 10000 && cameraon == false){
+    //     P1.fire();
+    // }
 
     MP.prevtime.loop = micros();
     MP._sysstate.r.state >= 1 ? MP.missionelasped = millis() - MP.liftofftime : MP.missionelasped = 0, MP.landedtime = millis();

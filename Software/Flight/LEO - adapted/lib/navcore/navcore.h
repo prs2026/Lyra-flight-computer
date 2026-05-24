@@ -256,11 +256,11 @@ void NAVCORE::getsensordata(bool readgps){
     if (useaccel == 1)
     {
         accumz += imu.data.accel.z;
-        if (millis() - invertedtime > 5000 )
-        {
-            upsidedowncheck();
-            invertedtime = millis();
-        }
+        // if (millis() - invertedtime > 5000 )
+        // {
+        //     upsidedowncheck();
+        //     invertedtime = millis();
+        // }
     }
 
     
