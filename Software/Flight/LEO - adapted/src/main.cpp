@@ -1,8 +1,70 @@
 #include <Arduino.h>
+#include <Adafruit_TinyUSB.h>
 
 #include "mpcore.h"
 
 MPCORE MP;
+Adafruit_USBD_MSC usb_msc;
+
+static int32_t mscReadCallback(uint32_t lba, void *buffer, uint32_t bufsize)
+{
+    uint32_t offset = lba * 512;
+    if (lba >= MSC_BLOCK_COUNT || bufsize > MSC_FLASH_SIZE - offset)
+    {
+        return -1;
+    }
+
+    memcpy(buffer, (const void *)(XIP_BASE + MSC_FLASH_OFFSET + offset), bufsize);
+    return (int32_t)bufsize;
+}
+
+static int32_t mscWriteCallback(uint32_t lba, uint8_t *buffer, uint32_t bufsize)
+{
+    (void)lba;
+    (void)buffer;
+    (void)bufsize;
+    return -1;
+}
+
+static void mscFlushCallback(void)
+{
+}
+
+static bool mscWritableCallback(void)
+{
+    return false;
+}
+
+static void enterMassStorageMode()
+{
+    Serial.println("MSC export mode requested");
+    Serial.println("Building CSV export");
+    Serial.flush();
+
+    if (MP.buildCsvExportFlash() != 0)
+    {
+        Serial.println("MSC export build failed");
+        MP.usbMassStorageMode = false;
+        MP.exportReady = false;
+        return;
+    }
+
+    Serial.println("Switching USB to mass storage");
+    Serial.flush();
+    delay(100);
+
+    TinyUSBDevice.detach();
+    delay(50);
+
+    Serial.end();
+
+    usb_msc.setUnitReady(true);
+    usb_msc.begin();
+
+    MP.exportReady = true;
+
+    TinyUSBDevice.attach();
+}
 
 bool dataismoved = false;
 
@@ -40,7 +102,12 @@ void setup() { // main core setup
     MP.beep(4000,200);
     MP.beep(4500,200);
     Serial.println("mpcore out of setup");
-    
+
+    usb_msc.setID("LYRA", "FlightCSV", "1.0");
+    usb_msc.setCapacity(MSC_BLOCK_COUNT, 512);
+    usb_msc.setReadWriteCallback(mscReadCallback, mscWriteCallback, mscFlushCallback);
+    usb_msc.setWritableCallback(mscWritableCallback);
+    usb_msc.setUnitReady(false);
 }
 
 void setup1() { // nav core setup
@@ -61,6 +128,18 @@ void setup1() { // nav core setup
 
 void loop() { // main core loop
     int eventsfired = 0;
+
+    if (MP.usbMassStorageMode)
+    {
+        if (!MP.exportReady)
+        {
+            enterMassStorageMode();
+        }
+
+        TinyUSBDevice.task();
+        return;
+    }
+
     MP.changestate();
     MP.checkforpyros();
 
@@ -141,6 +220,11 @@ void loop() { // main core loop
 
 
 void loop1() { // nav core loop
+    if (MP.usbMassStorageMode)
+    {
+        return;
+    }
+
     MP._sysstate.r.state == 0 ? NAV.useaccel = 1 : NAV.useaccel = 0;
     
     NAV.prevtime.getdata = micros();
@@ -175,4 +259,12 @@ void loop1() { // nav core loop
     }
     NAV.prevtime.looptime = micros();
     NAV._sysstate.r.uptime = millis();
+}
+
+void tud_mount_cb(void)
+{
+}
+
+void tud_umount_cb(void)
+{
 }

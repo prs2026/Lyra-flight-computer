@@ -58,6 +58,10 @@ class MPCORE{
         bool ready = false;
         bool beepon = 1;
         bool dogpspassthrough = false;
+        bool usbMassStorageMode = false;
+        bool exportReady = false;
+        uint32_t exportFileSize = 0;
+        uint32_t exportSectorCount = 0;
         bool flushpending = false;
         
 
@@ -113,6 +117,7 @@ class MPCORE{
         int logdata(mpstate state,navpacket navstate);
         logpacket readdata(uint64_t page,bool serial);
         int logtobuf();
+        int buildCsvExportFlash();
         int flushbufferpage();
 
         int movebuftofile();
@@ -243,7 +248,7 @@ int MPCORE::flashtest(){
     // int addr = FLASH_TARGET_OFFSET + XIP_BASE;
     int32_t page = 0;
     int *p;
-    while (page < FLASH_FILESYSTEM_SIZE/FLASH_PAGE_SIZE)
+    while (page < FLASH_LOG_SIZE/FLASH_PAGE_SIZE)
     {
         addr = XIP_BASE + FLASH_TARGET_OFFSET + (page * FLASH_PAGE_SIZE);
         p = (int *)addr;
@@ -257,6 +262,9 @@ int MPCORE::flashtest(){
         }
         page++;
     }
+
+    first_empty_page = FLASH_LOG_SIZE / FLASH_PAGE_SIZE;
+    Serial.println("Flash log region full");
 
     
     // *buf = 123456;
@@ -353,6 +361,12 @@ int MPCORE::flushbufferpage(){
 
 int MPCORE::logdata(mpstate state, navpacket navstate){
 
+    if (first_empty_page < 0 || first_empty_page >= (int32_t)(FLASH_LOG_SIZE / FLASH_PAGE_SIZE))
+    {
+        Serial.println("Flash log full, skipping entry");
+        return 1;
+    }
+
     NAV.event ? state.r.status = state.r.status | 0b1 : state.r.status = state.r.status;
     uint32_t openingtime = micros();
     state.r.batterystate = readbattvoltage();
@@ -427,7 +441,7 @@ int MPCORE::erasedata(){
     Serial.println("erasing...");
     rp2040.idleOtherCore();
     uint32_t ints = save_and_disable_interrupts();
-    flash_range_erase(FLASH_TARGET_OFFSET, FLASH_FILESYSTEM_SIZE-FLASH_SECTOR_SIZE-5);
+    flash_range_erase(FLASH_TARGET_OFFSET, FLASH_LOG_SIZE);
     first_empty_page = 0;
     restore_interrupts (ints);
     rp2040.resumeOtherCore();
@@ -493,6 +507,336 @@ int MPCORE::dumpdata(){
     }
         
     Serial.println("done");
+    return 0;
+}
+
+static const char CSV_EXPORT_HEADER[] =
+    "index,checksum1,"
+    "mp_errorflag,mp_uptime,mp_MET,mp_state,mp_pyrosfired,mp_pyroscont,mp_pyrostate,mp_status,mp_missiontime,mp_batterystate,"
+    "nav_errorflag,nav_uptime,"
+    "imu_accel_x,imu_accel_y,imu_accel_z,imu_gyro_x,imu_gyro_y,imu_gyro_z,imu_absaccel,imu_temp,"
+    "baro_pressure,baro_altitude,baro_temp,baro_verticalvel,baro_maxrecordedalt,baro_altitudeagl,baro_padalt,"
+    "adxl_accel_x,adxl_accel_y,adxl_accel_z,adxl_absaccel,"
+    "mag_gauss_x,mag_gauss_y,mag_gauss_z,mag_utesla_x,mag_utesla_y,mag_utesla_z,"
+    "accelworld_x,accelworld_y,accelworld_z,"
+    "orientationeuler_x,orientationeuler_y,orientationeuler_z,"
+    "orientationquat_w,orientationquat_x,orientationquat_y,orientationquat_z,"
+    "orientationquatadj_w,orientationquatadj_x,orientationquatadj_y,orientationquatadj_z,"
+    "filtered_vertaccel,filtered_alt,filtered_vvel,filtered_maxalt,"
+    "covariences_x,covariences_y,covariences_z,"
+    "checksum2\n";
+
+static int formatCsvExportLine(char *line, size_t lineSize, uint32_t index, const logpacket &packet)
+{
+    return snprintf(line, lineSize,
+        "%lu,%u,"
+        "%u,%lu,%lu,%u,%u,%u,%u,%u,%ld,%f,"
+        "%u,%lu,"
+        "%f,%f,%f,%f,%f,%f,%f,%f,"
+        "%f,%f,%f,%f,%f,%f,%f,"
+        "%f,%f,%f,%f,"
+        "%f,%f,%f,%f,%f,%f,"
+        "%f,%f,%f,"
+        "%f,%f,%f,"
+        "%f,%f,%f,%f,"
+        "%f,%f,%f,%f,"
+        "%f,%f,%f,%f,"
+        "%f,%f,%f,"
+        "%u\n",
+        (unsigned long)index,
+        (unsigned int)packet.r.checksum1,
+        (unsigned int)packet.r.MPstate.r.errorflag,
+        (unsigned long)packet.r.MPstate.r.uptime,
+        (unsigned long)packet.r.MPstate.r.MET,
+        (unsigned int)packet.r.MPstate.r.state,
+        (unsigned int)packet.r.MPstate.r.pyrosfired,
+        (unsigned int)packet.r.MPstate.r.pyroscont,
+        (unsigned int)packet.r.MPstate.r.pyrostate,
+        (unsigned int)packet.r.MPstate.r.status,
+        (long)packet.r.MPstate.r.missiontime,
+        packet.r.MPstate.r.batterystate,
+        (unsigned int)packet.r.navsysstate.r.errorflag,
+        (unsigned long)packet.r.navsysstate.r.uptime,
+        packet.r.navsysstate.r.imudata.accel.x,
+        packet.r.navsysstate.r.imudata.accel.y,
+        packet.r.navsysstate.r.imudata.accel.z,
+        packet.r.navsysstate.r.imudata.gyro.x,
+        packet.r.navsysstate.r.imudata.gyro.y,
+        packet.r.navsysstate.r.imudata.gyro.z,
+        packet.r.navsysstate.r.imudata.absaccel,
+        packet.r.navsysstate.r.imudata.temp,
+        packet.r.navsysstate.r.barodata.pressure,
+        packet.r.navsysstate.r.barodata.altitude,
+        packet.r.navsysstate.r.barodata.temp,
+        packet.r.navsysstate.r.barodata.verticalvel,
+        packet.r.navsysstate.r.barodata.maxrecordedalt,
+        packet.r.navsysstate.r.barodata.altitudeagl,
+        packet.r.navsysstate.r.barodata.padalt,
+        packet.r.navsysstate.r.adxldata.accel.x,
+        packet.r.navsysstate.r.adxldata.accel.y,
+        packet.r.navsysstate.r.adxldata.accel.z,
+        packet.r.navsysstate.r.adxldata.absaccel,
+        packet.r.navsysstate.r.magdata.gauss.x,
+        packet.r.navsysstate.r.magdata.gauss.y,
+        packet.r.navsysstate.r.magdata.gauss.z,
+        packet.r.navsysstate.r.magdata.utesla.x,
+        packet.r.navsysstate.r.magdata.utesla.y,
+        packet.r.navsysstate.r.magdata.utesla.z,
+        packet.r.navsysstate.r.accelworld.x,
+        packet.r.navsysstate.r.accelworld.y,
+        packet.r.navsysstate.r.accelworld.z,
+        packet.r.navsysstate.r.orientationeuler.x,
+        packet.r.navsysstate.r.orientationeuler.y,
+        packet.r.navsysstate.r.orientationeuler.z,
+        packet.r.navsysstate.r.orientationquat.w,
+        packet.r.navsysstate.r.orientationquat.x,
+        packet.r.navsysstate.r.orientationquat.y,
+        packet.r.navsysstate.r.orientationquat.z,
+        packet.r.navsysstate.r.orientationquatadj.w,
+        packet.r.navsysstate.r.orientationquatadj.x,
+        packet.r.navsysstate.r.orientationquatadj.y,
+        packet.r.navsysstate.r.orientationquatadj.z,
+        packet.r.navsysstate.r.filtered.vertaccel,
+        packet.r.navsysstate.r.filtered.alt,
+        packet.r.navsysstate.r.filtered.vvel,
+        packet.r.navsysstate.r.filtered.maxalt,
+        packet.r.navsysstate.r.covariences.x,
+        packet.r.navsysstate.r.covariences.y,
+        packet.r.navsysstate.r.covariences.z,
+        (unsigned int)packet.r.checksum2);
+}
+
+int MPCORE::buildCsvExportFlash(){
+    if (first_empty_page <= 0)
+    {
+        Serial.println("No flash data to export");
+        return 1;
+    }
+
+    uint32_t fileSize = sizeof(CSV_EXPORT_HEADER) - 1;
+    static char line[4096];
+
+    for (uint32_t page = 0; page < first_empty_page; ++page)
+    {
+        logpacket packet = readdata(page,false);
+        int len = formatCsvExportLine(line, sizeof(line), page, packet);
+
+        if (len < 0 || len >= (int)sizeof(line))
+        {
+            Serial.println("CSV format error");
+            return 1;
+        }
+        fileSize += (uint32_t)len;
+    }
+
+    uint32_t totalSectors = MSC_BLOCK_COUNT;
+    uint32_t rootDirSectors = ((16 * 32) + 511) / 512;
+    uint32_t fatSectors = 0;
+    uint32_t clusterCount = 0;
+    uint32_t prevFatSectors;
+
+    do {
+        prevFatSectors = fatSectors;
+        uint32_t dataSectors = totalSectors - 1 - rootDirSectors - 2 * fatSectors;
+        clusterCount = dataSectors;
+        fatSectors = ((clusterCount + 2) * 2 + 511) / 512;
+    } while (fatSectors != prevFatSectors);
+
+    uint32_t dataStart = 1 + 2 * fatSectors + rootDirSectors;
+    uint32_t fileClusters = (fileSize + 511) / 512;
+    if (clusterCount < 4085 || clusterCount >= 65525)
+    {
+        Serial.println("MSC geometry is not FAT16-compatible");
+        return 1;
+    }
+    if (fileClusters > clusterCount)
+    {
+        Serial.println("MSC export too large for reserved flash region");
+        return 1;
+    }
+
+    static uint8_t sector[512];
+    memset(sector, 0, sizeof(sector));
+
+    // clear export region
+    rp2040.idleOtherCore();
+    uint32_t ints = save_and_disable_interrupts();
+    flash_range_erase(MSC_FLASH_OFFSET, MSC_FLASH_SIZE);
+    restore_interrupts(ints);
+    rp2040.resumeOtherCore();
+
+    // boot sector
+    memset(sector, 0, sizeof(sector));
+    auto put16 = [](uint8_t *dst, uint16_t value) {
+        dst[0] = value & 0xFF;
+        dst[1] = (value >> 8) & 0xFF;
+    };
+    auto put32 = [](uint8_t *dst, uint32_t value) {
+        dst[0] = value & 0xFF;
+        dst[1] = (value >> 8) & 0xFF;
+        dst[2] = (value >> 16) & 0xFF;
+        dst[3] = (value >> 24) & 0xFF;
+    };
+    sector[0] = 0xEB;
+    sector[1] = 0x3C;
+    sector[2] = 0x90;
+    memcpy(sector + 3, "MSDOS5.0", 8);
+    put16(sector + 11, 512);
+    sector[13] = 1;
+    put16(sector + 14, 1);
+    sector[16] = 2;
+    put16(sector + 17, 16);
+    put16(sector + 19, totalSectors <= 0xFFFF ? totalSectors : 0);
+    sector[21] = 0xF8;
+    put16(sector + 22, fatSectors);
+    put16(sector + 24, 63);
+    put16(sector + 26, 255);
+    put32(sector + 28, 0);
+    put32(sector + 32, totalSectors > 0xFFFF ? totalSectors : 0);
+    sector[36] = 0x80;
+    sector[38] = 0x29;
+    put32(sector + 39, 0x4C595241);
+    memcpy(sector + 43, "LYRA CSV   ", 11);
+    memcpy(sector + 54, "FAT16   ", 8);
+    sector[510] = 0x55;
+    sector[511] = 0xAA;
+
+    rp2040.idleOtherCore();
+    ints = save_and_disable_interrupts();
+    flash_range_program(MSC_FLASH_OFFSET + 0, sector, 512);
+    restore_interrupts(ints);
+    rp2040.resumeOtherCore();
+
+    // build FAT table
+    uint32_t fatEntries = clusterCount + 2;
+    uint16_t *fat = (uint16_t *)malloc(fatEntries * sizeof(uint16_t));
+    if (!fat)
+    {
+        Serial.println("Out of memory for FAT table");
+        return 1;
+    }
+    fat[0] = 0xFFF8;
+    fat[1] = 0xFFFF;
+    for (uint32_t c = 2; c < fatEntries; ++c)
+    {
+        if (c < 2 + fileClusters - 1)
+        {
+            fat[c] = (uint16_t)(c + 1);
+        }
+        else if (c == 2 + fileClusters - 1)
+        {
+            fat[c] = 0xFFFF;
+        }
+        else
+        {
+            fat[c] = 0x0000;
+        }
+    }
+
+    memset(sector, 0, sizeof(sector));
+    uint32_t fatOffset = MSC_FLASH_OFFSET + 512;
+    uint32_t fatBytes = fatEntries * sizeof(uint16_t);
+    for (uint32_t s = 0; s < fatSectors; ++s)
+    {
+        uint32_t copyLen = fatBytes - s * 512;
+        if (copyLen > 512) copyLen = 512;
+        memcpy(sector, ((uint8_t *)fat) + s * 512, copyLen);
+        rp2040.idleOtherCore();
+        ints = save_and_disable_interrupts();
+        flash_range_program(fatOffset + s * 512, sector, 512);
+        restore_interrupts(ints);
+        rp2040.resumeOtherCore();
+        memset(sector, 0, sizeof(sector));
+    }
+
+    for (uint32_t s = 0; s < fatSectors; ++s)
+    {
+        uint32_t copyLen = fatBytes - s * 512;
+        if (copyLen > 512) copyLen = 512;
+        memcpy(sector, ((uint8_t *)fat) + s * 512, copyLen);
+        rp2040.idleOtherCore();
+        ints = save_and_disable_interrupts();
+        flash_range_program(fatOffset + (fatSectors + s) * 512, sector, 512);
+        restore_interrupts(ints);
+        rp2040.resumeOtherCore();
+        memset(sector, 0, sizeof(sector));
+    }
+    free(fat);
+
+    // root directory
+    memset(sector, 0, sizeof(sector));
+    memcpy(sector + 0, "FLIGHT  ", 8);
+    memcpy(sector + 8, "CSV", 3);
+    sector[11] = 0x20;
+    put16(sector + 26, 2);
+    put32(sector + 28, fileSize);
+
+    uint32_t rootOffset = MSC_FLASH_OFFSET + 512 + 2 * fatSectors * 512;
+    rp2040.idleOtherCore();
+    ints = save_and_disable_interrupts();
+    flash_range_program(rootOffset, sector, 512);
+    restore_interrupts(ints);
+    rp2040.resumeOtherCore();
+
+    // write file data sequentially
+    uint32_t dataStartOffset = MSC_FLASH_OFFSET + dataStart * 512;
+    uint32_t currentSector = 0;
+    uint32_t sectorPos = 0;
+    memset(sector, 0, sizeof(sector));
+
+    auto appendExportBytes = [&](const char *data, uint32_t len) {
+        uint32_t written = 0;
+        while (written < len)
+        {
+            uint32_t chunk = len - written;
+            if (chunk > 512 - sectorPos) chunk = 512 - sectorPos;
+            memcpy(sector + sectorPos, data + written, chunk);
+            written += chunk;
+            sectorPos += chunk;
+
+            if (sectorPos == 512)
+            {
+                rp2040.idleOtherCore();
+                ints = save_and_disable_interrupts();
+                flash_range_program(dataStartOffset + currentSector * 512, sector, 512);
+                restore_interrupts(ints);
+                rp2040.resumeOtherCore();
+                currentSector++;
+                sectorPos = 0;
+                memset(sector, 0, sizeof(sector));
+            }
+        }
+    };
+
+    appendExportBytes(CSV_EXPORT_HEADER, sizeof(CSV_EXPORT_HEADER) - 1);
+
+    for (uint32_t page = 0; page < first_empty_page; ++page)
+    {
+        logpacket packet = readdata(page,false);
+        int len = formatCsvExportLine(line, sizeof(line), page, packet);
+
+        if (len < 0 || len >= (int)sizeof(line))
+        {
+            Serial.println("CSV format error while writing");
+            return 1;
+        }
+
+        appendExportBytes(line, (uint32_t)len);
+    }
+
+    if (sectorPos > 0)
+    {
+        rp2040.idleOtherCore();
+        ints = save_and_disable_interrupts();
+        flash_range_program(dataStartOffset + currentSector * 512, sector, 512);
+        restore_interrupts(ints);
+        rp2040.resumeOtherCore();
+        currentSector++;
+    }
+
+    exportFileSize = fileSize;
+    exportSectorCount = totalSectors;
+    Serial.printf("MSC export image built: %u bytes, %u sectors\n", fileSize, exportSectorCount);
     return 0;
 }
 
@@ -821,6 +1165,12 @@ int MPCORE::parsecommand(char input){
     case 'g':
     dogpspassthrough = !dogpspassthrough;
     break;
+
+    case 'M':
+        Serial.println("MSC export mode requested");
+        usbMassStorageMode = true;
+        exportReady = false;
+        break;
     
     default:
         break;
