@@ -69,7 +69,7 @@ class NAVCORE{
         navpacket _sysstate;
 
         uint8_t state;
-        uint8_t newdata;
+        volatile uint8_t newdata;
 
         int useaccel = 1;
 
@@ -167,8 +167,8 @@ NAVCORE::NAVCORE(){
 int NAVCORE::initi2c(){
     Wire.setSCL(SCL);
     Wire.setSDA(SDA);
-    Wire.setClock(10000);
     Wire.begin();
+    Wire.setClock(400000);
     scani2c(true) ? _sysstate.r.errorflag || 0b1 : _sysstate.r.errorflag;
     return 0;
 }
@@ -203,26 +203,32 @@ uint32_t NAVCORE::sensorinit(){
 }
 
 void NAVCORE::getsensordata(bool readgps){
-    uint32_t hitlindex = 0;
+    uint64_t currentHitlIndex = hitlindex;
     //Serial.printf("\n>NAVspot: %f \n", 1.5);
     if (hitlteston)
     {
+        const uint64_t hitlCount = sizeof(hitldata)/sizeof(hitldata[0]);
         //Serial.println("hitltesting");
-        while ((hitldata[hitlindex][0]*1000)-(timetostart*1000) < millis() - hitltime && hitlteston)
+        while (hitlindex + 1 < hitlCount &&
+               (hitldata[hitlindex][0]*1000)-(timetostart*1000) < millis() - hitltime)
         {
             //Serial.printf("%f,%d\n",hitldata[hitlindex][0]*1000,millis() - hitltime);
             hitlindex++;
-            if (hitlindex > (sizeof(hitldata)/sizeof(hitldata[0]))-1)
-            {
-                hitlteston = 0;
-                Serial.println("out of hitltesting");
-            }
         }
+
+        if (hitlindex + 1 >= hitlCount)
+        {
+            hitlteston = 0;
+            Serial.println("out of hitltesting");
+        }
+
+        currentHitlIndex = hitlindex;
     }
     
     
     #if !defined(VERBOSETIMES)
-        imu.read(5,hitlteston,hitlindex);
+        const int imuOversampling = (state >= 1 && state <= 4) ? 1 : 5;
+        imu.read(imuOversampling,hitlteston,(int)currentHitlIndex);
         //Serial.printf("\n>NAVspot: %f \n", 1.55);
         //if(readgps){ gps.read();}
         _sysstate.r.temp1 = tempsens.read1(0);

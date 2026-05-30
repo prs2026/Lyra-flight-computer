@@ -43,6 +43,34 @@ class MPCORE{
     int addr;
     int32_t first_empty_page = -1;
 
+    struct CsvExportStreamState
+    {
+        uint32_t nextDataSector = 0;
+        uint32_t cachedDataSector = 0xFFFFFFFF;
+        uint32_t headerPos = 0;
+        uint32_t page = 0;
+        uint32_t lineLen = 0;
+        uint32_t linePos = 0;
+        char line[4096];
+        uint8_t sector[512];
+    };
+
+    CsvExportStreamState exportStream;
+
+    uint32_t exportFatSectors = 0;
+    uint32_t exportRootDirSectors = 0;
+    uint32_t exportDataStart = 0;
+    uint32_t exportFileSectors = 0;
+    uint32_t exportFileClusters = 0;
+    uint32_t exportClusterCount = 0;
+    uint32_t exportDataSectors = 0;
+    uint8_t exportSectorsPerCluster = 1;
+
+    void resetCsvExportStream();
+    bool nextCsvExportByte(char *out);
+    void buildNextCsvExportDataSector();
+    int readCsvExportDataSector(uint32_t dataSector, uint8_t *sector);
+
 
     public:
         
@@ -92,10 +120,10 @@ class MPCORE{
         };
         timings intervals[6] = {
             {17,1000,200,1000,10000}, // ground idle
-            {17,500,200, 200,800}, // powered ascent
-            {17,500,200,333,800}, // unpowered ascent
-            {17,500,200,333,800}, // ballistic descent
-            {17,800,200,333,800}, //ready to land
+            {10,500,200, 200,800}, // powered ascent
+            {10,500,200,333,800}, // unpowered ascent
+            {10,500,200,333,800}, // ballistic descent
+            {10,800,200,333,800}, //ready to land
             {1000,1500,200,1500,500} // landed
         };
         timings prevtime;
@@ -118,6 +146,7 @@ class MPCORE{
         logpacket readdata(uint64_t page,bool serial);
         int logtobuf();
         int buildCsvExportFlash();
+        int readCsvExportSector(uint32_t lba, uint8_t *sector);
         int flushbufferpage();
 
         int movebuftofile();
@@ -161,72 +190,41 @@ void MPCORE::setled(int state){
 }
 
 void MPCORE::beep(){
-    if (beepon){
-        tone(BUZZERPIN,4000,200);
-        delay(200);
-        noTone(BUZZERPIN);
-    }
-    
-
-    return;
+    beep(4000, 200);
 }
 
 void MPCORE::beep(int freq){
-    if (beepon){
-        tone(BUZZERPIN,freq,200);
-        delay(200);
-        noTone(BUZZERPIN);
-    }
-    return;
+    beep(freq, 200);
 }
 
 void MPCORE::beep(int freq, unsigned int duration){
     if (beepon)
     {
         tone(BUZZERPIN,freq,duration);
-        delay(duration);
-        noTone(BUZZERPIN);
     }
-return;
+    return;
 }
 
 void MPCORE::beepcont(){
-    if (_sysstate.r.pyroscont & 0b1)
+    static uint8_t pyroIndex = 0;
+    static uint32_t nextToneMs = 0;
+
+    if (!beepon)
     {
-        beep(4500);
-    }
-    else
-    {
-        beep(4000);
-    }
-    delay(50);
-        if (_sysstate.r.pyroscont & 0b10)
-    {
-        beep(4500);
-    }
-    else
-    {
-        beep(4000);
-    }
-    delay(50);
-        if (_sysstate.r.pyroscont & 0b100)
-    {
-        beep(4500);
-    }
-    else
-    {
-        beep(4000);
-    }
-    delay(50);
-        if (_sysstate.r.pyroscont & 0b1000)
-    {
-        beep(4500);
-    }
-    else
-    {
-        beep(4000);
+        return;
     }
 
+    uint32_t now = millis();
+    if ((int32_t)(now - nextToneMs) < 0)
+    {
+        return;
+    }
+
+    uint8_t pyroMask = 1 << pyroIndex;
+    beep((_sysstate.r.pyroscont & pyroMask) ? 4500 : 4000, 150);
+
+    pyroIndex = (pyroIndex + 1) & 0x03;
+    nextToneMs = now + (pyroIndex == 0 ? intervals[0].beep : 250);
 }
 
 float MPCORE::readbattvoltage(){
@@ -606,6 +604,203 @@ static int formatCsvExportLine(char *line, size_t lineSize, uint32_t index, cons
         (unsigned int)packet.r.checksum2);
 }
 
+void MPCORE::resetCsvExportStream(){
+    exportStream.nextDataSector = 0;
+    exportStream.cachedDataSector = 0xFFFFFFFF;
+    exportStream.headerPos = 0;
+    exportStream.page = 0;
+    exportStream.lineLen = 0;
+    exportStream.linePos = 0;
+    memset(exportStream.sector, 0, sizeof(exportStream.sector));
+}
+
+bool MPCORE::nextCsvExportByte(char *out){
+    const uint32_t headerLen = sizeof(CSV_EXPORT_HEADER) - 1;
+
+    if (exportStream.headerPos < headerLen)
+    {
+        *out = CSV_EXPORT_HEADER[exportStream.headerPos++];
+        return true;
+    }
+
+    while (exportStream.linePos >= exportStream.lineLen)
+    {
+        if (exportStream.page >= (uint32_t)first_empty_page)
+        {
+            return false;
+        }
+
+        logpacket packet = readdata(exportStream.page,false);
+        int len = formatCsvExportLine(exportStream.line, sizeof(exportStream.line), exportStream.page, packet);
+        exportStream.page++;
+
+        if (len < 0 || len >= (int)sizeof(exportStream.line))
+        {
+            exportStream.lineLen = 0;
+            exportStream.linePos = 0;
+            return false;
+        }
+
+        exportStream.lineLen = (uint32_t)len;
+        exportStream.linePos = 0;
+    }
+
+    *out = exportStream.line[exportStream.linePos++];
+    return true;
+}
+
+void MPCORE::buildNextCsvExportDataSector(){
+    memset(exportStream.sector, 0, sizeof(exportStream.sector));
+
+    for (uint32_t i = 0; i < 512; i++)
+    {
+        char value;
+        if (!nextCsvExportByte(&value))
+        {
+            break;
+        }
+        exportStream.sector[i] = (uint8_t)value;
+    }
+
+    exportStream.cachedDataSector = exportStream.nextDataSector;
+    exportStream.nextDataSector++;
+}
+
+int MPCORE::readCsvExportDataSector(uint32_t dataSector, uint8_t *sector){
+    if (dataSector >= exportDataSectors)
+    {
+        memset(sector, 0, 512);
+        return 0;
+    }
+
+    if (exportStream.cachedDataSector == dataSector)
+    {
+        memcpy(sector, exportStream.sector, 512);
+        return 0;
+    }
+
+    if (dataSector < exportStream.nextDataSector)
+    {
+        resetCsvExportStream();
+    }
+
+    while (exportStream.nextDataSector <= dataSector)
+    {
+        buildNextCsvExportDataSector();
+    }
+
+    memcpy(sector, exportStream.sector, 512);
+    return 0;
+}
+
+int MPCORE::readCsvExportSector(uint32_t lba, uint8_t *sector){
+    auto put16 = [](uint8_t *dst, uint16_t value) {
+        dst[0] = value & 0xFF;
+        dst[1] = (value >> 8) & 0xFF;
+    };
+    auto put32 = [](uint8_t *dst, uint32_t value) {
+        dst[0] = value & 0xFF;
+        dst[1] = (value >> 8) & 0xFF;
+        dst[2] = (value >> 16) & 0xFF;
+        dst[3] = (value >> 24) & 0xFF;
+    };
+
+    if (lba >= exportSectorCount)
+    {
+        memset(sector, 0, 512);
+        return 1;
+    }
+
+    memset(sector, 0, 512);
+
+    if (lba == 0)
+    {
+        sector[0] = 0xEB;
+        sector[1] = 0x3C;
+        sector[2] = 0x90;
+        memcpy(sector + 3, "MSDOS5.0", 8);
+        put16(sector + 11, 512);
+        sector[13] = exportSectorsPerCluster;
+        put16(sector + 14, 1);
+        sector[16] = 2;
+        put16(sector + 17, 16);
+        put16(sector + 19, exportSectorCount <= 0xFFFF ? exportSectorCount : 0);
+        sector[21] = 0xF8;
+        put16(sector + 22, exportFatSectors);
+        put16(sector + 24, 63);
+        put16(sector + 26, 255);
+        put32(sector + 28, 0);
+        put32(sector + 32, exportSectorCount > 0xFFFF ? exportSectorCount : 0);
+        sector[36] = 0x80;
+        sector[38] = 0x29;
+        put32(sector + 39, 0x4C595241);
+        memcpy(sector + 43, "LYRA CSV   ", 11);
+        memcpy(sector + 54, "FAT16   ", 8);
+        sector[510] = 0x55;
+        sector[511] = 0xAA;
+        return 0;
+    }
+
+    if (lba >= 1 && lba < 1 + 2 * exportFatSectors)
+    {
+        uint32_t fatSector = (lba - 1) % exportFatSectors;
+        uint32_t fatEntries = exportClusterCount + 2;
+
+        for (uint32_t i = 0; i < 256; i++)
+        {
+            uint32_t entry = fatSector * 256 + i;
+            uint16_t value = 0;
+
+            if (entry == 0)
+            {
+                value = 0xFFF8;
+            }
+            else if (entry == 1)
+            {
+                value = 0xFFFF;
+            }
+            else if (entry < fatEntries)
+            {
+                uint32_t firstFileCluster = 2;
+                uint32_t lastFileCluster = firstFileCluster + exportFileClusters - 1;
+
+                if (entry >= firstFileCluster && entry < lastFileCluster)
+                {
+                    value = (uint16_t)(entry + 1);
+                }
+                else if (entry == lastFileCluster)
+                {
+                    value = 0xFFFF;
+                }
+            }
+
+            put16(sector + i * 2, value);
+        }
+        return 0;
+    }
+
+    uint32_t rootStart = 1 + 2 * exportFatSectors;
+    if (lba >= rootStart && lba < rootStart + exportRootDirSectors)
+    {
+        if (lba == rootStart)
+        {
+            memcpy(sector + 0, "FLIGHT  ", 8);
+            memcpy(sector + 8, "CSV", 3);
+            sector[11] = 0x20;
+            put16(sector + 26, 2);
+            put32(sector + 28, exportFileSize);
+        }
+        return 0;
+    }
+
+    if (lba >= exportDataStart)
+    {
+        return readCsvExportDataSector(lba - exportDataStart, sector);
+    }
+
+    return 0;
+}
+
 int MPCORE::buildCsvExportFlash(){
     if (first_empty_page <= 0)
     {
@@ -629,214 +824,47 @@ int MPCORE::buildCsvExportFlash(){
         fileSize += (uint32_t)len;
     }
 
-    uint32_t totalSectors = MSC_BLOCK_COUNT;
-    uint32_t rootDirSectors = ((16 * 32) + 511) / 512;
-    uint32_t fatSectors = 0;
-    uint32_t clusterCount = 0;
-    uint32_t prevFatSectors;
-
-    do {
-        prevFatSectors = fatSectors;
-        uint32_t dataSectors = totalSectors - 1 - rootDirSectors - 2 * fatSectors;
-        clusterCount = dataSectors;
-        fatSectors = ((clusterCount + 2) * 2 + 511) / 512;
-    } while (fatSectors != prevFatSectors);
-
-    uint32_t dataStart = 1 + 2 * fatSectors + rootDirSectors;
-    uint32_t fileClusters = (fileSize + 511) / 512;
-    if (clusterCount < 4085 || clusterCount >= 65525)
-    {
-        Serial.println("MSC geometry is not FAT16-compatible");
-        return 1;
-    }
-    if (fileClusters > clusterCount)
-    {
-        Serial.println("MSC export too large for reserved flash region");
-        return 1;
-    }
-
-    static uint8_t sector[512];
-    memset(sector, 0, sizeof(sector));
-
-    // clear export region
-    rp2040.idleOtherCore();
-    uint32_t ints = save_and_disable_interrupts();
-    flash_range_erase(MSC_FLASH_OFFSET, MSC_FLASH_SIZE);
-    restore_interrupts(ints);
-    rp2040.resumeOtherCore();
-
-    // boot sector
-    memset(sector, 0, sizeof(sector));
-    auto put16 = [](uint8_t *dst, uint16_t value) {
-        dst[0] = value & 0xFF;
-        dst[1] = (value >> 8) & 0xFF;
-    };
-    auto put32 = [](uint8_t *dst, uint32_t value) {
-        dst[0] = value & 0xFF;
-        dst[1] = (value >> 8) & 0xFF;
-        dst[2] = (value >> 16) & 0xFF;
-        dst[3] = (value >> 24) & 0xFF;
-    };
-    sector[0] = 0xEB;
-    sector[1] = 0x3C;
-    sector[2] = 0x90;
-    memcpy(sector + 3, "MSDOS5.0", 8);
-    put16(sector + 11, 512);
-    sector[13] = 1;
-    put16(sector + 14, 1);
-    sector[16] = 2;
-    put16(sector + 17, 16);
-    put16(sector + 19, totalSectors <= 0xFFFF ? totalSectors : 0);
-    sector[21] = 0xF8;
-    put16(sector + 22, fatSectors);
-    put16(sector + 24, 63);
-    put16(sector + 26, 255);
-    put32(sector + 28, 0);
-    put32(sector + 32, totalSectors > 0xFFFF ? totalSectors : 0);
-    sector[36] = 0x80;
-    sector[38] = 0x29;
-    put32(sector + 39, 0x4C595241);
-    memcpy(sector + 43, "LYRA CSV   ", 11);
-    memcpy(sector + 54, "FAT16   ", 8);
-    sector[510] = 0x55;
-    sector[511] = 0xAA;
-
-    rp2040.idleOtherCore();
-    ints = save_and_disable_interrupts();
-    flash_range_program(MSC_FLASH_OFFSET + 0, sector, 512);
-    restore_interrupts(ints);
-    rp2040.resumeOtherCore();
-
-    // build FAT table
-    uint32_t fatEntries = clusterCount + 2;
-    uint16_t *fat = (uint16_t *)malloc(fatEntries * sizeof(uint16_t));
-    if (!fat)
-    {
-        Serial.println("Out of memory for FAT table");
-        return 1;
-    }
-    fat[0] = 0xFFF8;
-    fat[1] = 0xFFFF;
-    for (uint32_t c = 2; c < fatEntries; ++c)
-    {
-        if (c < 2 + fileClusters - 1)
-        {
-            fat[c] = (uint16_t)(c + 1);
-        }
-        else if (c == 2 + fileClusters - 1)
-        {
-            fat[c] = 0xFFFF;
-        }
-        else
-        {
-            fat[c] = 0x0000;
-        }
-    }
-
-    memset(sector, 0, sizeof(sector));
-    uint32_t fatOffset = MSC_FLASH_OFFSET + 512;
-    uint32_t fatBytes = fatEntries * sizeof(uint16_t);
-    for (uint32_t s = 0; s < fatSectors; ++s)
-    {
-        uint32_t copyLen = fatBytes - s * 512;
-        if (copyLen > 512) copyLen = 512;
-        memcpy(sector, ((uint8_t *)fat) + s * 512, copyLen);
-        rp2040.idleOtherCore();
-        ints = save_and_disable_interrupts();
-        flash_range_program(fatOffset + s * 512, sector, 512);
-        restore_interrupts(ints);
-        rp2040.resumeOtherCore();
-        memset(sector, 0, sizeof(sector));
-    }
-
-    for (uint32_t s = 0; s < fatSectors; ++s)
-    {
-        uint32_t copyLen = fatBytes - s * 512;
-        if (copyLen > 512) copyLen = 512;
-        memcpy(sector, ((uint8_t *)fat) + s * 512, copyLen);
-        rp2040.idleOtherCore();
-        ints = save_and_disable_interrupts();
-        flash_range_program(fatOffset + (fatSectors + s) * 512, sector, 512);
-        restore_interrupts(ints);
-        rp2040.resumeOtherCore();
-        memset(sector, 0, sizeof(sector));
-    }
-    free(fat);
-
-    // root directory
-    memset(sector, 0, sizeof(sector));
-    memcpy(sector + 0, "FLIGHT  ", 8);
-    memcpy(sector + 8, "CSV", 3);
-    sector[11] = 0x20;
-    put16(sector + 26, 2);
-    put32(sector + 28, fileSize);
-
-    uint32_t rootOffset = MSC_FLASH_OFFSET + 512 + 2 * fatSectors * 512;
-    rp2040.idleOtherCore();
-    ints = save_and_disable_interrupts();
-    flash_range_program(rootOffset, sector, 512);
-    restore_interrupts(ints);
-    rp2040.resumeOtherCore();
-
-    // write file data sequentially
-    uint32_t dataStartOffset = MSC_FLASH_OFFSET + dataStart * 512;
-    uint32_t currentSector = 0;
-    uint32_t sectorPos = 0;
-    memset(sector, 0, sizeof(sector));
-
-    auto appendExportBytes = [&](const char *data, uint32_t len) {
-        uint32_t written = 0;
-        while (written < len)
-        {
-            uint32_t chunk = len - written;
-            if (chunk > 512 - sectorPos) chunk = 512 - sectorPos;
-            memcpy(sector + sectorPos, data + written, chunk);
-            written += chunk;
-            sectorPos += chunk;
-
-            if (sectorPos == 512)
-            {
-                rp2040.idleOtherCore();
-                ints = save_and_disable_interrupts();
-                flash_range_program(dataStartOffset + currentSector * 512, sector, 512);
-                restore_interrupts(ints);
-                rp2040.resumeOtherCore();
-                currentSector++;
-                sectorPos = 0;
-                memset(sector, 0, sizeof(sector));
-            }
-        }
-    };
-
-    appendExportBytes(CSV_EXPORT_HEADER, sizeof(CSV_EXPORT_HEADER) - 1);
-
-    for (uint32_t page = 0; page < first_empty_page; ++page)
-    {
-        logpacket packet = readdata(page,false);
-        int len = formatCsvExportLine(line, sizeof(line), page, packet);
-
-        if (len < 0 || len >= (int)sizeof(line))
-        {
-            Serial.println("CSV format error while writing");
-            return 1;
-        }
-
-        appendExportBytes(line, (uint32_t)len);
-    }
-
-    if (sectorPos > 0)
-    {
-        rp2040.idleOtherCore();
-        ints = save_and_disable_interrupts();
-        flash_range_program(dataStartOffset + currentSector * 512, sector, 512);
-        restore_interrupts(ints);
-        rp2040.resumeOtherCore();
-        currentSector++;
-    }
-
     exportFileSize = fileSize;
-    exportSectorCount = totalSectors;
-    Serial.printf("MSC export image built: %u bytes, %u sectors\n", fileSize, exportSectorCount);
+    exportFileSectors = (fileSize + 511) / 512;
+
+    const uint8_t clusterSizes[] = {1, 2, 4, 8, 16, 32, 64};
+    exportSectorsPerCluster = 0;
+    for (uint8_t i = 0; i < sizeof(clusterSizes) / sizeof(clusterSizes[0]); i++)
+    {
+        uint8_t sectorsPerCluster = clusterSizes[i];
+        uint32_t fileClusters = (exportFileSectors + sectorsPerCluster - 1) / sectorsPerCluster;
+        uint32_t clusterCount = fileClusters < 4085 ? 4085 : fileClusters;
+
+        if (clusterCount < 65525)
+        {
+            exportSectorsPerCluster = sectorsPerCluster;
+            exportFileClusters = fileClusters;
+            exportClusterCount = clusterCount;
+            break;
+        }
+    }
+
+    if (exportSectorsPerCluster == 0)
+    {
+        Serial.println("CSV export too large for FAT16 dynamic image");
+        return 1;
+    }
+
+    exportDataSectors = exportClusterCount * exportSectorsPerCluster;
+
+    if (exportClusterCount >= 65525)
+    {
+        Serial.println("CSV export too large for FAT16 dynamic image");
+        return 1;
+    }
+
+    exportRootDirSectors = ((16 * 32) + 511) / 512;
+    exportFatSectors = ((exportClusterCount + 2) * 2 + 511) / 512;
+    exportDataStart = 1 + 2 * exportFatSectors + exportRootDirSectors;
+    exportSectorCount = exportDataStart + exportDataSectors;
+
+    resetCsvExportStream();
+    Serial.printf("MSC dynamic export ready: %u bytes, %u sectors, %u sectors/cluster\n", exportFileSize, exportSectorCount, exportSectorsPerCluster);
     return 0;
 }
 
@@ -1076,8 +1104,7 @@ int MPCORE::parsecommand(char input){
     
     case 't':
         Serial.println(" hitltesting");
-        NAV.hitltime = millis();
-        NAV.hitlteston = 1;
+        NAV.startHitl();
         break;
     case 'r':
         page = Serial.parseInt();

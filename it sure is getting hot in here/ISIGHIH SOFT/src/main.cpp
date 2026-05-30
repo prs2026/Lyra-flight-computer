@@ -1,8 +1,79 @@
 #include <Arduino.h>
+#include <Adafruit_TinyUSB.h>
 
 #include "mpcore.h"
 
 MPCORE MP;
+Adafruit_USBD_MSC usb_msc;
+
+static int32_t mscReadCallback(uint32_t lba, void *buffer, uint32_t bufsize)
+{
+    if (bufsize % 512 != 0)
+    {
+        return -1;
+    }
+
+    uint8_t *dst = (uint8_t *)buffer;
+    uint32_t blockCount = bufsize / 512;
+    for (uint32_t block = 0; block < blockCount; block++)
+    {
+        if (MP.readCsvExportSector(lba + block, dst + block * 512) != 0)
+        {
+            memset(dst + block * 512, 0, 512);
+        }
+    }
+
+    return (int32_t)bufsize;
+}
+
+static int32_t mscWriteCallback(uint32_t lba, uint8_t *buffer, uint32_t bufsize)
+{
+    (void)lba;
+    (void)buffer;
+    (void)bufsize;
+    return -1;
+}
+
+static void mscFlushCallback(void)
+{
+}
+
+static bool mscWritableCallback(void)
+{
+    return false;
+}
+
+static void enterMassStorageMode()
+{
+    Serial.println("MSC export mode requested");
+    Serial.println("Building CSV export");
+    Serial.flush();
+
+    if (MP.buildCsvExportFlash() != 0)
+    {
+        Serial.println("MSC export build failed");
+        MP.usbMassStorageMode = false;
+        MP.exportReady = false;
+        return;
+    }
+
+    Serial.println("Switching USB to mass storage");
+    Serial.flush();
+    delay(100);
+
+    TinyUSBDevice.detach();
+    delay(50);
+
+    Serial.end();
+
+    usb_msc.setCapacity(MP.exportSectorCount, 512);
+    usb_msc.setUnitReady(true);
+    usb_msc.begin();
+
+    MP.exportReady = true;
+
+    TinyUSBDevice.attach();
+}
 
 bool dataismoved = false;
 
@@ -28,6 +99,12 @@ void setup() { // main core setup
     MP._sysstate.r.uptime = millis();
 
     Serial.println("mpcore out of setup");
+
+    usb_msc.setID("LYRA", "ISIGHIHCSV", "1.0");
+    usb_msc.setCapacity(MSC_BLOCK_COUNT, 512);
+    usb_msc.setReadWriteCallback(mscReadCallback, mscWriteCallback, mscFlushCallback);
+    usb_msc.setWritableCallback(mscWritableCallback);
+    usb_msc.setUnitReady(false);
     
 }
 
@@ -46,6 +123,18 @@ void setup1() { // nav core setup
 
 void loop() { // main core loop
     int eventsfired = 0;
+
+    if (MP.usbMassStorageMode)
+    {
+        if (!MP.exportReady)
+        {
+            enterMassStorageMode();
+        }
+
+        TinyUSBDevice.task();
+        return;
+    }
+
     MP.changestate();
     //MP.checkforpyros();
     //Serial.printf(">loops: 1 \n");
@@ -118,6 +207,11 @@ void loop() { // main core loop
 
 
 void loop1() { // nav core loop
+    if (MP.usbMassStorageMode)
+    {
+        return;
+    }
+
     MP._sysstate.r.state == 0 ? NAV.useaccel = 1 : NAV.useaccel = 0;
     //Serial.printf("\n>NAVspot: %d \n", 1);
     

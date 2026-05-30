@@ -115,22 +115,24 @@ int IMU::init(){
 // reads the imu and applies calibration matrices
 void IMU::read(int oversampling, int hitltesting,int hitlindex){
     IMUdata _data;
-    Vector3d accel;
-    Vector3d gyro;
-
-    accel << 0,0,0;
-    gyro << 0,0,0;
+    float accelX = 0.0f;
+    float accelY = 0.0f;
+    float accelZ = 0.0f;
+    float gyroX = 0.0f;
+    float gyroY = 0.0f;
+    float gyroZ = 0.0f;
+    static uint8_t tempReadDecimator = 0;
 
     if (hitltesting)
     {
         //time,baro_altitude,accl_z,accl_y,accl_x,gps_altitude,gyro_roll,gyro_pitch,gyro_yaw
-        accel.x() = hitldata[hitlindex][4];
-        accel.y() = hitldata[hitlindex][2];
-        accel.z() = hitldata[hitlindex][3];
+        accelX = hitldata[hitlindex][4];
+        accelY = hitldata[hitlindex][2];
+        accelZ = hitldata[hitlindex][3];
         float convertorads = (PI/180);
-        gyro.x() = hitldata[hitlindex][7]*convertorads;
-        gyro.y() = hitldata[hitlindex][8]*convertorads;
-        gyro.z() = hitldata[hitlindex][6]*convertorads;
+        gyroX = hitldata[hitlindex][7]*convertorads;
+        gyroY = hitldata[hitlindex][8]*convertorads;
+        gyroZ = hitldata[hitlindex][6]*convertorads;
     }
     
     else
@@ -138,61 +140,77 @@ void IMU::read(int oversampling, int hitltesting,int hitlindex){
     
     for (int i = 0; i < oversampling; i++)
     {
-        accelunit.readSensor();
+        if (tempReadDecimator == 0)
+        {
+            accelunit.readSensor();
+        }
+        else
+        {
+            accelunit.readSensorNoTemp();
+        }
         gyrounit.readSensor();
 
-        accel.x() += accelunit.getAccelX_mss();
-        accel.y() += accelunit.getAccelZ_mss();
-        accel.z() += accelunit.getAccelY_mss();
+        accelX += accelunit.getAccelX_mss();
+        accelY += accelunit.getAccelZ_mss();
+        accelZ += accelunit.getAccelY_mss();
         //Serial.printf("new accelmss z : %f \n",accel.z());
 
-        gyro.x() += gyrounit.getGyroX_rads();
+        gyroX += gyrounit.getGyroX_rads();
 
-        gyro.y() += gyrounit.getGyroZ_rads();
-        gyro.z() += gyrounit.getGyroY_rads();
+        gyroY += gyrounit.getGyroZ_rads();
+        gyroZ += gyrounit.getGyroY_rads();
 
         delayMicroseconds(1);
-        gyro.x() < -73786 || gyro.x() > 73786 ? gyro.x() = data.gyro.x : gyro.x() = gyro.x();
-        gyro.y() < -73786 || gyro.y() > 73786 ? gyro.y() = data.gyro.x : gyro.y() = gyro.y();
-        gyro.z() < -73786 || gyro.z() > 73786 ? gyro.z() = data.gyro.x : gyro.z() = gyro.z();
+        gyroX < -73786 || gyroX > 73786 ? gyroX = data.gyro.x : gyroX = gyroX;
+        gyroY < -73786 || gyroY > 73786 ? gyroY = data.gyro.x : gyroY = gyroY;
+        gyroZ < -73786 || gyroZ > 73786 ? gyroZ = data.gyro.x : gyroZ = gyroZ;
 
-        accel.x() < -7378 || accel.x() > 7378 ? accel.x() = data.accel.x : accel.x() = accel.x();
-        accel.y() < -7378 || accel.y() > 7378 ? accel.y() = data.accel.x : accel.y() = accel.y();
-        accel.z() < -7378 || accel.z() > 7378 ? accel.z() = data.accel.x : accel.z() = accel.z();
+        accelX < -7378 || accelX > 7378 ? accelX = data.accel.x : accelX = accelX;
+        accelY < -7378 || accelY > 7378 ? accelY = data.accel.x : accelY = accelY;
+        accelZ < -7378 || accelZ > 7378 ? accelZ = data.accel.x : accelZ = accelZ;
         
     }
     
     
-    accel.x() /= oversampling;
-    accel.y() /= oversampling;
-    accel.z() /= oversampling;
+    accelX /= oversampling;
+    accelY /= oversampling;
+    accelZ /= oversampling;
     
-    gyro.x() /= oversampling;
-    gyro.y() /= oversampling;
-    gyro.z() /= oversampling;
+    gyroX /= oversampling;
+    gyroY /= oversampling;
+    gyroZ /= oversampling;
 
     // accel calibration
-    accel = accel - bcal;
+    accelX -= bcal.x();
+    accelY -= bcal.y();
+    accelZ -= bcal.z();
 
-    accel = acal * accel;
+    float calibratedAccelX = acal(0,0)*accelX + acal(0,1)*accelY + acal(0,2)*accelZ;
+    float calibratedAccelY = acal(1,0)*accelX + acal(1,1)*accelY + acal(1,2)*accelZ;
+    float calibratedAccelZ = acal(2,0)*accelX + acal(2,1)*accelY + acal(2,2)*accelZ;
+
+    accelX = calibratedAccelX;
+    accelY = calibratedAccelY;
+    accelZ = calibratedAccelZ;
     }
 
     // low pass filter
-    gyro.x() = gyroal*prevdata.gyro.x + (1-gyroal)*gyro.x();
-    gyro.y() = gyroal*prevdata.gyro.y + (1-gyroal)*gyro.y();
-    gyro.z() = gyroal*prevdata.gyro.z + (1-gyroal)*gyro.z();
+    gyroX = gyroal*prevdata.gyro.x + (1-gyroal)*gyroX;
+    gyroY = gyroal*prevdata.gyro.y + (1-gyroal)*gyroY;
+    gyroZ = gyroal*prevdata.gyro.z + (1-gyroal)*gyroZ;
 
-    accel.x() = accelal*prevdata.accel.x + (1-accelal)*accel.x();
-    accel.y() = accelal*prevdata.accel.y + (1-accelal)*accel.y();
-    accel.z() = accelal*prevdata.accel.z + (1-accelal)*accel.z();
+    accelX = accelal*prevdata.accel.x + (1-accelal)*accelX;
+    accelY = accelal*prevdata.accel.y + (1-accelal)*accelY;
+    accelZ = accelal*prevdata.accel.z + (1-accelal)*accelZ;
 
     //Serial.printf("new accelmss z : %f \n",accel.x());
 
-    data.absaccel = accel.norm();
-    _data.accel = vector3tofloat(accel);
-    _data.gyro = vector3tofloat(gyro);
+    _data.accel = {accelX, accelY, accelZ};
+    _data.gyro = {gyroX, gyroY, gyroZ};
+    _data.absaccel = sqrtf(accelX*accelX + accelY*accelY + accelZ*accelZ);
 
     _data.temp = accelunit.getTemperature_C();
+    tempReadDecimator = (tempReadDecimator + 1) % 10;
     
     data = _data;
     prevdata = _data;
@@ -527,7 +545,8 @@ int BARO::init(){
         //MP.logtextentry("BMP init fail");
         return 1;
     }
-    bmp.setPressureOversampling(BMP3_OVERSAMPLING_8X);
+    bmp.setTemperatureOversampling(BMP3_NO_OVERSAMPLING);
+    bmp.setPressureOversampling(BMP3_OVERSAMPLING_2X);
     bmp.setOutputDataRate(BMP3_ODR_100_HZ);
     getpadoffset();
     //Serial.println("BMP init success");
@@ -542,7 +561,7 @@ void BARO::readsensor(int hitltest, int hitlindex){
     if (hitltest)
     {
         _data.altitude = hitldata[hitlindex][1]+data.padalt;
-        timestep = hitldata[hitlindex][0]-hitldata[hitlindex-1][0];
+        timestep = hitlindex > 0 ? hitldata[hitlindex][0]-hitldata[hitlindex-1][0] : 0.01f;
     }
 
     else{
@@ -554,7 +573,8 @@ void BARO::readsensor(int hitltest, int hitlindex){
     timestep = (micros() - prevtime)/1e6;
     // float hpfgain = hpfcutoff / (2* M_PI * 1/timestep);
 
-    _data.altitude = bmp.readAltitude(SEALEVELPRESSURE);//44330.0 * (1.0 - pow((bmp.pressure/100.0F) / SEALEVELPRESSURE, 0.1903));
+    float atmospheric = bmp.pressure / 100.0F;
+    _data.altitude = 44330.0F * (1.0F - pow(atmospheric / SEALEVELPRESSURE, 0.1903F));
 
     _data.altitude = lpfal*prevalt + (1-lpfal)*_data.altitude;
 

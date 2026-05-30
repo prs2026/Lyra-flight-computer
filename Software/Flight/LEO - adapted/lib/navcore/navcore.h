@@ -5,6 +5,136 @@
 
 //#define VERBOSETIMES
 
+#if defined(LYRA_NAV_PROFILING)
+enum NavProfileBucket : uint8_t
+{
+    NAV_PROF_LOOP_WORK,
+    NAV_PROF_GETSENSORDATA,
+    NAV_PROF_IMU,
+    NAV_PROF_BARO,
+    NAV_PROF_ADXL,
+    NAV_PROF_MAG,
+    NAV_PROF_SENSOR_POST,
+    NAV_PROF_KFRUN,
+    NAV_PROF_ACCEL_ADJUST,
+    NAV_PROF_COUNT
+};
+
+static const char *const NAV_PROFILE_NAMES[NAV_PROF_COUNT] = {
+    "loop_work",
+    "getsensordata",
+    "imu",
+    "baro",
+    "adxl",
+    "mag",
+    "sensor_post",
+    "kfrun",
+    "accel_adjust"
+};
+
+struct NavProfileBucketStats
+{
+    uint32_t count = 0;
+    uint64_t totalUs = 0;
+    uint32_t maxUs = 0;
+};
+
+struct NavProfileStats
+{
+    NavProfileBucketStats buckets[NAV_PROF_COUNT];
+
+    void add(uint8_t bucket, uint32_t durationUs)
+    {
+        if (bucket >= NAV_PROF_COUNT)
+        {
+            return;
+        }
+
+        NavProfileBucketStats &stats = buckets[bucket];
+        stats.count++;
+        stats.totalUs += durationUs;
+        if (durationUs > stats.maxUs)
+        {
+            stats.maxUs = durationUs;
+        }
+    }
+
+    void reset()
+    {
+        for (uint8_t i = 0; i < NAV_PROF_COUNT; i++)
+        {
+            buckets[i] = {};
+        }
+    }
+};
+
+NavProfileStats NAV_PROFILE;
+
+#define NAV_PROFILE_BEGIN(varname) uint32_t varname = micros()
+#define NAV_PROFILE_END(bucket, varname) NAV_PROFILE.add((bucket), micros() - (varname))
+#define NAV_PROFILE_ADD(bucket, durationUs) NAV_PROFILE.add((bucket), (durationUs))
+#else
+#define NAV_PROFILE_BEGIN(varname)
+#define NAV_PROFILE_END(bucket, varname)
+#define NAV_PROFILE_ADD(bucket, durationUs)
+#endif
+
+static Quatstruct normalizeQuatFast(Quatstruct q)
+{
+    float norm = sqrtf(q.w*q.w + q.x*q.x + q.y*q.y + q.z*q.z);
+    if (norm <= 0.0f)
+    {
+        return {1.0f, 0.0f, 0.0f, 0.0f};
+    }
+
+    float invNorm = 1.0f / norm;
+    return {q.w*invNorm, q.x*invNorm, q.y*invNorm, q.z*invNorm};
+}
+
+static Quatstruct multiplyQuatFast(Quatstruct a, Quatstruct b)
+{
+    return {
+        a.w*b.w - a.x*b.x - a.y*b.y - a.z*b.z,
+        a.w*b.x + a.x*b.w + a.y*b.z - a.z*b.y,
+        a.w*b.y - a.x*b.z + a.y*b.w + a.z*b.x,
+        a.w*b.z + a.x*b.y - a.y*b.x + a.z*b.w
+    };
+}
+
+static Vector3float rotateVectorFast(Quatstruct q, Vector3float v)
+{
+    q = normalizeQuatFast(q);
+
+    float tx = 2.0f * (q.y*v.z - q.z*v.y);
+    float ty = 2.0f * (q.z*v.x - q.x*v.z);
+    float tz = 2.0f * (q.x*v.y - q.y*v.x);
+
+    return {
+        v.x + q.w*tx + (q.y*tz - q.z*ty),
+        v.y + q.w*ty + (q.z*tx - q.x*tz),
+        v.z + q.w*tz + (q.x*ty - q.y*tx)
+    };
+}
+
+static Vector3float quatToEulerFast(Quatstruct q)
+{
+    q = normalizeQuatFast(q);
+
+    float sinrCosp = 2.0f * (q.w*q.x + q.y*q.z);
+    float cosrCosp = 1.0f - 2.0f * (q.x*q.x + q.y*q.y);
+    float roll = atan2f(sinrCosp, cosrCosp);
+
+    float sinp = 2.0f * (q.w*q.y - q.z*q.x);
+    sinp = fmaxf(-1.0f, fminf(1.0f, sinp));
+    float pitch = asinf(sinp);
+
+    float sinyCosp = 2.0f * (q.w*q.z + q.x*q.y);
+    float cosyCosp = 1.0f - 2.0f * (q.y*q.y + q.z*q.z);
+    float yaw = atan2f(sinyCosp, cosyCosp);
+
+    return {roll, pitch, yaw};
+}
+
 
 // Dimensions of the matrices
 #define Nstate 3 // length of the state vector
@@ -59,7 +189,7 @@ class NAVCORE{
 
     
 
-    double accumz = 0;
+    float accumz = 0.0f;
 
     uint64_t hitlindex = 0;
     
@@ -71,7 +201,7 @@ class NAVCORE{
         navpacket _sysstate;
 
         uint8_t state;
-        uint8_t newdata;
+        volatile uint8_t newdata = 0;
 
         int useaccel = 1;
 
@@ -84,6 +214,7 @@ class NAVCORE{
         int sendtoserial = 0;
 
         void KFinit();
+        void startHitl();
 
         NAVCORE();
         /*
@@ -124,7 +255,7 @@ class NAVCORE{
         void KFrun();                                                         
         
 
-        Quatstruct intergrategyros(double timestep);
+        Quatstruct intergrategyros(float timestep);
 
         Quatstruct adjustwithaccel(float alpha);
 
@@ -145,7 +276,15 @@ void NAVCORE::KFinit(){
     
     prevsysstate = _sysstate;
     prevtime.kfupdate = micros();
+    kfpredicttime = micros();
     _sysstate.r.orientationquat = adjustwithaccel(0);
+}
+
+void NAVCORE::startHitl(){
+    hitltime = millis();
+    hitlindex = 0;
+    hitlteston = 1;
+    baro.setforhitl();
 }
 
 NAVCORE::NAVCORE(){
@@ -187,8 +326,8 @@ NAVCORE::NAVCORE(){
 int NAVCORE::initi2c(){
     Wire.setSCL(SCL);
     Wire.setSDA(SDA);
-    Wire.setClock(10000);
     Wire.begin();
+    Wire.setClock(400000);
     scani2c(true) ? _sysstate.r.errorflag || 0b1 : _sysstate.r.errorflag;
     return 0;
 }
@@ -226,32 +365,56 @@ uint32_t NAVCORE::sensorinit(){
 }
 
 void NAVCORE::getsensordata(bool readgps){
-    
-    uint32_t hitlindex = 0;
+    uint64_t currentHitlIndex = hitlindex;
 
     if (hitlteston)
     {
+        const uint64_t hitlCount = sizeof(hitldata)/sizeof(hitldata[0]);
         //Serial.println("hitltesting");
-        while ((hitldata[hitlindex][0]*1000)-(timetostart*1000) < millis() - hitltime && hitlteston)
+        while (hitlindex + 1 < hitlCount &&
+               (hitldata[hitlindex][0]*1000)-(timetostart*1000) < millis() - hitltime)
         {
             //Serial.printf("%f,%d\n",hitldata[hitlindex][0]*1000,millis() - hitltime);
             hitlindex++;
-            if (hitlindex > (sizeof(hitldata)/sizeof(hitldata[0]))-1)
-            {
-                hitlteston = 0;
-                Serial.println("out of hitltesting");
-            }
         }
+
+        if (hitlindex + 1 >= hitlCount)
+        {
+            hitlteston = 0;
+            Serial.println("out of hitltesting");
+        }
+
+        currentHitlIndex = hitlindex;
     }
     
 
     #if !defined(VERBOSETIMES)
-        imu.read(5,hitlteston,hitlindex);
-        baro.readsensor(hitlteston,hitlindex);
-        adxl.read(hitlteston,hitlindex);
-        magclass.readsensor();
+        const int imuOversampling = (state >= 1 && state <= 4) ? 1 : 5;
+        const int hitlSampleIndex = (int)currentHitlIndex;
+        NAV_PROFILE_BEGIN(imuProfileStartUs);
+        imu.read(imuOversampling,hitlteston,hitlSampleIndex);
+        NAV_PROFILE_END(NAV_PROF_IMU, imuProfileStartUs);
+
+        NAV_PROFILE_BEGIN(baroProfileStartUs);
+        baro.readsensor(hitlteston,hitlSampleIndex);
+        NAV_PROFILE_END(NAV_PROF_BARO, baroProfileStartUs);
+
+        NAV_PROFILE_BEGIN(adxlProfileStartUs);
+        adxl.read(hitlteston,hitlSampleIndex);
+        NAV_PROFILE_END(NAV_PROF_ADXL, adxlProfileStartUs);
+
+        NAV_PROFILE_BEGIN(magProfileStartUs);
+        static uint8_t magReadDivider = 0;
+        if (!(state >= 1 && state <= 4) || magReadDivider == 0)
+        {
+            magclass.readsensor();
+        }
+        magReadDivider = (magReadDivider + 1) % 5;
+        NAV_PROFILE_END(NAV_PROF_MAG, magProfileStartUs);
         //if(readgps){ gps.read();}
     #endif // VERBOSETIMES
+
+    NAV_PROFILE_BEGIN(sensorPostProfileStartUs);
     
     if (useaccel == 1)
     {
@@ -284,6 +447,7 @@ void NAVCORE::getsensordata(bool readgps){
     _sysstate.r.imudata = imu.data;
     _sysstate.r.barodata = baro.data;
     _sysstate.r.magdata = magclass.data;
+    NAV_PROFILE_END(NAV_PROF_SENSOR_POST, sensorPostProfileStartUs);
     
     return;
 }
@@ -291,9 +455,7 @@ void NAVCORE::getsensordata(bool readgps){
 void NAVCORE::KFrun(){
     navpacket extrapolatedsysstate = _sysstate;
 
-    double timestep = (micros() - kfpredicttime)/1e6;
-
-    Quaterniond adjquat = quatstructtoeigen(quatadj).normalized();
+    float timestep = (micros() - kfpredicttime)/1e6f;
 
     if (_sysstate.r.filtered.vvel >= 200)
     {
@@ -314,7 +476,8 @@ void NAVCORE::KFrun(){
     obs(0) = _sysstate.r.barodata.altitudeagl;
     obs(1) = _sysstate.r.accelworld.z;
 
-    K.F = {1.0,timestep,0.5*pow(timestep,2),
+    float timestepSquared = timestep * timestep;
+    K.F = {1.0,timestep,0.5f*timestepSquared,
            0.0, 1.0,timestep,
            0.0, 0.0, 1.0};
 
@@ -332,10 +495,10 @@ void NAVCORE::KFrun(){
     
 
     extrapolatedsysstate.r.orientationquat = intergrategyros(timestep);
-    extrapolatedsysstate.r.orientationquatadj = eigentoquatstruct(adjquat* (quatstructtoeigen(extrapolatedsysstate.r.orientationquat).normalized() * adjquat.inverse()));
+    extrapolatedsysstate.r.orientationquatadj = normalizeQuatFast(extrapolatedsysstate.r.orientationquat);
     
     extrapolatedsysstate.r.accelworld = getworldaccel(extrapolatedsysstate);
-    extrapolatedsysstate.r.orientationeuler = quat2euler(extrapolatedsysstate.r.orientationquatadj);
+    extrapolatedsysstate.r.orientationeuler = quatToEulerFast(extrapolatedsysstate.r.orientationquatadj);
 
 
 
@@ -348,15 +511,28 @@ void NAVCORE::KFrun(){
 
 }                                                         
 
-Quatstruct NAVCORE::intergrategyros(double timestep){
-    Quaterniond orientationquat = quatstructtoeigen(_sysstate.r.orientationquat);
-    Vector3d gyro = vectorfloatto3(_sysstate.r.imudata.gyro);
-    
-    Quaterniond qdelta(AngleAxisd(timestep*gyro.norm(), gyro.normalized()));
+Quatstruct NAVCORE::intergrategyros(float timestep){
+    Quatstruct orientationquat = _sysstate.r.orientationquat;
+    Vector3float gyro = _sysstate.r.imudata.gyro;
+    float gyroNorm = sqrtf(gyro.x*gyro.x + gyro.y*gyro.y + gyro.z*gyro.z);
 
-    orientationquat = orientationquat * qdelta;
+    if (gyroNorm <= 0.000001f)
+    {
+        return normalizeQuatFast(orientationquat);
+    }
 
-    return eigentoquatstruct(orientationquat.normalized());
+    float halfAngle = 0.5f * timestep * gyroNorm;
+    float scale = sinf(halfAngle) / gyroNorm;
+    Quatstruct qdelta = {
+        cosf(halfAngle),
+        gyro.x * scale,
+        gyro.y * scale,
+        gyro.z * scale
+    };
+
+    orientationquat = multiplyQuatFast(orientationquat, qdelta);
+
+    return normalizeQuatFast(orientationquat);
 }
 
 
@@ -396,36 +572,21 @@ Quatstruct NAVCORE::adjustwithaccel(float alpha){
 
 
 Vector3float NAVCORE::getworldaccel(navpacket _state){
-    Vector3d accelvec = vectorfloatto3(_state.r.imudata.accel);
+    Vector3float accelvec = _state.r.imudata.accel;
+    float accelMag = sqrtf(accelvec.x*accelvec.x + accelvec.y*accelvec.y + accelvec.z*accelvec.z);
     
-    if (accelvec.norm() > 20*9.81)
+    if (accelMag > 20.0f*9.81f)
     {
-        Vector3d accelvec = vectorfloatto3(_state.r.adxldata.accel);
+        accelvec = _state.r.adxldata.accel;
     }
 
-    Quaterniond orientationquat3 = quatstructtoeigen(_state.r.orientationquatadj);//.inverse();
+    accelvec = rotateVectorFast(_state.r.orientationquatadj, accelvec);
 
-    Quaterniond accelquat2;
+    Quatstruct sensorFrameAdjust = {0.70710678f, 0.70710678f, 0.0f, 0.0f};
+    accelvec = rotateVectorFast(sensorFrameAdjust, accelvec);
+    accelvec.z -= 9.801f;
 
-    accelquat2.x() = accelvec.x();
-    accelquat2.y() = accelvec.y();
-    accelquat2.z() = accelvec.z();
-
-    accelquat2 = orientationquat3 * (accelquat2 * orientationquat3.inverse());
-
-    accelquat2 = vectoradj * (accelquat2 * vectoradj.inverse());
-
-    accelvec.x() = accelquat2.x();
-    accelvec.y() = accelquat2.y();
-    accelvec.z() = accelquat2.z();   
-    
-
-    
-    Vector3d grav;
-    grav << 0,0,9.801;
-    Vector3d _accelworld = accelvec-grav;
-
-    return vector3tofloat(_accelworld);
+    return accelvec;
 
 };
 
